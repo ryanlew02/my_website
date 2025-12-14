@@ -1,130 +1,131 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ryan Lewandowski — Software Developer</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ryan Lewandowski — Software Developer</title>
 
-    <!-- Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
+        <!-- Inter -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="style.css" />
+    </head>
 
-  <body>
-    <div class="page">
-      <div class="bg-blob blob-1"></div>
-      <div class="bg-blob blob-2"></div>
-      <div class="cross c1"></div>
-      <div class="cross c2"></div>
-      <div class="cross c3"></div>
+    <body>
+        <div class="page">
+            <div class="bg-blob blob-1"></div>
+            <div class="bg-blob blob-2"></div>
+            <div class="cross c1"></div>
+            <div class="cross c2"></div>
+            <div class="cross c3"></div>
 
-      <main class="container">
-        <div class="meta">
-          <span>Software</span>
-          <span>Developer</span>
-          <span>2025</span>
+            <main class="container">
+                <div class="meta">
+                    <span>Software</span>
+                    <span>Developer</span>
+                    <span>2025</span>
+                </div>
+
+                <section class="frame" id="top">
+                    <header class="header">
+                        <a class="logo" href="#top" aria-label="Home">
+                            <!-- simple mark -->
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+
+                        <nav class="nav">
+                            <a href="#top">Home</a>
+                            <a href="#about">About</a>
+                            <a href="#projects">Works</a>
+                            <a href="#contact">Contact</a>
+                        </nav>
+                    </header>
+
+                    <div class="hero">
+                        <div>
+                            <h1>Ryan Lewandowski<br />Software Developer.</h1>
+
+                            <p class="sub">
+                                I build clean, reliable software with a focus on clarity and fundamentals.
+                            </p>
+
+                            <div class="btn-row">
+                                <a class="btn" href="#projects">
+                                    See my works
+                                    <span aria-hidden="true">→</span>
+                                </a>
+                                <a class="btn" href="#contact">
+                                    Contact
+                                    <span aria-hidden="true">↗</span>
+                                </a>
+                            </div>
+
+                            <div class="links" aria-label="Social links">
+                                <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                                <span>/</span>
+                                <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                                <span>/</span>
+                                <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                            </div>
+
+                        </div>
+
+                        <div class="visual" aria-hidden="true">
+                            <div class="circle"></div>
+                            <div class="big-x"></div>
+                            <div class="chip">Minimal. Reliable. Clear.</div>
+                        </div>
+                    </div>
+
+                    <div class="sections">
+                        <section class="section" id="projects">
+                            <h2>Projects</h2>
+                            <ul class="project-list">
+                                <li class="project">
+                                    <strong>Discord bot using Riot API</strong>
+                                    <span>Fun bot that analyzes match stats and delivers a verdict.</span>
+                                </li>
+                                <li class="project">
+                                    <strong>Python data tools</strong>
+                                    <span>Small utilities for cleaning, parsing, and automating workflows.</span>
+                                </li>
+                                <li class="project">
+                                    <strong>Portfolio website (this one)</strong>
+                                    <span>Minimal, typography-first site built from scratch.</span>
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section class="section" id="about">
+                            <h2>About</h2>
+                            <p>
+                                I currently work at Verizon while transitioning into software engineering.
+                            </p>
+                        </section>
+                    </div>
+
+                    <footer class="contact-row" id="contact">
+                        <div>© <span id="year"></span> Ryan Lewandowski</div>
+                        <div class="links" aria-label="Social links">
+                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <span>/</span>
+                            <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                            <span>/</span>
+                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        </div>
+                    </footer>
+                </section>
+            </main>
         </div>
 
-        <section class="frame" id="top">
-          <header class="header">
-            <a class="logo" href="#top" aria-label="Home">
-              <!-- simple mark -->
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </a>
-
-            <nav class="nav">
-              <a href="#top">Home</a>
-              <a href="#about">About</a>
-              <a href="#projects">Works</a>
-              <a href="#contact">Contact</a>
-            </nav>
-          </header>
-
-          <div class="hero">
-            <div>
-              <h1>Ryan Lewandowski<br />Software Developer.</h1>
-
-              <p class="sub">
-                I build clean, reliable software with a focus on clarity and fundamentals.
-              </p>
-
-              <div class="btn-row">
-                <a class="btn" href="#projects">
-                  See my works
-                  <span aria-hidden="true">→</span>
-                </a>
-                <a class="btn" href="#contact">
-                  Contact
-                  <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-
-              <div class="links" aria-label="Social links">
-                <a href="#" title="GitHub">GitHub</a>
-                <span>/</span>
-                <a href="#" title="Email">Email</a>
-                <span>/</span>
-                <a href="#" title="LinkedIn">LinkedIn</a>
-              </div>
-            </div>
-
-            <div class="visual" aria-hidden="true">
-              <div class="circle"></div>
-              <div class="big-x"></div>
-              <div class="chip">Minimal. Reliable. Clear.</div>
-            </div>
-          </div>
-
-          <div class="sections">
-            <section class="section" id="projects">
-              <h2>Projects</h2>
-              <ul class="project-list">
-                <li class="project">
-                  <strong>Discord bot using Riot API</strong>
-                  <span>Fun bot that analyzes match stats and delivers a verdict.</span>
-                </li>
-                <li class="project">
-                  <strong>Python data tools</strong>
-                  <span>Small utilities for cleaning, parsing, and automating workflows.</span>
-                </li>
-                <li class="project">
-                  <strong>Portfolio website (this one)</strong>
-                  <span>Minimal, typography-first site built from scratch.</span>
-                </li>
-              </ul>
-            </section>
-
-            <section class="section" id="about">
-              <h2>About</h2>
-              <p>
-                I currently work at Verizon while transitioning into software engineering.
-              </p>
-            </section>
-          </div>
-
-          <footer class="contact-row" id="contact">
-            <div>© <span id="year"></span> Ryan Lewandowski</div>
-            <div class="links">
-              <a href="#">GitHub</a>
-              <span>/</span>
-              <a href="#">Email</a>
-              <span>/</span>
-              <a href="#">LinkedIn</a>
-            </div>
-          </footer>
-        </section>
-      </main>
-    </div>
-
-    <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
-  </body>
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+    </body>
 </html>
