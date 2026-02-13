@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inner City — Ryan Lewandowski</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../style.css" />
+        <style>
+            .project-hero {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 28px;
+                align-items: center;
+                margin-bottom: 44px;
+            }
+
+            .project-logo {
+                width: 88px;
+                height: 88px;
+                border-radius: 22px;
+                object-fit: cover;
+                border: 1px solid var(--line);
+            }
+
+            .project-hero h1 {
+                font-size: clamp(32px, 4vw, 48px);
+                margin: 0 0 6px;
+            }
+
+            .project-tagline {
+                color: var(--muted);
+                font-size: 16px;
+                margin: 0;
+            }
+
+            .tech-stack {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            .tech-tag {
+                padding: 5px 12px;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                font-size: 12px;
+                color: var(--muted);
+                background: #fff;
+            }
+
+            .project-about {
+                margin-bottom: 48px;
+            }
+
+            .project-about h2 {
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+                margin: 0 0 10px;
+            }
+
+            .project-about p {
+                color: var(--muted);
+                margin: 0 0 12px;
+                max-width: 65ch;
+            }
+
+            .features-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 8px;
+            }
+
+            .features-list li {
+                color: var(--muted);
+                padding-left: 20px;
+                position: relative;
+            }
+
+            .features-list li::before {
+                content: "—";
+                position: absolute;
+                left: 0;
+                color: var(--muted-2);
+            }
+
+            .screenshot-section {
+                margin-bottom: 48px;
+            }
+
+            .screenshot-section h2 {
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: 0.02em;
+                margin: 0 0 18px;
+            }
+
+            .screenshot-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 18px;
+            }
+
+            .screenshot-grid img {
+                width: 100%;
+                border-radius: 16px;
+                border: 1px solid var(--line);
+                object-fit: cover;
+            }
+
+            .back-link {
+                display: inline-flex;
+                gap: 8px;
+                align-items: center;
+                color: var(--muted-2);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 28px;
+            }
+
+            .back-link:hover {
+                color: var(--text);
+            }
+
+            @media (max-width: 600px) {
+                .project-hero {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                    justify-items: center;
+                }
+
+                .screenshot-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="page">
+            <div class="bg-blob blob-1"></div>
+            <div class="bg-blob blob-2"></div>
+            <div class="cross c1"></div>
+            <div class="cross c2"></div>
+            <div class="cross c3"></div>
+
+            <main class="container">
+                <div class="meta">
+                    <span>Project</span>
+                    <span>Inner City</span>
+                    <span>2026</span>
+                </div>
+
+                <section class="frame">
+                    <header class="header">
+                        <a class="logo" href="../index.html" aria-label="Home">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+
+                        <nav class="nav">
+                            <a href="../index.html">Home</a>
+                            <a href="../index.html#about">About</a>
+                            <a href="../index.html#projects">Works</a>
+                            <a href="../index.html#contact">Contact</a>
+                        </nav>
+                    </header>
+
+                    <a class="back-link" href="../index.html#projects">
+                        <span aria-hidden="true">&larr;</span> Back to projects
+                    </a>
+
+                    <div class="project-hero">
+                        <img class="project-logo" src="../assets/logo.png" alt="Inner City logo" />
+                        <div>
+                            <h1>Inner City</h1>
+                            <p class="project-tagline">Build your city, one habit at a time.</p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">React Native</span>
+                                <span class="tech-tag">Expo</span>
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">SQL</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="project-about">
+                        <h2>About</h2>
+                        <p>
+                            Inner City is a mobile habit-tracking app that turns daily routines into a city-building game.
+                            Complete your habits each day to construct buildings and watch your city grow on an isometric grid.
+                        </p>
+                        <h2>Features</h2>
+                        <ul class="features-list">
+                            <li>Track daily habits with customizable goals and streaks</li>
+                            <li>Isometric city that grows as you complete habits</li>
+                            <li>Detailed stats with overview, weekly, monthly, and yearly views</li>
+                            <li>Calendar heatmaps to visualize consistency</li>
+                            <li>Support for both "build" and "quit" habit types</li>
+                        </ul>
+                    </div>
+
+                    <div class="screenshot-section">
+                        <h2>Screenshots</h2>
+                        <div class="screenshot-grid">
+                            <img src="../assets/IMG_3737.png" alt="Inner City — isometric city view" />
+                            <img src="../assets/IMG_3736.png" alt="Inner City — daily habits checklist" />
+                            <img src="../assets/IMG_3733.png" alt="Inner City — stats overview" />
+                            <img src="../assets/IMG_3734.png" alt="Inner City — yearly heatmap view" />
+                            <img src="../assets/IMG_3735.png" alt="Inner City — monthly calendar view" />
+                        </div>
+                    </div>
+
+                    <footer class="contact-row">
+                        <div>&copy; <span id="year"></span> Ryan Lewandowski</div>
+                        <div class="links" aria-label="Social links">
+                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <span>/</span>
+                            <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                            <span>/</span>
+                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                            <span>/</span>
+                            <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                        </div>
+                    </footer>
+                </section>
+            </main>
+        </div>
+
+        <script>
+            document.getElementById("year").textContent = new Date().getFullYear();
+        </script>
+    </body>
+</html>
