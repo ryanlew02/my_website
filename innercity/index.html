@@ -22,8 +22,8 @@
             }
 
             .project-logo {
-                width: 88px;
-                height: 88px;
+                width: 120px;
+                height: 120px;
                 border-radius: 22px;
                 object-fit: cover;
                 border: 1px solid var(--line);
@@ -135,6 +135,16 @@
                 color: var(--text);
             }
 
+            .app-store-badge {
+                display: inline-block;
+                margin-top: 14px;
+            }
+
+            .app-store-badge img {
+                height: 50px;
+                width: auto;
+            }
+
             @media (max-width: 600px) {
                 .project-hero {
                     grid-template-columns: 1fr;
@@ -195,6 +205,9 @@
                                 <span class="tech-tag">TypeScript</span>
                                 <span class="tech-tag">SQL</span>
                             </div>
+                            <a class="app-store-badge" href="https://apps.apple.com/us/app/inner-city/id6759073471" target="_blank" rel="noopener noreferrer">
+                                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
+                            </a>
                         </div>
                     </div>
 
