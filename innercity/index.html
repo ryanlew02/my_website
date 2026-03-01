@@ -12,6 +12,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="../style.css" />
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
         <style>
             .project-hero {
                 display: grid;
@@ -53,7 +54,7 @@
                 border-radius: 999px;
                 font-size: 12px;
                 color: var(--muted);
-                background: #fff;
+                background: var(--soft-1);
             }
 
             .project-about {
@@ -135,14 +136,40 @@
                 color: var(--text);
             }
 
-            .app-store-badge {
-                display: inline-block;
+            .project-links {
+                display: flex;
+                align-items: center;
+                gap: 14px;
                 margin-top: 14px;
+                flex-wrap: wrap;
+            }
+
+            .app-store-badge {
+                display: inline-flex;
             }
 
             .app-store-badge img {
                 height: 50px;
                 width: auto;
+            }
+
+            .github-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                background: var(--soft-1);
+                color: var(--text);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: border-color 120ms ease, color 120ms ease;
+            }
+
+            .github-link:hover {
+                border-color: var(--muted);
             }
 
             @media (max-width: 600px) {
@@ -163,6 +190,12 @@
         <div class="page">
             <div class="bg-blob blob-1"></div>
             <div class="bg-blob blob-2"></div>
+            <div class="bg-blob blob-3"></div>
+            <div class="bg-blob blob-4"></div>
+            <div class="bg-blob blob-5"></div>
+            <div class="bg-ring ring-1"></div>
+            <div class="bg-ring ring-2"></div>
+            <div class="bg-ring ring-3"></div>
             <div class="cross c1"></div>
             <div class="cross c2"></div>
             <div class="cross c3"></div>
@@ -188,6 +221,8 @@
                             <a href="../index.html#projects">Works</a>
                             <a href="../index.html#contact">Contact</a>
                         </nav>
+
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
                     </header>
 
                     <a class="back-link" href="../index.html#projects">
@@ -205,9 +240,17 @@
                                 <span class="tech-tag">TypeScript</span>
                                 <span class="tech-tag">SQL</span>
                             </div>
-                            <a class="app-store-badge" href="https://apps.apple.com/us/app/inner-city/id6759073471" target="_blank" rel="noopener noreferrer">
-                                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
-                            </a>
+                            <div class="project-links">
+                                <a class="app-store-badge" href="https://apps.apple.com/us/app/inner-city/id6759073471" target="_blank" rel="noopener noreferrer">
+                                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
+                                </a>
+                                <a class="github-link" href="https://github.com/ryanlew02/inner-city" target="_blank" rel="noopener noreferrer">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                                    </svg>
+                                    View on GitHub
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -243,7 +286,7 @@
                         <div class="links" aria-label="Social links">
                             <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
                             <span>/</span>
-                            <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                            <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
                             <span>/</span>
                             <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                             <span>/</span>
@@ -254,8 +297,6 @@
             </main>
         </div>
 
-        <script>
-            document.getElementById("year").textContent = new Date().getFullYear();
-        </script>
+        <script src="../script.js"></script>
     </body>
 </html>

@@ -13,12 +13,19 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="style.css" />
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
     </head>
 
     <body>
         <div class="page">
             <div class="bg-blob blob-1"></div>
             <div class="bg-blob blob-2"></div>
+            <div class="bg-blob blob-3"></div>
+            <div class="bg-blob blob-4"></div>
+            <div class="bg-blob blob-5"></div>
+            <div class="bg-ring ring-1"></div>
+            <div class="bg-ring ring-2"></div>
+            <div class="bg-ring ring-3"></div>
             <div class="cross c1"></div>
             <div class="cross c2"></div>
             <div class="cross c3"></div>
@@ -45,6 +52,8 @@
                             <a href="#projects">Works</a>
                             <a href="#contact">Contact</a>
                         </nav>
+
+                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
                     </header>
 
                     <div class="hero">
@@ -69,7 +78,7 @@
                             <div class="links" aria-label="Social links">
                                 <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
                                 <span>/</span>
-                                <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                                <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
                                 <span>/</span>
                                 <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                                 <span>/</span>
@@ -78,10 +87,8 @@
 
                         </div>
 
-                        <div class="visual" aria-hidden="true">
-                            <div class="circle"></div>
-                            <div class="big-x"></div>
-                            <div class="chip">Built with intent.</div>
+                        <div class="visual">
+                            <img class="profile-circle" src="assets/profile_photo.jpg" alt="Ryan Lewandowski" />
                         </div>
                     </div>
 
@@ -122,6 +129,7 @@
 
                         </section>
 
+                        <div class="right-col">
                         <section class="section" id="about">
                             <h2>About</h2>
                             <p>
@@ -129,27 +137,32 @@
                                 I’m focused on building practical projects, strengthening core computer science
                                 fundamentals, and writing code that’s easy to reason about and maintain.
                             </p>
-
-<p>
-  Outside of coding, I enjoy reading and staying active.
-</p>
-
-
                         </section>
+
+                        <section class="section learning">
+                            <h2>Currently learning</h2>
+                            <ul class="learning-list">
+                                <li>Data structures & algorithms</li>
+                                <li>System design</li>
+                            </ul>
+                        </section>
+                        </div>
+
                         <section class="section skills">
                             <h2>Skills</h2>
 
                             <div class="skill-grid">
                                 <span class="skill">Python</span>
-                                <span class="skill">JavaScript</span>
+                                <span class="skill">JavaScript / TypeScript</span>
                                 <span class="skill">HTML / CSS</span>
-                                <span class="skill">Git & GitHub</span>
+                                <span class="skill">React</span>
                                 <span class="skill">APIs & REST</span>
                                 <span class="skill">Java</span>
                                 <span class="skill">SQL</span>
-                                <span class="skill">Algorithms & Data Structures</span>
+                                <span class="skill">C++</span>
                             </div>
                         </section>
+
                     </div>
 
                     <footer class="contact-row" id="contact">
@@ -157,7 +170,7 @@
                         <div class="links" aria-label="Social links">
                             <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
                             <span>/</span>
-                            <a href="mailto:ryanlewan.2@gmail.com">Email</a>
+                            <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
                             <span>/</span>
                             <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                             <span>/</span>
@@ -168,8 +181,6 @@
             </main>
         </div>
 
-        <script>
-            document.getElementById("year").textContent = new Date().getFullYear();
-        </script>
+        <script src="script.js"></script>
     </body>
 </html>
