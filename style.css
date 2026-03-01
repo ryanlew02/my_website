@@ -1,4 +1,12 @@
 :root {
+    --maxw: 1500px;
+    --r-lg: 28px;
+    --pad-x: clamp(20px, 4vw, 56px);
+    --pad-y: clamp(18px, 3.5vw, 52px);
+}
+
+/* Dark theme */
+html[data-theme="dark"] {
     --bg: #0d1117;
     --panel: #161b22;
     --soft-1: #21262d;
@@ -9,11 +17,6 @@
     --muted-2: #6e7681;
 
     --line: #30363d;
-    --maxw: 1500px;
-
-    --r-lg: 28px;
-    --pad-x: clamp(20px, 4vw, 56px);
-    --pad-y: clamp(18px, 3.5vw, 52px);
 }
 
 /* Light theme */
@@ -22,9 +25,11 @@ html[data-theme="light"] {
     --panel: #ffffff;
     --soft-1: #f5f5f5;
     --soft-2: #eeeeee;
+
     --text: #111111;
     --muted: #555555;
     --muted-2: #777777;
+
     --line: #dadada;
 }
 
