@@ -307,16 +307,23 @@ h1 {
 }
 
 .copy-email {
+    -webkit-appearance: none;
+    appearance: none;
     background: none;
     border: none;
     border-bottom: 1px solid transparent;
+    outline: none;
     padding: 0;
+    margin: 0;
     font: inherit;
     font-size: 13px;
     color: var(--muted-2);
     cursor: pointer;
+    display: inline;
+    vertical-align: baseline;
 }
 .copy-email:hover { color: var(--text); border-bottom-color: var(--line); }
+.copy-email:focus { outline: none; }
 .copy-email.copied { color: var(--text); }
 
 /* Hero visual */

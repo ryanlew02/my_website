@@ -46,14 +46,29 @@
 
         document.querySelectorAll('.copy-email').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                navigator.clipboard.writeText(btn.dataset.email).then(function () {
+                var email = btn.dataset.email;
+
+                function onSuccess() {
                     btn.textContent = 'Copied!';
                     btn.classList.add('copied');
                     setTimeout(function () {
                         btn.textContent = 'Email';
                         btn.classList.remove('copied');
                     }, 2000);
-                });
+                }
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(email).then(onSuccess);
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = email;
+                    ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
+                    document.body.appendChild(ta);
+                    ta.focus();
+                    ta.select();
+                    try { document.execCommand('copy'); onSuccess(); } catch (e) {}
+                    document.body.removeChild(ta);
+                }
             });
         });
     });
