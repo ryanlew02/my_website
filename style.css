@@ -497,3 +497,30 @@ h1 {
     .sections { grid-template-columns: 1fr; }
 }
 
+@media (max-width: 600px) {
+    .header {
+        flex-wrap: wrap;
+        gap: 12px 0;
+    }
+
+    /* Nav drops to its own full-width row, centered */
+    .nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    /* Theme toggle stays on the first row, pushed to the right */
+    .theme-toggle {
+        margin-left: auto;
+    }
+
+    .profile-circle {
+        width: 220px;
+        height: 220px;
+    }
+
+    .visual { min-height: 220px; }
+}
+
