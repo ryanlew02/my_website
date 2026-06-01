@@ -738,6 +738,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     position: relative;
     z-index: 1;
     height: 100vh;
+    height: 100dvh;
     overflow-y: scroll;
     scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
@@ -749,6 +750,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 /* ── Each full-screen section ────────────────────────────────────────────── */
 .snap-section {
     height: 100vh;
+    height: 100dvh;
     scroll-snap-align: start;
     scroll-snap-stop: always;
     position: relative;
@@ -812,6 +814,52 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     line-height: 1.75;
     margin: 0 0 20px;
     max-width: 58ch;
+}
+
+.about-availability {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #6bcc8a;
+}
+
+.availability-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #6bcc8a;
+    box-shadow: 0 0 6px #6bcc8a;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+.resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 10px 18px;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+.resume-btn:hover {
+    background: var(--accent);
+    color: var(--bg);
 }
 
 .section-sub-heading {
@@ -879,17 +927,47 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .dot:hover::before { opacity: 1; }
 
 /* ── Responsive overrides ────────────────────────────────────────────────── */
+
+/* Tablet + mobile (≤900px) */
 @media (max-width: 900px) {
-    .snap-section { overflow-y: auto; }
-    .about-grid   { grid-template-columns: 1fr; gap: 28px; }
-    .scroll-dots  { display: none; }
-    .section-inner--top {
-        padding-top: calc(64px + 20px);
-    }
+    .snap-section       { overflow-y: auto; }
+    .scroll-dots        { display: none; }
+    .about-grid         { grid-template-columns: 1fr; gap: 24px; }
+    .section-inner--top { padding-top: calc(76px + 16px); }
+
+    /* Hero: stack text above photo, tighten gap */
+    .hero               { grid-template-columns: 1fr; gap: 24px; }
+    .visual             { min-height: 0; order: -1; }
+    .profile-circle     { width: 200px; height: 200px; }
+
+    /* Project cards: 2 columns on tablet */
+    .project-list       { grid-template-columns: repeat(2, 1fr); }
 }
 
+/* Mobile (≤600px) */
 @media (max-width: 600px) {
-    .section-inner { gap: 20px; }
-    .site-header .nav { gap: 12px; font-size: 10px; }
+    .section-inner      { gap: 16px; }
+    .section-inner--top { padding-top: calc(68px + 12px); }
+
+    /* Header: shrink nav text so it fits on one row */
+    .site-header        { gap: 12px; padding: 0 16px; }
+    .site-header .nav   { gap: 14px; font-size: 10px; letter-spacing: 0.06em; }
+    .logo, .theme-toggle { width: 38px; height: 38px; }
+
+    /* Hero */
+    .profile-circle     { width: 160px; height: 160px; }
+    .btn-row            { flex-wrap: wrap; gap: 10px; }
+    h1                  { font-size: clamp(26px, 7vw, 36px); }
+
+    /* Projects: single column */
+    .project-list       { grid-template-columns: 1fr; }
+
+    /* Hallows: smaller, tucked into corner */
+    .hp-hallows {
+        width: 100px;
+        height: 110px;
+        bottom: 16px;
+        left: 16px;
+    }
 }
 
