@@ -8,10 +8,10 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap"
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="../style.css?v=2" />
+        <link rel="stylesheet" href="../style.css?v=4" />
         <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
         <style>
             .project-hero {
@@ -31,8 +31,10 @@
             }
 
             .project-hero h1 {
-                font-size: clamp(32px, 4vw, 48px);
+                font-size: clamp(30px, 4vw, 46px);
                 margin: 0 0 6px;
+                font-family: 'Cinzel', Georgia, serif;
+                letter-spacing: 0.02em;
             }
 
             .project-tagline {
@@ -48,24 +50,18 @@
                 margin-top: 12px;
             }
 
-            .tech-tag {
-                padding: 5px 12px;
-                border: 1px solid var(--line);
-                border-radius: 999px;
-                font-size: 12px;
-                color: var(--muted);
-                background: var(--soft-1);
-            }
 
             .project-about {
                 margin-bottom: 48px;
             }
 
             .project-about h2 {
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 600;
-                letter-spacing: 0.02em;
+                letter-spacing: 0.08em;
                 margin: 0 0 10px;
+                font-family: 'Cinzel', Georgia, serif;
+                text-transform: uppercase;
             }
 
             .project-about p {
@@ -89,10 +85,12 @@
             }
 
             .features-list li::before {
-                content: "—";
+                content: "✦";
                 position: absolute;
                 left: 0;
-                color: var(--muted-2);
+                color: var(--accent);
+                font-size: 10px;
+                top: 4px;
             }
 
             .screenshot-section {
@@ -100,10 +98,12 @@
             }
 
             .screenshot-section h2 {
-                font-size: 16px;
+                font-size: 15px;
                 font-weight: 600;
-                letter-spacing: 0.02em;
+                letter-spacing: 0.08em;
                 margin: 0 0 18px;
+                font-family: 'Cinzel', Georgia, serif;
+                text-transform: uppercase;
             }
 
             .screenshot-grid {
@@ -133,7 +133,7 @@
             }
 
             .back-link:hover {
-                color: var(--text);
+                color: var(--accent);
             }
 
             .project-links {
@@ -169,7 +169,8 @@
             }
 
             .github-link:hover {
-                border-color: var(--muted);
+                border-color: var(--accent);
+                color: var(--accent);
             }
 
             @media (max-width: 600px) {
@@ -187,6 +188,7 @@
     </head>
 
     <body>
+        <div id="smoke-intro"></div>
         <div class="page">
             <div class="bg-blob blob-1"></div>
             <div class="bg-blob blob-2"></div>
@@ -280,6 +282,15 @@
                         </div>
                     </div>
 
+                    <!-- Deathly Hallows — hidden Easter egg -->
+                    <div class="hp-hallows" aria-hidden="true" title="">
+                        <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="50,14 4,96 96,96" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <circle cx="50" cy="69" r="27" stroke="currentColor" stroke-width="1.5"/>
+                            <line x1="50" y1="14" x2="50" y2="96" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+
                     <footer class="contact-row">
                         <div>&copy; <span id="year"></span> Ryan Lewandowski</div>
                         <div class="links" aria-label="Social links">
@@ -296,6 +307,6 @@
             </main>
         </div>
 
-        <script src="../script.js?v=2"></script>
+        <script src="../script.js?v=3"></script>
     </body>
 </html>

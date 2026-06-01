@@ -1,23 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="snap-layout">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ryan Lewandowski — Software Developer</title>
 
-        <!-- Inter -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap"
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=3" />
-        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
+        <link rel="stylesheet" href="style.css?v=5" />
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
     <body>
-        <div class="page">
+        <div id="smoke-intro"></div>
+
+        <!-- Fixed background decorations — persist across all sections -->
+        <div class="bg-layer" aria-hidden="true">
             <div class="bg-blob blob-1"></div>
             <div class="bg-blob blob-2"></div>
             <div class="bg-blob blob-3"></div>
@@ -29,32 +31,38 @@
             <div class="cross c1"></div>
             <div class="cross c2"></div>
             <div class="cross c3"></div>
+        </div>
 
-            <main class="container">
-                <div class="meta">
-                    <span>Software</span>
-                    <span>Developer</span>
-                    <span>2026</span>
-                </div>
+        <!-- Fixed site header -->
+        <header class="site-header">
+            <a class="logo" href="#hero" aria-label="Home">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </a>
 
-                <section class="frame" id="top">
-                    <header class="header">
-                        <a class="logo" href="#top" aria-label="Home">
-                            <!-- simple mark -->
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </a>
+            <nav class="nav">
+                <a href="#hero"     data-section="hero">Home</a>
+                <a href="#projects" data-section="projects">Projects</a>
+                <a href="#about"    data-section="about">About</a>
+            </nav>
 
-                        <nav class="nav">
-                            <a href="#top">Home</a>
-                            <a href="#about">About</a>
-                            <a href="#projects">Works</a>
-                            <a href="#contact">Contact</a>
-                        </nav>
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
+        </header>
 
-                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
-                    </header>
+        <!-- ═══════════════════════════════════════════════════
+             Scroll-snap container
+        ════════════════════════════════════════════════════ -->
+        <main class="scroll-container" id="scroll-container">
+
+            <!-- ── 01 · Hero ──────────────────────────────── -->
+            <section class="snap-section" id="hero">
+                <div class="section-inner">
+                    <div class="meta">
+                        <span>Software</span>
+                        <span>Developer</span>
+                        <span>2026</span>
+                    </div>
 
                     <div class="hero">
                         <div>
@@ -69,8 +77,8 @@
                                     See my works
                                     <span aria-hidden="true">→</span>
                                 </a>
-                                <a class="btn" href="#contact">
-                                    Contact
+                                <a class="btn" href="#about">
+                                    About me
                                     <span aria-hidden="true">↗</span>
                                 </a>
                             </div>
@@ -84,85 +92,133 @@
                                 <span>/</span>
                                 <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
                             </div>
-
                         </div>
 
                         <div class="visual">
                             <img class="profile-circle" src="assets/profile_photo.jpg" alt="Ryan Lewandowski" />
                         </div>
                     </div>
+                </div>
+            </section>
 
-                    <div class="sections">
-                        <section class="section" id="projects">
-                            <h2>Projects</h2>
-                            <ul class="project-list">
-                                <li>
-                                    <a class="project" href="innercity/index.html">
-                                    <div class="project-top">
-                                        <strong>Inner City App</strong>
-                                        <span class="arrow" aria-hidden="true">↗</span>
+            <!-- ── 02 · Projects ──────────────────────────── -->
+            <section class="snap-section" id="projects">
+                <div class="section-inner section-inner--top">
+                    <div class="section-heading">
+                        <span class="section-number">02</span>
+                        <h2 class="section-title">Projects</h2>
+                    </div>
+
+                    <ul class="project-list">
+
+                        <li>
+                            <a class="project" href="innercity/index.html">
+                                <div class="project-top">
+                                    <div class="project-title-row">
+                                        <strong>Inner City</strong>
+                                        <span class="project-status">Live on App Store</span>
                                     </div>
-                                    <span class="desc">Mobile app built with React Native Expo, TypeScript, and SQL.</span>
-                                    </a>
-                                </li>
+                                    <span class="arrow" aria-hidden="true">↗</span>
+                                </div>
+                                <p class="desc">A mobile habit-tracking app that gamifies your daily routines. Complete habits to construct buildings and watch your city grow on an isometric grid.</p>
+                                <ul class="project-bullets">
+                                    <li>Published and available on the iOS App Store</li>
+                                    <li>Isometric city that expands in real time as habits are completed</li>
+                                    <li>Stats dashboard with heatmaps and weekly, monthly, and yearly breakdowns</li>
+                                    <li>Supports both "build" habits and "quit" habits with streak tracking</li>
+                                </ul>
+                                <div class="project-tags">
+                                    <span class="tech-tag">React Native</span>
+                                    <span class="tech-tag">Expo</span>
+                                    <span class="tech-tag">TypeScript</span>
+                                    <span class="tech-tag">SQLite</span>
+                                </div>
+                            </a>
+                        </li>
 
-                                <li>
-                                    <a class="project" href="https://github.com/ryanlew02/lol-inted-bot" target="_blank" rel="noopener noreferrer">
-                                    <div class="project-top">
-                                        <strong>Discord bot using Riot API</strong>
-                                        <span class="arrow" aria-hidden="true">↗</span>
+                        <li>
+                            <a class="project" href="https://github.com/ryanlew02/lol-inted-bot" target="_blank" rel="noopener noreferrer">
+                                <div class="project-top">
+                                    <div class="project-title-row">
+                                        <strong>League of Legends Discord Bot</strong>
                                     </div>
-                                    <span class="desc">Fun bot that analyzes match stats and delivers a verdict.</span>
-                                    </a>
-                                </li>
+                                    <span class="arrow" aria-hidden="true">↗</span>
+                                </div>
+                                <p class="desc">A Discord bot that pulls live match data from Riot Games' API, parses player performance, and delivers a humorous verdict directly to the server.</p>
+                                <ul class="project-bullets">
+                                    <li>Integrates with Riot Games API to fetch real-time match history</li>
+                                    <li>Analyzes KDA, damage output, vision score, and objective participation</li>
+                                    <li>Generates and posts performance verdicts to Discord channels</li>
+                                </ul>
+                                <div class="project-tags">
+                                    <span class="tech-tag">Python</span>
+                                    <span class="tech-tag">Riot Games API</span>
+                                    <span class="tech-tag">Discord.py</span>
+                                </div>
+                            </a>
+                        </li>
 
-                                <li>
-                                    <a class="project" href="https://github.com/ryanlew02/my_website" target="_blank" rel="noopener noreferrer">
-                                    <div class="project-top">
-                                        <strong>Portfolio website (this one)</strong>
-                                        <span class="arrow" aria-hidden="true">↗</span>
+                        <li>
+                            <a class="project" href="https://github.com/ryanlew02/my_website" target="_blank" rel="noopener noreferrer">
+                                <div class="project-top">
+                                    <div class="project-title-row">
+                                        <strong>This Portfolio</strong>
                                     </div>
-                                    <span class="desc">Minimal, typography-first site built from scratch.</span>
-                                    </a>
-                                </li>
-                            </ul>
+                                    <span class="arrow" aria-hidden="true">↗</span>
+                                </div>
+                                <p class="desc">Built from scratch with zero dependencies — no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript with a custom Harry Potter theme.</p>
+                                <ul class="project-bullets">
+                                    <li>Fully responsive layout using CSS Grid and fluid <code>clamp()</code> typography</li>
+                                    <li>Dark / light theme system with CSS custom properties and localStorage</li>
+                                    <li>Page intro animation and particle effects via the Web Animations API</li>
+                                </ul>
+                                <div class="project-tags">
+                                    <span class="tech-tag">HTML</span>
+                                    <span class="tech-tag">CSS</span>
+                                    <span class="tech-tag">JavaScript</span>
+                                </div>
+                            </a>
+                        </li>
 
-                        </section>
+                    </ul>
+                </div>
+            </section>
 
-                        <div class="right-col">
-                        <section class="section" id="about">
-                            <h2>About</h2>
-                            <p>
+            <!-- ── 03 · About ──────────────────────────────── -->
+            <section class="snap-section" id="about">
+                <div class="section-inner">
+                    <div class="section-heading">
+                        <span class="section-number">03</span>
+                        <h2 class="section-title">About</h2>
+                    </div>
+
+                    <div class="about-grid">
+                        <div class="about-col">
+                            <p class="about-text">
                                 I currently work at Verizon while transitioning into software engineering.
-                                I’m focused on building practical projects, strengthening core computer science
-                                fundamentals, and writing code that’s easy to reason about and maintain.
+                                I'm focused on building practical projects, strengthening core computer science
+                                fundamentals, and writing code that's easy to reason about and maintain.
                             </p>
-                        </section>
-
-                        <section class="section learning">
-                            <h2>Currently learning</h2>
+                            <h3 class="section-sub-heading">Currently Learning</h3>
                             <ul class="learning-list">
-                                <li>Data structures & algorithms</li>
+                                <li>Data structures &amp; algorithms</li>
                                 <li>System design</li>
                             </ul>
-                        </section>
                         </div>
 
-                        <section class="section skills">
-                            <h2>Skills</h2>
-
+                        <div class="about-col">
+                            <h3 class="section-sub-heading">Skills</h3>
                             <div class="skill-grid">
                                 <span class="skill">Python</span>
                                 <span class="skill">JavaScript / TypeScript</span>
                                 <span class="skill">HTML / CSS</span>
                                 <span class="skill">React</span>
-                                <span class="skill">APIs & REST</span>
+                                <span class="skill">APIs &amp; REST</span>
                                 <span class="skill">Java</span>
                                 <span class="skill">SQL</span>
                                 <span class="skill">C++</span>
                             </div>
-                        </section>
-
+                        </div>
                     </div>
 
                     <footer class="contact-row" id="contact">
@@ -177,10 +233,27 @@
                             <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
                         </div>
                     </footer>
-                </section>
-            </main>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Side navigation dots -->
+        <nav class="scroll-dots" aria-label="Section navigation">
+            <a class="dot active" href="#hero"     data-label="Home"     aria-label="Go to Home"></a>
+            <a class="dot"        href="#projects" data-label="Projects" aria-label="Go to Projects"></a>
+            <a class="dot"        href="#about"    data-label="About"    aria-label="Go to About"></a>
+        </nav>
+
+        <!-- Deathly Hallows Easter egg -->
+        <div class="hp-hallows" aria-hidden="true" title="">
+            <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,14 4,96 96,96" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                <circle cx="50" cy="69" r="27" stroke="currentColor" stroke-width="1.5"/>
+                <line x1="50" y1="14" x2="50" y2="96" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
         </div>
 
-        <script src="script.js?v=2"></script>
+        <script src="script.js?v=4"></script>
     </body>
 </html>
