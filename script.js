@@ -528,9 +528,14 @@
 
         // ── Screen flash
         var flash = document.createElement('div');
-        flash.style.cssText = 'position:fixed;inset:0;z-index:190;pointer-events:none;background:rgba(140,190,255,0.16);';
+        flash.style.cssText = 'position:fixed;inset:0;z-index:190;pointer-events:none;background:rgba(255,255,255,0.38);';
         document.body.appendChild(flash);
-        flash.animate([{opacity:0},{opacity:1},{opacity:0}], {duration:650,easing:'ease-out',fill:'forwards'})
+        flash.animate([
+            {opacity:0},
+            {opacity:1,  offset:0.25},
+            {opacity:0.9,offset:0.45},
+            {opacity:0}
+        ], {duration:1600, easing:'ease-in-out', fill:'forwards'})
             .onfinish = function () { flash.remove(); };
 
         // ── Spell text
@@ -552,7 +557,10 @@
                 {opacity:0, transform:'translateX(-50%) translateY(-8px)'}
             ], {duration:2800, easing:'ease-in-out', fill:'forwards'})
                 .onfinish = function () { spellEl.remove(); };
-        }, 280);
+        }, 0);
+
+        // ── Delay doe by 1s so flash settles first
+        setTimeout(function () {
 
         // ── Stag element — left:0 top:0, position driven entirely by transform
         var stag = document.createElement('div');
@@ -568,7 +576,9 @@
         stag.innerHTML = getStagSVG();
         document.body.appendChild(stag);
 
-        var rootG = stag.querySelector('#p-root');
+        var rootG  = stag.querySelector('#p-root');
+        var headG  = stag.querySelector('#p-head');
+        var headAng = 0, headVel = 0, prevBodyAngle = smoothAngle;
         // Far-side legs drawn first (behind body), near-side on top.
         // ang/vel track the spring-physics state for each leg.
         var LEGS = [
@@ -670,6 +680,17 @@
             if (rootG) rootG.setAttribute('transform',
                 'rotate(' + smoothAngle.toFixed(1) + ',100,75)');
 
+            // Head spring-physics: head lags against body rotation changes,
+            // creating a natural nod/wobble during jumps and turns
+            var bodyDelta = smoothAngle - prevBodyAngle;
+            prevBodyAngle = smoothAngle;
+            var headTarget = -bodyDelta * 8.0;
+            headVel = (headVel + (headTarget - headAng) * 0.10) * 0.72;
+            headAng += headVel;
+            headAng = Math.max(-16, Math.min(16, headAng));
+            if (headG) headG.setAttribute('transform',
+                'rotate(' + headAng.toFixed(2) + ',148,62)');
+
 
             // Phase-offset leg extensions: hind legs push off before the peak,
             // fore legs reach forward after — creating a natural wave through the body.
@@ -751,6 +772,8 @@
             cancelAnimationFrame(rafId);
             if (stag.parentNode) stag.remove();
         }, RUN_DUR + 300);
+
+        }, 500); // end of delay
     }
 
     // ── Trail particle — streams opposite to direction of travel
@@ -789,17 +812,10 @@
             '<ellipse cx="50"  cy="82" rx="16" ry="13" fill="',c,'"/>',  // haunch
             '<ellipse cx="142" cy="70" rx="12" ry="20" transform="rotate(15,142,70)" fill="',c,'"/>',  // chest
 
-            // Neck — rotated ellipse instead of polygon to avoid visible corners
-            '<ellipse cx="152" cy="55" rx="21" ry="7"  transform="rotate(-22,152,55)" fill="',c,'"/>',
-            // Head
-            '<ellipse cx="164" cy="44" rx="17" ry="12" transform="rotate(-12,164,44)" fill="',c,'"/>',
-            '<ellipse cx="178" cy="40" rx="11" ry="7"  transform="rotate(-6,178,40)"  fill="',c,'"/>',
-            '<ellipse cx="154" cy="28" rx="5"  ry="10" transform="rotate(18,154,28)"  fill="',c,'"/>',
-            // Tail — repositioned onto haunch with slightly larger radius
+            // Tail
             '<ellipse cx="38"  cy="72" rx="8"  ry="12" transform="rotate(-18,38,72)"  fill="',c,'"/>',
 
             // Legs — far-side pair drawn first (behind body), then near-side
-            // Initial d = straight-down resting pose; tick() overwrites every frame
             '<g fill="none" stroke="',c,'" stroke-linecap="round" stroke-linejoin="round">',
             '<path id="p-h2" stroke-width="6"  d="M72,110 Q64,129 72,148"/>',
             '<path id="p-f2" stroke-width="6"  d="M132,106 Q140,126 132,147"/>',
@@ -807,11 +823,17 @@
             '<path id="p-f1" stroke-width="9"  d="M120,108 Q128,128 120,148"/>',
             '</g>',
 
-            // Antlers
+            // Head group — spring-physics animated each frame (pivots at neck base)
+            '<g id="p-head">',
+            '<ellipse cx="152" cy="55" rx="21" ry="7"  transform="rotate(-22,152,55)" fill="',c,'"/>',
+            '<ellipse cx="164" cy="44" rx="17" ry="12" transform="rotate(-12,164,44)" fill="',c,'"/>',
+            '<ellipse cx="178" cy="40" rx="11" ry="7"  transform="rotate(-6,178,40)"  fill="',c,'"/>',
+            '<ellipse cx="154" cy="28" rx="5"  ry="10" transform="rotate(18,154,28)"  fill="',c,'"/>',
             '<g fill="none" stroke="',c,'" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">',
             '<path d="M153,25 L147,8 M147,8 L141,2 M147,8 L152,2 M147,13 L154,8"/>',
             '<path d="M163,22 L164,5 M164,5 L158,0 M164,5 L169,1 M164,11 L170,7"/>',
             '</g>',
+            '</g>',  // end #p-head
 
             '</g></svg>'
         ].join('');
@@ -820,17 +842,30 @@
     // ── Hidden trigger circle
     var dot = document.createElement('div');
     dot.style.cssText =
-        'position:fixed;bottom:26px;right:26px;z-index:200;' +
-        'width:11px;height:11px;border-radius:50%;' +
-        'background:#fff;opacity:0.15;cursor:pointer;' +
-        'transition:opacity 0.35s ease,box-shadow 0.35s ease;';
+        'position:fixed;top:88px;right:20px;z-index:600;' +
+        'width:38px;height:65px;cursor:pointer;opacity:0.52;' +
+        'filter:drop-shadow(0 0 3px rgba(255,255,255,0.45));' +
+        'transition:opacity 0.3s ease,filter 0.3s ease,transform 0.3s ease;';
+    dot.innerHTML =
+        '<svg width="38" height="65" viewBox="0 0 38 65" xmlns="http://www.w3.org/2000/svg">' +
+        // Main handle — starts at orb centre so it grows out of the dot
+        '<line x1="22" y1="10" x2="7" y2="62" stroke="#c9a84c" stroke-width="5.0" stroke-linecap="round"/>' +
+        // Grip band
+        '<line x1="11" y1="46" x2="7" y2="62" stroke="#8b6020" stroke-width="7.0" stroke-linecap="round"/>' +
+        // Soft glow halo behind orb
+        '<circle cx="22" cy="10" r="10" fill="rgba(255,255,255,0.12)"/>' +
+        // Orb
+        '<circle cx="22" cy="10" r="6.5" fill="white"/>' +
+        '</svg>';
     dot.addEventListener('mouseenter', function () {
-        dot.style.opacity = '0.55';
-        dot.style.boxShadow = '0 0 8px rgba(255,255,255,0.55)';
+        dot.style.opacity   = '1';
+        dot.style.filter    = 'drop-shadow(0 0 7px rgba(255,255,255,0.95)) drop-shadow(0 0 16px rgba(200,230,255,0.7))';
+        dot.style.transform = 'scale(1.12)';
     });
     dot.addEventListener('mouseleave', function () {
-        dot.style.opacity = '0.15';
-        dot.style.boxShadow = 'none';
+        dot.style.opacity   = '0.52';
+        dot.style.filter    = 'drop-shadow(0 0 3px rgba(255,255,255,0.45))';
+        dot.style.transform = 'scale(1)';
     });
     dot.addEventListener('click', castPatronus);
     document.body.appendChild(dot);
