@@ -114,6 +114,32 @@
                     <ul class="project-list">
 
                         <li>
+                            <a class="project" href="divergeos/index.html">
+                                <div class="project-top">
+                                    <div class="project-title-row">
+                                        <strong>DivergeOS</strong>
+                                        <span class="project-status">Live Demo</span>
+                                    </div>
+                                    <span class="arrow" aria-hidden="true">↗</span>
+                                </div>
+                                <p class="desc">A fully functional desktop OS simulation that runs in the browser, themed around the Divergent universe. Complete with a real window manager, 12 working apps, faction-based themes, and a virtual file system.</p>
+                                <ul class="project-bullets">
+                                    <li>Window manager with drag, resize, minimize, maximize, and z-index stacking</li>
+                                    <li>Chess engine with minimax AI, alpha-beta pruning, and 3 difficulty levels</li>
+                                    <li>6 complete faction themes powered by CSS custom properties at runtime</li>
+                                    <li>Ships as a PWA — installable and fully offline-capable</li>
+                                </ul>
+                                <div class="project-tags">
+                                    <span class="tech-tag">React</span>
+                                    <span class="tech-tag">TypeScript</span>
+                                    <span class="tech-tag">Vite</span>
+                                    <span class="tech-tag">Zustand</span>
+                                    <span class="tech-tag">CSS Modules</span>
+                                </div>
+                            </a>
+                        </li>
+
+                        <li>
                             <a class="project" href="innercity/index.html">
                                 <div class="project-top">
                                     <div class="project-title-row">
@@ -272,5 +298,12 @@
         </div>
 
         <script src="script.js?v=6"></script>
+        <script>
+        document.querySelectorAll('body > div').forEach(function(el) {
+            if (el.style.top === '88px' && el.style.right === '20px') {
+                el.classList.add('hp-wand');
+            }
+        });
+        </script>
     </body>
 </html>

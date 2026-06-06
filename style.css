@@ -740,7 +740,9 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     height: 100vh;
     height: 100dvh;
     overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
     scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
     scroll-behavior: smooth;
     /* Hide the native scrollbar */
     scrollbar-width: none;
@@ -928,10 +930,9 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 
 /* ── Responsive overrides ────────────────────────────────────────────────── */
 
-/* Tablet + mobile (≤900px) */
+/* Tablet (601px – 900px) */
 @media (max-width: 900px) {
-    .scroll-container   { scroll-snap-type: y proximity; }
-    .snap-section       { overflow-y: auto; scroll-snap-stop: normal; }
+    /* Keep mandatory snap — sections still lock cleanly at tablet sizes */
     .scroll-dots        { display: none; }
     .about-grid         { grid-template-columns: 1fr; gap: 24px; }
     .section-inner--top { padding-top: calc(76px + 16px); }
@@ -961,12 +962,66 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .btn-row            { flex-wrap: wrap; gap: 10px; }
     h1                  { font-size: clamp(26px, 7vw, 36px); }
 
-    /* Projects: single column */
-    .project-list       { grid-template-columns: 1fr; }
+    /* Hallows + wand: hidden on mobile */
+    .hp-hallows { display: none; }
+    .hp-wand    { display: none !important; }
 
-    /* Hallows: hidden on mobile to save screen space */
-    .hp-hallows {
-        display: none;
+    /* ── Projects: horizontal snap carousel ──────────────────
+       Vertical snap locks between sections as normal.
+       Swipe left/right to browse project cards.
+    ────────────────────────────────────────────────────────── */
+    #projects .section-inner--top {
+        overflow: hidden;
+        padding-bottom: 8px;
+    }
+
+    /* Override grid with a horizontal flex scroller */
+    #projects .project-list {
+        display: flex;
+        flex-direction: row;
+        grid-template-columns: unset;
+        overflow-x: scroll;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+        gap: 12px;
+        /* Bleed to screen edges so next card peeks through */
+        margin-left: -16px;
+        margin-right: -16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+        flex: 1;
+        min-height: 0;
+        align-items: stretch;
+    }
+    #projects .project-list::-webkit-scrollbar { display: none; }
+
+    /* Each card: ~85vw wide so the next card peeks through */
+    #projects .project-list > li {
+        flex: 0 0 85vw;
+        display: flex;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+        min-width: 0;
+    }
+
+    #projects .project {
+        flex: 1;
+        min-height: 0;
+    }
+
+    /* Swipe hint label below the heading */
+    #projects .section-heading::after {
+        content: 'swipe →';
+        font-size: 10px;
+        font-family: 'Cinzel', Georgia, serif;
+        letter-spacing: 0.12em;
+        color: var(--accent);
+        opacity: 0.5;
+        margin-left: 10px;
+        align-self: center;
     }
 }
 

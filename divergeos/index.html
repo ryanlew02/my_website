@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="DivergeOS — A fully functional web-based desktop OS simulation inspired by the Divergent book series. Built with React, TypeScript, and Vite." />
+        <title>DivergeOS — Ryan Lewandowski</title>
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Exo+2:wght@400;600;700;800&family=Share+Tech+Mono&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="style.css" />
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})()</script>
+    </head>
+
+    <body>
+        <div id="smoke-intro"></div>
+        <canvas id="dv-particles"></canvas>
+        <div class="dv-scanlines" aria-hidden="true"></div>
+        <div class="dv-noise"     aria-hidden="true"></div>
+        <div class="dv-spectrum"  aria-hidden="true"></div>
+        <div class="dv-geo"       aria-hidden="true">
+            <div class="dv-geo-ring dv-geo-r1"></div>
+            <div class="dv-geo-ring dv-geo-r2"></div>
+            <div class="dv-geo-ring dv-geo-r3"></div>
+            <div class="dv-geo-hline dv-geo-h1"></div>
+            <div class="dv-geo-hline dv-geo-h2"></div>
+        </div>
+
+        <!-- Fixed header -->
+        <header class="dv-header">
+            <a class="dv-logo-link" href="../index.html" aria-label="Home">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </a>
+            <nav><ul class="dv-nav">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../index.html#projects">Works</a></li>
+                <li><a href="../index.html#about">About</a></li>
+            </ul></nav>
+            <button id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
+        </header>
+
+        <!-- Side navigation dots -->
+        <nav class="dv-dots-nav" aria-label="Section navigation">
+            <a class="dv-dot active" href="#dv-intro"  data-label="Introduction"     aria-label="Introduction"></a>
+            <a class="dv-dot"        href="#dv-about"  data-label="About & Features" aria-label="About &amp; Features"></a>
+            <a class="dv-dot"        href="#dv-themes" data-label="Themes"           aria-label="Themes"></a>
+        </nav>
+
+        <!-- ══ Scroll-snap container ══════════════════════════ -->
+        <main id="dv-scroll" class="dv-scroll-wrap">
+
+            <!-- ── Section 1: Introduction ──────────────────── -->
+            <section class="dv-snap" id="dv-intro">
+                <div class="dv-intro-main">
+                    <a class="dv-back" href="../index.html#projects">← Back to projects</a>
+
+                    <div class="dv-eyebrow">
+                        System Active &nbsp;·&nbsp; Choose Your Faction
+                        <span class="dv-eyebrow-blink" aria-hidden="true"></span>
+                    </div>
+
+                    <h1 class="dv-title">Diverge<br />OS</h1>
+
+                    <div class="dv-hero-lower">
+                        <div>
+                            <p class="dv-subtitle">
+                                A fully functional desktop OS that runs entirely in the browser.
+                                Window manager, 12 applications, 6 faction themes, virtual file system —
+                                all built from scratch with React and TypeScript.
+                            </p>
+                            <div class="dv-tags">
+                                <span class="dv-tag">React</span>
+                                <span class="dv-tag">TypeScript</span>
+                                <span class="dv-tag">Vite</span>
+                                <span class="dv-tag">Zustand</span>
+                                <span class="dv-tag">CSS Modules</span>
+                                <span class="dv-tag">PWA</span>
+                            </div>
+                            <div class="dv-links">
+                                <a class="dv-btn-primary" href="https://ryanlew02.github.io/DivergeOS/" target="_blank" rel="noopener noreferrer">
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                    Live Demo
+                                </a>
+                                <a class="dv-btn-ghost" href="https://github.com/ryanlew02/DivergeOS" target="_blank" rel="noopener noreferrer">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                                    GitHub
+                                </a>
+                            </div>
+                        </div>
+                        <div class="dv-stats-col" aria-hidden="true">
+                            <div><span class="dv-stat-num">12</span><span class="dv-stat-label">Applications</span></div>
+                            <div><span class="dv-stat-num">06</span><span class="dv-stat-label">Factions</span></div>
+                            <div><span class="dv-stat-num">3×</span><span class="dv-stat-label">AI Levels</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ticker pinned to bottom of section -->
+                <div class="dv-ticker" aria-hidden="true">
+                    <div class="dv-ticker-track">
+                        <span class="dv-ticker-item">12 Applications</span>
+                        <span class="dv-ticker-item">6 Faction Themes</span>
+                        <span class="dv-ticker-item">PWA Enabled</span>
+                        <span class="dv-ticker-item">Offline Capable</span>
+                        <span class="dv-ticker-item">Chess AI</span>
+                        <span class="dv-ticker-item">Virtual Filesystem</span>
+                        <span class="dv-ticker-item">Window Manager</span>
+                        <span class="dv-ticker-item">Lock Screen</span>
+                        <span class="dv-ticker-item">Fear Simulation</span>
+                        <span class="dv-ticker-item">Aptitude Test</span>
+                        <span class="dv-ticker-item">12 Applications</span>
+                        <span class="dv-ticker-item">6 Faction Themes</span>
+                        <span class="dv-ticker-item">PWA Enabled</span>
+                        <span class="dv-ticker-item">Offline Capable</span>
+                        <span class="dv-ticker-item">Chess AI</span>
+                        <span class="dv-ticker-item">Virtual Filesystem</span>
+                        <span class="dv-ticker-item">Window Manager</span>
+                        <span class="dv-ticker-item">Lock Screen</span>
+                        <span class="dv-ticker-item">Fear Simulation</span>
+                        <span class="dv-ticker-item">Aptitude Test</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Section 2: About & Features ──────────────── -->
+            <section class="dv-snap" id="dv-about">
+                <div class="dv-about-inner">
+                    <div class="dv-label">About</div>
+                    <p class="dv-about-text">
+                        DivergeOS is built entirely from scratch — no UI libraries, no component kits.
+                        Every window, taskbar, drag handle, and notification is hand-crafted in React and TypeScript.
+                        It ships as a PWA and runs fully offline. Default passcode: <span class="dv-code-inline">insurgent</span>.
+                    </p>
+
+                    <div class="dv-section-divider"></div>
+
+                    <div class="dv-label">Features</div>
+                    <div class="dv-feature-grid">
+                        <div class="dv-feature-col" style="--fc: #e84830">
+                            <div class="dv-feature-head">Window Manager</div>
+                            <ul class="dv-feature-list">
+                                <li>Drag and resize in 8 directions</li>
+                                <li>Minimize, maximize, and close</li>
+                                <li>Z-index stacking — focused window always on top</li>
+                                <li>Taskbar with running window list and clock</li>
+                                <li>Multi-select with marquee drag</li>
+                                <li>Right-click desktop context menu</li>
+                            </ul>
+                        </div>
+                        <div class="dv-feature-col" style="--fc: #89b4fa">
+                            <div class="dv-feature-head">Applications</div>
+                            <ul class="dv-feature-list">
+                                <li>Notepad — text editor + virtual file system</li>
+                                <li>Files — folder explorer with create, rename, delete</li>
+                                <li>Chess — full rules, minimax AI, 3 difficulty levels</li>
+                                <li>Terminal — CLI with custom command set</li>
+                                <li>Calculator, Browser, Dictionary, Manifesto</li>
+                                <li>Aptitude Test, Fear Simulation, Zip Line</li>
+                            </ul>
+                        </div>
+                        <div class="dv-feature-col" style="--fc: #909090">
+                            <div class="dv-feature-head">Architecture</div>
+                            <ul class="dv-feature-list">
+                                <li>Zustand stores for windows, theme, FS, notifications</li>
+                                <li>CSS custom properties for real-time faction theming</li>
+                                <li>LocalStorage persistence for all user data</li>
+                                <li>PWA service worker with offline asset caching</li>
+                                <li>Lazy-loaded app modules for fast startup</li>
+                                <li>Full TypeScript coverage across the codebase</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Section 3: Themes & Screenshots ──────────── -->
+            <section class="dv-snap" id="dv-themes">
+                <div class="dv-themes-inner">
+                    <div class="dv-label">Faction Themes</div>
+                    <div class="dv-faction-grid">
+                        <div class="dv-faction-card" style="--fc: #e84830">
+                            <span class="dv-faction-symbol">🔥</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Dauntless</div>
+                                <div class="dv-faction-virtue">Bravery</div>
+                                <div class="dv-faction-motto">"Faction before blood."</div>
+                            </div>
+                        </div>
+                        <div class="dv-faction-card" style="--fc: #89b4fa">
+                            <span class="dv-faction-symbol">👁</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Erudite</div>
+                                <div class="dv-faction-virtue">Intelligence</div>
+                                <div class="dv-faction-motto">"Knowledge is power."</div>
+                            </div>
+                        </div>
+                        <div class="dv-faction-card" style="--fc: #d4821a">
+                            <span class="dv-faction-symbol">🌿</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Amity</div>
+                                <div class="dv-faction-virtue">Peacefulness</div>
+                                <div class="dv-faction-motto">"Give freely, trust wholly."</div>
+                            </div>
+                        </div>
+                        <div class="dv-faction-card" style="--fc: #909090">
+                            <span class="dv-faction-symbol">🤲</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Abnegation</div>
+                                <div class="dv-faction-virtue">Selflessness</div>
+                                <div class="dv-faction-motto">"Forget yourself."</div>
+                            </div>
+                        </div>
+                        <div class="dv-faction-card" style="--fc: #c8c8c8">
+                            <span class="dv-faction-symbol">⚖️</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Candor</div>
+                                <div class="dv-faction-virtue">Honesty</div>
+                                <div class="dv-faction-motto">"The truth shall set you free."</div>
+                            </div>
+                        </div>
+                        <div class="dv-faction-card" style="--fc: #f472b6">
+                            <span class="dv-faction-symbol">✦</span>
+                            <div class="dv-faction-info">
+                                <div class="dv-faction-name">Divergent</div>
+                                <div class="dv-faction-virtue">All Factions</div>
+                                <div class="dv-faction-motto">"You belong everywhere."</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dv-section-divider"></div>
+
+                    <div class="dv-label">Screenshots</div>
+                    <div class="dv-screenshot-grid">
+                        <div class="dv-shot">
+                            <img src="../assets/divergeos_1.png" alt="DivergeOS screenshot 1" />
+                            <div class="dv-shot-label">Desktop Environment</div>
+                        </div>
+                        <div class="dv-shot">
+                            <img src="../assets/divergeos_2.png" alt="DivergeOS screenshot 2" />
+                            <div class="dv-shot-label">Applications</div>
+                        </div>
+                        <div class="dv-shot">
+                            <img src="../assets/divergeos_3.png" alt="DivergeOS screenshot 3" />
+                            <div class="dv-shot-label">Applications</div>
+                        </div>
+                        <div class="dv-shot">
+                            <img src="../assets/divergeos_4.png" alt="DivergeOS screenshot 4" />
+                            <div class="dv-shot-label">Loading Screen</div>
+                        </div>
+                    </div>
+
+                    <footer class="dv-footer">
+                        <div>&copy; <span id="year"></span> Ryan Lewandowski</div>
+                        <div class="dv-footer-links">
+                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <span class="dv-footer-sep">/</span>
+                            <button class="dv-copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
+                            <span class="dv-footer-sep">/</span>
+                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                            <span class="dv-footer-sep">/</span>
+                            <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
+        </main>
+
+        <script src="../script.js?v=6"></script>
+        <script src="page.js"></script>
+    </body>
+</html>
