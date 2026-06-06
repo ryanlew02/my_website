@@ -994,6 +994,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
         scrollbar-width: none;
         flex: 1;
         min-height: 0;
+        max-height: 68dvh;
         align-items: stretch;
     }
     #projects .project-list::-webkit-scrollbar { display: none; }
