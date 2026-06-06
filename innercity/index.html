@@ -310,5 +310,12 @@
         </div>
 
         <script src="../script.js?v=6"></script>
+        <script>
+        document.querySelectorAll('body > div').forEach(function(el) {
+            if (el.style.top === '88px' && el.style.right === '20px') {
+                el.classList.add('hp-wand');
+            }
+        });
+        </script>
     </body>
 </html>
