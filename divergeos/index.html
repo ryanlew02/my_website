@@ -15,7 +15,6 @@
     </head>
 
     <body>
-        <div id="smoke-intro"></div>
         <canvas id="dv-particles"></canvas>
         <div class="dv-scanlines" aria-hidden="true"></div>
         <div class="dv-noise"     aria-hidden="true"></div>
@@ -214,6 +213,38 @@
             <!-- ── Section 3: Themes & Screenshots ──────────── -->
             <section class="dv-snap" id="dv-themes">
                 <div class="dv-themes-inner">
+                    <div class="dv-label">Screenshots</div>
+                    <div class="dv-carousel" id="dv-carousel">
+                        <div class="dv-carousel-viewport">
+                            <div class="dv-shot is-active">
+                                <img src="../assets/divergeos_1.png" alt="DivergeOS screenshot 1" />
+                            </div>
+                            <div class="dv-shot">
+                                <img src="../assets/divergeos_2.png" alt="DivergeOS screenshot 2" />
+                            </div>
+                            <div class="dv-shot">
+                                <img src="../assets/divergeos_3.png" alt="DivergeOS screenshot 3" />
+                            </div>
+                            <div class="dv-shot">
+                                <img src="../assets/divergeos_4.png" alt="DivergeOS screenshot 4" />
+                            </div>
+                        </div>
+                        <button class="dv-carousel-arrow dv-carousel-prev" aria-label="Previous screenshot" type="button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <button class="dv-carousel-arrow dv-carousel-next" aria-label="Next screenshot" type="button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+                        <div class="dv-carousel-dots">
+                            <button class="dv-carousel-dot is-active" data-index="0" aria-label="Show screenshot 1" type="button"></button>
+                            <button class="dv-carousel-dot" data-index="1" aria-label="Show screenshot 2" type="button"></button>
+                            <button class="dv-carousel-dot" data-index="2" aria-label="Show screenshot 3" type="button"></button>
+                            <button class="dv-carousel-dot" data-index="3" aria-label="Show screenshot 4" type="button"></button>
+                        </div>
+                    </div>
+
+                    <div class="dv-section-divider"></div>
+
                     <div class="dv-label">Faction Themes</div>
                     <div class="dv-faction-grid">
                         <div class="dv-faction-card" style="--fc: #e84830">
@@ -263,28 +294,6 @@
                                 <div class="dv-faction-virtue">All Factions</div>
                                 <div class="dv-faction-motto">"You belong everywhere."</div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="dv-section-divider"></div>
-
-                    <div class="dv-label">Screenshots</div>
-                    <div class="dv-screenshot-grid">
-                        <div class="dv-shot">
-                            <img src="../assets/divergeos_1.png" alt="DivergeOS screenshot 1" />
-                            <div class="dv-shot-label">Desktop Environment</div>
-                        </div>
-                        <div class="dv-shot">
-                            <img src="../assets/divergeos_2.png" alt="DivergeOS screenshot 2" />
-                            <div class="dv-shot-label">Applications</div>
-                        </div>
-                        <div class="dv-shot">
-                            <img src="../assets/divergeos_3.png" alt="DivergeOS screenshot 3" />
-                            <div class="dv-shot-label">Applications</div>
-                        </div>
-                        <div class="dv-shot">
-                            <img src="../assets/divergeos_4.png" alt="DivergeOS screenshot 4" />
-                            <div class="dv-shot-label">Loading Screen</div>
                         </div>
                     </div>
 

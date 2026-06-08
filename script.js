@@ -44,11 +44,11 @@
         const yearEl = document.getElementById('year');
         if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-        // ── Scroll-snap navigation ────────────────────────────────────────────
+        // ── Section navigation ────────────────────────────────────────────────
         var scrollContainer = document.getElementById('scroll-container');
         if (scrollContainer) {
-            scrollContainer.scrollTop = 0;
-            // Anchor links scroll the container, not the document
+            window.scrollTo(0, 0);
+            // Smooth-scroll to the target section on anchor click
             document.querySelectorAll('a[href^="#"]').forEach(function (a) {
                 a.addEventListener('click', function (e) {
                     var id = a.getAttribute('href').slice(1);
@@ -76,7 +76,7 @@
                             });
                         }
                     });
-                }, { root: scrollContainer, threshold: 0.5 });
+                }, { root: null, threshold: 0.5 });
                 sections.forEach(function (s) { io.observe(s); });
             }
         }
@@ -141,78 +141,6 @@
         ], { duration: 750 + Math.random() * 500, easing: 'ease-out', fill: 'forwards' })
             .onfinish = function () { el.remove(); };
     }
-
-    // ── Page intro: Death Eater apparition ───────────────────────────────────
-    function runSmokeIntro() {
-        var overlay = document.getElementById('smoke-intro');
-        if (!overlay) return;
-
-        var W = window.innerWidth;
-        var H = window.innerHeight;
-
-        // Eight overlapping smoke masses that churn, then fly apart
-        var configs = [
-            { x: 0.50, y: 0.50, w: 0.72, h: 0.66, rgb: '15,5,40',  dur: 2700, delay:   0 },
-            { x: 0.28, y: 0.38, w: 0.56, h: 0.50, rgb: '22,8,54',  dur: 2500, delay: 110 },
-            { x: 0.72, y: 0.58, w: 0.60, h: 0.54, rgb: '10,3,30',  dur: 2650, delay:  75 },
-            { x: 0.50, y: 0.26, w: 0.52, h: 0.46, rgb: '18,6,46',  dur: 2400, delay: 190 },
-            { x: 0.50, y: 0.74, w: 0.54, h: 0.48, rgb: '12,4,36',  dur: 2600, delay: 155 },
-            { x: 0.13, y: 0.50, w: 0.46, h: 0.42, rgb: '8,2,26',   dur: 2300, delay: 240 },
-            { x: 0.87, y: 0.44, w: 0.48, h: 0.44, rgb: '16,5,44',  dur: 2550, delay: 175 },
-            { x: 0.64, y: 0.17, w: 0.42, h: 0.38, rgb: '12,4,36',  dur: 2200, delay: 310 },
-        ];
-
-        configs.forEach(function (c) {
-            var el = document.createElement('div');
-            var w = c.w * W, h = c.h * H;
-            // Each wisp flies off in a random direction
-            var angle = Math.random() * Math.PI * 2;
-            var speed = 0.55 + Math.random() * 0.55;
-            var dx = Math.cos(angle) * W * speed;
-            var dy = Math.sin(angle) * H * speed;
-            var r0 = (Math.random() - 0.5) * 50;
-            var r1 = r0 + (Math.random() - 0.5) * 100;
-
-            el.style.cssText =
-                'position:absolute;border-radius:50%;pointer-events:none;' +
-                'left:' + (c.x * W - w / 2) + 'px;top:' + (c.y * H - h / 2) + 'px;' +
-                'width:' + w + 'px;height:' + h + 'px;' +
-                'background:radial-gradient(ellipse at 44% 44%,' +
-                'rgba(' + c.rgb + ',0.97) 0%,rgba(' + c.rgb + ',0.55) 48%,transparent 76%);' +
-                'filter:blur(40px);will-change:transform,opacity;';
-            overlay.appendChild(el);
-
-            el.animate([
-                { opacity: 0,    transform: 'scale(0.22) rotate(' + r0 + 'deg)' },
-                { opacity: 0.98, transform: 'scale(1)    rotate(' + r0 + 'deg)',
-                  offset: 0.18 },
-                { opacity: 0.90, transform: 'scale(1.1) rotate(' + (r0 * 0.4) + 'deg)' +
-                  ' translate(' + dx * 0.04 + 'px,' + dy * 0.04 + 'px)',
-                  offset: 0.52 },
-                { opacity: 0,    transform: 'scale(2.8)  rotate(' + r1 + 'deg)' +
-                  ' translate(' + dx + 'px,' + dy + 'px)' }
-            ], {
-                duration: c.dur, delay: c.delay,
-                easing: 'cubic-bezier(0.4,0,0.6,1)', fill: 'forwards'
-            });
-        });
-
-        // Fade the solid base out after the wisps have built up
-        overlay.animate([
-            { opacity: 1 },
-            { opacity: 1, offset: 0.44 },
-            { opacity: 0 }
-        ], { duration: 3200, easing: 'ease-in', fill: 'forwards' })
-            .onfinish = function () { overlay.remove(); };
-
-        // Click anywhere to skip
-        overlay.addEventListener('click', function () {
-            overlay.style.cssText += 'transition:opacity 0.3s ease;opacity:0;pointer-events:none;';
-            setTimeout(function () { overlay.remove(); }, 320);
-        }, { once: true });
-    }
-
-    runSmokeIntro();
 
     // ── Spell Spark Burst ────────────────────────────────────────────────────
     var SPARK_COLORS = ['#4cd97a', '#7aff9e', '#2ecc71', '#a8e63d', '#ccffdd', '#20e87a'];

@@ -52,15 +52,14 @@ document.querySelectorAll('body > div').forEach(function (el) {
 
 // ── Side dot navigation ───────────────────────────────
 (function () {
-    const scrollEl = document.getElementById('dv-scroll');
-    const dots     = document.querySelectorAll('.dv-dot');
-    const snaps    = document.querySelectorAll('.dv-snap');
+    const dots  = document.querySelectorAll('.dv-dot');
+    const snaps = document.querySelectorAll('.dv-snap');
 
     dots.forEach(function (dot) {
         dot.addEventListener('click', function (e) {
             e.preventDefault();
             const target = document.getElementById(dot.getAttribute('href').slice(1));
-            if (target && scrollEl) scrollEl.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 
@@ -74,9 +73,38 @@ document.querySelectorAll('body > div').forEach(function (el) {
                     });
                 }
             });
-        }, { root: scrollEl, threshold: 0.5 });
+        }, { root: null, threshold: 0.5 });
         snaps.forEach(function (s) { io.observe(s); });
     }
+})();
+
+// ── Screenshot carousel (looping) ─────────────────────
+(function () {
+    const carousel = document.getElementById('dv-carousel');
+    if (!carousel) return;
+
+    const slides = Array.from(carousel.querySelectorAll('.dv-carousel-viewport .dv-shot'));
+    const dots   = Array.from(carousel.querySelectorAll('.dv-carousel-dot'));
+    const prev   = carousel.querySelector('.dv-carousel-prev');
+    const next   = carousel.querySelector('.dv-carousel-next');
+    if (!slides.length) return;
+
+    let index = slides.findIndex(function (s) { return s.classList.contains('is-active'); });
+    if (index < 0) index = 0;
+
+    function show(i) {
+        index = (i + slides.length) % slides.length;
+        slides.forEach(function (s, n) { s.classList.toggle('is-active', n === index); });
+        dots.forEach(function (d, n) { d.classList.toggle('is-active', n === index); });
+    }
+
+    if (prev) prev.addEventListener('click', function () { show(index - 1); });
+    if (next) next.addEventListener('click', function () { show(index + 1); });
+    dots.forEach(function (dot, n) {
+        dot.addEventListener('click', function () { show(n); });
+    });
+
+    show(index);
 })();
 
 // ── Faction particle system (canvas) ──────────────────

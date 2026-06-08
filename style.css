@@ -592,16 +592,6 @@ h1 {
 }
 
 
-/* ── Smoke intro overlay ─────────────────────────────────────────────────── */
-#smoke-intro {
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: #030308;
-    cursor: pointer;
-    overflow: hidden;
-}
-
 /* ── Deathly Hallows Easter egg ──────────────────────────────────────────── */
 .hp-hallows {
     position: fixed;
@@ -690,17 +680,6 @@ h1 {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   SNAP LAYOUT  (index page only — html.snap-layout)
-   ═══════════════════════════════════════════════════════════════════════════ */
-
-/* Lock the document from scrolling; only .scroll-container scrolls */
-html.snap-layout,
-html.snap-layout body {
-    height: 100%;
-    overflow: hidden;
-}
-
 /* Fixed magical background layer — visible through all sections */
 .bg-layer {
     position: fixed;
@@ -733,28 +712,16 @@ html.snap-layout body {
 html[data-theme="dark"]  .site-header { background: rgba(7,   8,  15, 0.72); }
 html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 
-/* ── Scroll-snap container ───────────────────────────────────────────────── */
+/* ── Page content container (normal document flow scrolling) ─────────────── */
 .scroll-container {
     position: relative;
     z-index: 1;
-    height: 100vh;
-    height: 100dvh;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: y mandatory;
-    overscroll-behavior-y: contain;
-    scroll-behavior: smooth;
-    /* Hide the native scrollbar */
-    scrollbar-width: none;
 }
-.scroll-container::-webkit-scrollbar { display: none; }
 
 /* ── Each full-screen section ────────────────────────────────────────────── */
 .snap-section {
     height: 100vh;
     height: 100dvh;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
     position: relative;
     overflow: hidden;
 }
@@ -932,7 +899,6 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 
 /* Tablet (601px – 900px) */
 @media (max-width: 900px) {
-    /* Keep mandatory snap — sections still lock cleanly at tablet sizes */
     .scroll-dots        { display: none; }
     .about-grid         { grid-template-columns: 1fr; gap: 24px; }
     .section-inner--top { padding-top: calc(76px + 16px); }
@@ -967,7 +933,6 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .hp-wand    { display: none !important; }
 
     /* ── Projects: horizontal snap carousel ──────────────────
-       Vertical snap locks between sections as normal.
        Swipe left/right to browse project cards.
     ────────────────────────────────────────────────────────── */
     #projects .section-inner--top {
