@@ -916,7 +916,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 /* Mobile (≤600px) */
 @media (max-width: 600px) {
     .section-inner      { gap: 16px; }
-    .section-inner--top { padding-top: calc(68px + 12px); }
+    .section-inner--top { padding-top: calc(68px + 28px); }
 
     /* Header: shrink nav text so it fits on one row */
     .site-header        { gap: 12px; padding: 0 16px; }

@@ -248,7 +248,7 @@ html, body {
     font-weight: 700;
     line-height: 0.86;
     letter-spacing: -0.03em;
-    color: #fff;
+    color: var(--d-text);
     text-shadow: 0 0 140px rgba(232,72,48,0.18), 0 0 40px rgba(232,72,48,0.08);
     margin-bottom: 36px;
     animation: dv-glitch 9s infinite;
@@ -458,7 +458,7 @@ html[data-theme="light"] .dv-themes-inner {
 }
 @media (max-width: 600px) {
     .dv-snap { height: auto; }
-    #dv-intro { min-height: 100dvh; min-height: calc(var(--dvh, 1vh) * 100); }
+    #dv-intro { min-height: 0; }
 
     .dv-intro-main { flex: none; justify-content: flex-start; padding: 88px 20px 32px; }
     .dv-about-inner { padding: 32px 20px; }
