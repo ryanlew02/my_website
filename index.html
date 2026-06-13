@@ -193,11 +193,11 @@
                                     </div>
                                     <span class="arrow" aria-hidden="true">↗</span>
                                 </div>
-                                <p class="desc">Built from scratch with zero dependencies — no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript with a custom Harry Potter theme.</p>
+                                <p class="desc">Built from scratch with zero dependencies — no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript.</p>
                                 <ul class="project-bullets">
                                     <li>Fully responsive layout using CSS Grid and fluid <code>clamp()</code> typography</li>
                                     <li>Dark / light theme system with CSS custom properties and localStorage</li>
-                                    <li>Spark-burst particle effects and Easter eggs via the Web Animations API</li>
+                                    <li>Subtle particle effects and ambient animations via the Web Animations API</li>
                                 </ul>
                                 <div class="project-tags">
                                     <span class="tech-tag">HTML</span>
@@ -288,22 +288,6 @@
             <a class="dot"        href="#about"    data-label="About"    aria-label="Go to About"></a>
         </nav>
 
-        <!-- Deathly Hallows Easter egg -->
-        <div class="hp-hallows" aria-hidden="true" title="">
-            <svg viewBox="0 0 100 110" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <polygon points="50,14 4,96 96,96" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                <circle cx="50" cy="69" r="27" stroke="currentColor" stroke-width="1.5"/>
-                <line x1="50" y1="14" x2="50" y2="96" stroke="currentColor" stroke-width="1.5"/>
-            </svg>
-        </div>
-
         <script src="script.js?v=6"></script>
-        <script>
-        document.querySelectorAll('body > div').forEach(function(el) {
-            if (el.style.top === '88px' && el.style.right === '20px') {
-                el.classList.add('hp-wand');
-            }
-        });
-        </script>
     </body>
 </html>
