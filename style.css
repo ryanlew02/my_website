@@ -483,6 +483,118 @@ h1 {
     transform: scale(1.3);
 }
 
+/* ── Certifications (vertical tabs) ──────────────────────────────────────── */
+.tabs {
+    display: flex;
+    gap: 32px;
+    width: 100%;
+    max-width: 860px;
+}
+
+.tab-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-width: 132px;
+    border-right: 1px solid var(--line);
+}
+
+.tab {
+    appearance: none;
+    background: none;
+    border: 0;
+    text-align: left;
+    padding: 12px 18px;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 160ms ease;
+}
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); }
+
+.tab-indicator {
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 2px;
+    height: 0;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: transform 250ms cubic-bezier(.4, 0, .2, 1), height 250ms ease, width 250ms ease;
+}
+
+.tab-panels {
+    flex: 1;
+    min-width: 0;
+}
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: tabfade 260ms ease; }
+@keyframes tabfade {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.tab-title {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+}
+.tab-accent { color: var(--accent); }
+.tab-date {
+    margin: 0 0 20px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+}
+.tab-bullets {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 14px;
+}
+.tab-bullets li {
+    position: relative;
+    padding-left: 24px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.6;
+}
+.tab-bullets li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--accent);
+    font-size: 12px;
+}
+.tab-link {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: 13px;
+    color: var(--accent);
+    text-decoration: none;
+}
+.tab-link:hover { text-decoration: underline; }
+
+/* Center the heading + tabs in the space above the footer */
+#certifications .cert-main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+}
+
+/* Footer sits near the bottom of the certifications section, with breathing room */
+#certifications .section-inner { padding-bottom: clamp(28px, 6vh, 64px); }
+
 .project {
   display: flex;
   flex-direction: column;
@@ -982,5 +1094,19 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
         scroll-snap-stop: always;
     }
     .project-media { height: 130px; }
+
+    /* Certifications: tabs move to a scrollable row above the panel */
+    .tabs { flex-direction: column; gap: 20px; }
+    .tab-list {
+        flex-direction: row;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .tab-list::-webkit-scrollbar { display: none; }
+    .tab-indicator { right: auto; top: auto; bottom: -1px; left: 0; }
+    .tab-title { font-size: 18px; }
 }
 

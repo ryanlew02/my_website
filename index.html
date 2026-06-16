@@ -43,9 +43,10 @@
             </a>
 
             <nav class="nav">
-                <a href="#hero"     data-section="hero">Home</a>
-                <a href="#about"    data-section="about">About</a>
-                <a href="#projects" data-section="projects">Projects</a>
+                <a href="#hero"           data-section="hero">Home</a>
+                <a href="#about"          data-section="about">About</a>
+                <a href="#projects"       data-section="projects">Projects</a>
+                <a href="#certifications" data-section="certifications">Certifications</a>
             </nav>
 
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
@@ -155,19 +156,6 @@
                             </a>
                         </div>
                     </div>
-
-                    <footer class="contact-row" id="contact">
-                        <div>© <span id="year"></span> Ryan Lewandowski</div>
-                        <div class="links" aria-label="Social links">
-                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
-                            <span>/</span>
-                            <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
-                            <span>/</span>
-                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                            <span>/</span>
-                            <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
-                        </div>
-                    </footer>
                 </div>
             </section>
 
@@ -193,15 +181,47 @@
                 </div>
             </section>
 
+            <!-- ── 04 · Certifications ─────────────────────── -->
+            <section class="snap-section" id="certifications">
+                <div class="section-inner">
+                    <div class="cert-main">
+                        <div class="section-heading">
+                            <span class="section-number">04</span>
+                            <h2 class="section-title">Certifications</h2>
+                        </div>
+
+                        <!-- Tabs + panels are rendered from the CERTIFICATIONS array in script.js -->
+                        <div class="tabs" id="certTabs">
+                            <div class="tab-list" role="tablist" aria-label="Certifications"></div>
+                            <div class="tab-panels"></div>
+                        </div>
+                    </div>
+
+                    <footer class="contact-row" id="contact">
+                        <div>© <span id="year"></span> Ryan Lewandowski</div>
+                        <div class="links" aria-label="Social links">
+                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            <span>/</span>
+                            <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
+                            <span>/</span>
+                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                            <span>/</span>
+                            <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+
         </main>
 
         <!-- Side navigation dots -->
         <nav class="scroll-dots" aria-label="Section navigation">
-            <a class="dot active" href="#hero"     data-label="Home"     aria-label="Go to Home"></a>
-            <a class="dot"        href="#about"    data-label="About"    aria-label="Go to About"></a>
-            <a class="dot"        href="#projects" data-label="Projects" aria-label="Go to Projects"></a>
+            <a class="dot active" href="#hero"           data-label="Home"           aria-label="Go to Home"></a>
+            <a class="dot"        href="#about"          data-label="About"          aria-label="Go to About"></a>
+            <a class="dot"        href="#projects"       data-label="Projects"       aria-label="Go to Projects"></a>
+            <a class="dot"        href="#certifications" data-label="Certifications" aria-label="Go to Certifications"></a>
         </nav>
 
-        <script src="script.js?v=7"></script>
+        <script src="script.js?v=12"></script>
     </body>
 </html>
