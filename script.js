@@ -13,6 +13,140 @@
 
     const LABELS = { light: 'Light', dark: 'Dark' };
 
+    // ── Project data ──────────────────────────────────────────────────────────
+    // Add a new project by appending an object here. `image` is optional —
+    // cards without it render as text-only. `external: true` opens in a new tab.
+    const PROJECTS = [
+        {
+            title: 'DivergeOS',
+            status: 'Live Demo',
+            href: 'divergeos/index.html',
+            image: { src: 'assets/divergeos_2.png', alt: 'DivergeOS desktop with the Manifesto, Terminal, Calculator, and Chess apps open', pos: 'center 20%' },
+            desc: 'A fully functional desktop OS simulation that runs in the browser, themed around the Divergent universe. Complete with a real window manager, 12 working apps, faction-based themes, and a virtual file system.',
+            bullets: [
+                'Window manager with drag, resize, minimize, maximize, and z-index stacking',
+                'Chess engine with minimax AI, alpha-beta pruning, and 3 difficulty levels',
+                '6 complete faction themes powered by CSS custom properties at runtime',
+                'Ships as a PWA — installable and fully offline-capable'
+            ],
+            tags: ['React', 'TypeScript', 'Vite', 'Zustand', 'CSS Modules']
+        },
+        {
+            title: 'Inner City',
+            status: 'Live on App Store',
+            href: 'innercity/index.html',
+            image: { src: 'assets/1.1.0_1.png', alt: 'Inner City app showing an isometric city that grows as habits are completed' },
+            desc: 'A mobile habit-tracking app that gamifies your daily routines. Complete habits to construct buildings and watch your city grow on an isometric grid.',
+            bullets: [
+                'Published and available on the iOS App Store',
+                'Isometric city that expands in real time as habits are completed',
+                'Stats dashboard with heatmaps and weekly, monthly, and yearly breakdowns',
+                'Supports both "build" habits and "quit" habits with streak tracking'
+            ],
+            tags: ['React Native', 'Expo', 'TypeScript', 'SQLite']
+        },
+        {
+            title: 'League of Legends Discord Bot',
+            href: 'https://github.com/ryanlew02/lol-inted-bot',
+            external: true,
+            desc: "A Discord bot that pulls live match data from Riot Games' API, parses player performance, and delivers a humorous verdict directly to the server.",
+            bullets: [
+                'Integrates with Riot Games API to fetch real-time match history',
+                'Analyzes KDA, damage output, vision score, and objective participation',
+                'Generates and posts performance verdicts to Discord channels'
+            ],
+            tags: ['Python', 'Riot Games API', 'Discord.py']
+        },
+        {
+            title: 'This Portfolio',
+            href: 'https://github.com/ryanlew02/my_website',
+            external: true,
+            desc: 'Built from scratch with zero dependencies — no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript.',
+            bullets: [
+                'Fully responsive layout using CSS Grid and fluid <code>clamp()</code> typography',
+                'Dark / light theme system with CSS custom properties and localStorage',
+                'Subtle particle effects and ambient animations via the Web Animations API'
+            ],
+            tags: ['HTML', 'CSS', 'JavaScript']
+        }
+    ];
+
+    function escapeHTML(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
+    function projectCardHTML(p) {
+        var ext = p.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+        var status = p.status ? '<span class="project-status">' + escapeHTML(p.status) + '</span>' : '';
+        var pos = p.image && p.image.pos ? ' style="--media-pos:' + p.image.pos + '"' : '';
+        var media = p.image
+            ? '<div class="project-media"><img src="' + p.image.src + '" alt="' + escapeHTML(p.image.alt) + '" loading="lazy"' + pos + '></div>'
+            : '';
+        var bullets = p.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
+        var tags = p.tags.map(function (t) { return '<span class="tech-tag">' + escapeHTML(t) + '</span>'; }).join('');
+        return '' +
+            '<li>' +
+                '<a class="project" href="' + p.href + '"' + ext + '>' +
+                    media +
+                    '<div class="project-body">' +
+                        '<div class="project-top">' +
+                            '<div class="project-title-row"><strong>' + escapeHTML(p.title) + '</strong>' + status + '</div>' +
+                            '<span class="arrow" aria-hidden="true">↗</span>' +
+                        '</div>' +
+                        '<p class="desc">' + p.desc + '</p>' +
+                        '<ul class="project-bullets">' + bullets + '</ul>' +
+                        '<div class="project-tags">' + tags + '</div>' +
+                    '</div>' +
+                '</a>' +
+            '</li>';
+    }
+
+    function initProjectCarousel() {
+        var track = document.getElementById('projectTrack');
+        if (!track) return;
+        track.innerHTML = PROJECTS.map(projectCardHTML).join('');
+
+        var prev = document.querySelector('.carousel-prev');
+        var next = document.querySelector('.carousel-next');
+        var dotsWrap = document.getElementById('projectDots');
+        var cards = Array.prototype.slice.call(track.children);
+        if (!cards.length) return;
+
+        if (dotsWrap) {
+            dotsWrap.innerHTML = cards.map(function (_, i) {
+                return '<button class="carousel-dot" type="button" aria-label="Go to project ' + (i + 1) + '"></button>';
+            }).join('');
+        }
+        var dots = dotsWrap ? Array.prototype.slice.call(dotsWrap.children) : [];
+
+        function step() {
+            return cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : track.clientWidth;
+        }
+        function clamp(i) { return Math.max(0, Math.min(cards.length - 1, i)); }
+        function index() { return clamp(Math.round(track.scrollLeft / step())); }
+        function go(i) { track.scrollTo({ left: step() * clamp(i), behavior: 'smooth' }); }
+        function update() {
+            var idx = index();
+            dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+            var maxScroll = track.scrollWidth - track.clientWidth - 2;
+            if (prev) prev.disabled = track.scrollLeft <= 2;
+            if (next) next.disabled = track.scrollLeft >= maxScroll;
+        }
+
+        if (prev) prev.addEventListener('click', function () { go(index() - 1); });
+        if (next) next.addEventListener('click', function () { go(index() + 1); });
+        dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
+        track.addEventListener('scroll', function () { window.requestAnimationFrame(update); });
+        track.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); }
+        });
+        window.addEventListener('resize', function () { window.requestAnimationFrame(update); });
+        update();
+    }
+
     function getTheme() {
         return localStorage.getItem('theme') || 'dark';
     }
@@ -31,6 +165,7 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         applyTheme(getTheme());
+        initProjectCarousel();
 
         const btn = document.getElementById('themeToggle');
         if (btn) {
@@ -155,13 +290,6 @@
             el.addEventListener('mouseenter', function () {
                 var r = el.getBoundingClientRect();
                 spawnSparks(r.left + r.width / 2, r.top + r.height / 2, 6);
-            });
-        });
-
-        document.querySelectorAll('.project').forEach(function (el) {
-            el.addEventListener('mouseenter', function () {
-                var r = el.getBoundingClientRect();
-                spawnSparks(r.right - 22, r.top + 22, 5);
             });
         });
     });
