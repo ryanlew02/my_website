@@ -216,12 +216,17 @@
         }
         var dots = dotsWrap ? Array.prototype.slice.call(dotsWrap.children) : [];
 
+        // How much of the previous card peeks in on the left of an active card.
+        // Must match `scroll-padding-left` on .project-list in the CSS.
+        var PEEK = 50;
         function step() {
             return cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : track.clientWidth;
         }
+        function base() { return cards[0].offsetLeft; }
         function clamp(i) { return Math.max(0, Math.min(cards.length - 1, i)); }
-        function index() { return clamp(Math.round(track.scrollLeft / step())); }
-        function go(i) { track.scrollTo({ left: step() * clamp(i), behavior: 'smooth' }); }
+        function targetFor(i) { return Math.max(0, cards[clamp(i)].offsetLeft - PEEK); }
+        function index() { return clamp(Math.round((track.scrollLeft - base() + PEEK) / step())); }
+        function go(i) { track.scrollTo({ left: targetFor(i), behavior: 'smooth' }); }
         function update() {
             var idx = index();
             dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
@@ -240,14 +245,15 @@
         if (next) next.addEventListener('click', function () { go(index() + 1); });
         dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
 
-        // Clicking a partially-visible (peeking) card scrolls it into view first;
-        // it only follows its link once it's fully in the viewable area.
+        // Clicking a partially-visible (peeking) card scrolls one card toward it
+        // first; it only follows its link once it's fully in the viewable area.
         track.addEventListener('click', function (e) {
             var li = e.target.closest('li');
             if (!li || li.parentNode !== track) return;
             if (!fullyVisible(li)) {
                 e.preventDefault();
-                go(cards.indexOf(li));
+                var ci = cards.indexOf(li), cur = index();
+                go(ci > cur ? cur + 1 : cur - 1);
             }
         });
         track.addEventListener('scroll', function () { window.requestAnimationFrame(update); });

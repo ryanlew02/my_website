@@ -409,8 +409,11 @@ h1 {
     gap: 16px;
     overflow-x: auto;
     overflow-y: hidden;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 4px;
+    /* proximity (not mandatory) so the 2-up layout never traps you near the
+       end — you can freely scroll back and a previous card stays clickable */
+    scroll-snap-type: x proximity;
+    /* leaves room so the previous card peeks in on the left (matches PEEK in script.js) */
+    scroll-padding-left: 50px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
@@ -419,9 +422,9 @@ h1 {
 
 .project-list li { list-style: none; }
 
-/* Each card shows ~2-up on desktop with a sliver of the next peeking through */
+/* Two cards up with a sliver of the previous AND next card peeking on each side */
 .project-list > li {
-    flex: 0 0 calc((100% - 16px) / 2 - 26px);
+    flex: 0 0 calc((100% - 108px) / 2);
     display: flex;
     min-width: 0;
     scroll-snap-align: start;
@@ -1074,6 +1077,11 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .section-inner--top { padding-top: calc(76px + 16px); }
     #about .section-inner { justify-content: flex-start; padding-top: calc(76px + 24px); }
 
+    /* About stacks to one column here and can exceed the viewport — let it grow
+       and scroll so the résumé button isn't clipped at the bottom */
+    #about.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
+    #about .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
+
     /* Hero: stack text above photo, tighten gap */
     .hero               { grid-template-columns: 1fr; gap: 24px; }
     .visual             { min-height: 0; order: -1; }
@@ -1096,6 +1104,9 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     h1                  { font-size: clamp(26px, 7vw, 36px); }
 
     /* Projects carousel: one card with a peek of the next on phones */
+    .project-list {
+        scroll-snap-type: x mandatory;   /* crisp 1-up swiping on phones */
+    }
     .project-list > li {
         flex: 0 0 85%;
         scroll-snap-stop: always;
