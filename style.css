@@ -427,11 +427,18 @@ h1 {
     scroll-snap-align: start;
 }
 
-/* Prev / next controls live in the section heading */
+/* "See all projects" button, pushed to the right of the heading */
+.see-all-btn {
+    margin-left: auto;
+    align-self: center;
+    font-size: 12px;
+    padding: 8px 14px;
+}
+
+/* Prev / next controls live in the section heading, next to the button */
 .carousel-controls {
     display: flex;
     gap: 8px;
-    margin-left: auto;
     align-self: center;
 }
 .carousel-arrow {

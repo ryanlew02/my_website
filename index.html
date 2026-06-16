@@ -44,8 +44,8 @@
 
             <nav class="nav">
                 <a href="#hero"     data-section="hero">Home</a>
-                <a href="#projects" data-section="projects">Projects</a>
                 <a href="#about"    data-section="about">About</a>
+                <a href="#projects" data-section="projects">Projects</a>
             </nav>
 
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
@@ -103,28 +103,11 @@
             </section>
 
             <!-- ── 02 · Projects ──────────────────────────── -->
-            <section class="snap-section" id="projects">
-                <div class="section-inner section-inner--top">
-                    <div class="section-heading">
-                        <span class="section-number">02</span>
-                        <h2 class="section-title">Projects</h2>
-                        <div class="carousel-controls">
-                            <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous project">‹</button>
-                            <button class="carousel-arrow carousel-next" type="button" aria-label="Next project">›</button>
-                        </div>
-                    </div>
-
-                    <!-- Cards are rendered from the PROJECTS array in script.js -->
-                    <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
-                    <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
-                </div>
-            </section>
-
-            <!-- ── 03 · About ──────────────────────────────── -->
+            <!-- ── 02 · About ──────────────────────────────── -->
             <section class="snap-section" id="about">
                 <div class="section-inner">
                     <div class="section-heading">
-                        <span class="section-number">03</span>
+                        <span class="section-number">02</span>
                         <h2 class="section-title">About</h2>
                     </div>
 
@@ -188,15 +171,37 @@
                 </div>
             </section>
 
+            <!-- ── 03 · Projects ───────────────────────────── -->
+            <section class="snap-section" id="projects">
+                <div class="section-inner section-inner--top">
+                    <div class="section-heading">
+                        <span class="section-number">03</span>
+                        <h2 class="section-title">Projects</h2>
+                        <a class="btn see-all-btn" href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">
+                            See all projects
+                            <span aria-hidden="true">↗</span>
+                        </a>
+                        <div class="carousel-controls">
+                            <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous project">‹</button>
+                            <button class="carousel-arrow carousel-next" type="button" aria-label="Next project">›</button>
+                        </div>
+                    </div>
+
+                    <!-- Cards are rendered from the PROJECTS array in script.js -->
+                    <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
+                    <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
+                </div>
+            </section>
+
         </main>
 
         <!-- Side navigation dots -->
         <nav class="scroll-dots" aria-label="Section navigation">
             <a class="dot active" href="#hero"     data-label="Home"     aria-label="Go to Home"></a>
-            <a class="dot"        href="#projects" data-label="Projects" aria-label="Go to Projects"></a>
             <a class="dot"        href="#about"    data-label="About"    aria-label="Go to About"></a>
+            <a class="dot"        href="#projects" data-label="Projects" aria-label="Go to Projects"></a>
         </nav>
 
-        <script src="script.js?v=6"></script>
+        <script src="script.js?v=7"></script>
     </body>
 </html>

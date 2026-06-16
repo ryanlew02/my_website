@@ -135,9 +135,26 @@
             if (next) next.disabled = track.scrollLeft >= maxScroll;
         }
 
+        function fullyVisible(card) {
+            var t = track.getBoundingClientRect();
+            var c = card.getBoundingClientRect();
+            return c.left >= t.left - 1 && c.right <= t.right + 1;
+        }
+
         if (prev) prev.addEventListener('click', function () { go(index() - 1); });
         if (next) next.addEventListener('click', function () { go(index() + 1); });
         dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
+
+        // Clicking a partially-visible (peeking) card scrolls it into view first;
+        // it only follows its link once it's fully in the viewable area.
+        track.addEventListener('click', function (e) {
+            var li = e.target.closest('li');
+            if (!li || li.parentNode !== track) return;
+            if (!fullyVisible(li)) {
+                e.preventDefault();
+                go(cards.indexOf(li));
+            }
+        });
         track.addEventListener('scroll', function () { window.requestAnimationFrame(update); });
         track.addEventListener('keydown', function (e) {
             if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); }
