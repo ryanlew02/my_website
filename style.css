@@ -822,20 +822,21 @@ h1 {
 
 
 @media (max-width: 600px) {
+    /* Header: keep everything on one row, matching the main page */
     .header {
-        flex-wrap: wrap;
-        gap: 12px 0;
+        gap: 12px;
     }
 
-    /* Nav drops to its own full-width row, centered */
+    /* Nav stays inline and shrinks to fit, like the fixed site header */
     .nav {
         order: 3;
         width: 100%;
         justify-content: center;
-        gap: 16px;
+        gap: 14px;
+        font-size: 10px;
+        letter-spacing: 0.06em;
     }
 
-    /* Theme toggle stays on the first row, pushed to the right */
     .theme-toggle {
         margin-left: auto;
     }
