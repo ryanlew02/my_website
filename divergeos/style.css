@@ -477,3 +477,13 @@ html[data-theme="light"] .dv-themes-inner {
     /* Strip the heavy content from section 1 */
     #dv-intro .dv-hero-lower { display: none; }
 }
+
+/* Respect the OS "reduce motion" setting */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    html { scroll-behavior: auto !important; }
+}

@@ -403,8 +403,12 @@ h1 {
 .project-list {
     list-style: none;
     margin: 0;
-    /* extra padding leaves room for the cards' hover lift + glow */
-    padding: 6px 4px;
+    /* 56px side padding reserves one "peek slot" (40px sliver + 16px gap) at each
+       end. This is what keeps the peek a constant width: the first and last cards
+       rest at the same offset as the middle ones, so a card peeks the same amount
+       whether the slot is filled by a neighbour card or by this empty edge space.
+       (6px top/bottom leaves room for the cards' hover lift + glow.) */
+    padding: 6px 56px;
     display: flex;
     gap: 16px;
     overflow-x: auto;
@@ -412,8 +416,8 @@ h1 {
     /* proximity (not mandatory) so the 2-up layout never traps you near the
        end — you can freely scroll back and a previous card stays clickable */
     scroll-snap-type: x proximity;
-    /* leaves room so the previous card peeks in on the left (matches PEEK in script.js) */
-    scroll-padding-left: 50px;
+    /* a card snaps so its left edge sits 56px in — matches PEEK in script.js */
+    scroll-padding-left: 56px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
@@ -422,9 +426,11 @@ h1 {
 
 .project-list li { list-style: none; }
 
-/* Two cards up with a sliver of the previous AND next card peeking on each side */
+/* Two cards up. With the 56px peek-slot padding on the track, the content box is
+   (viewport - 112px), and two cards + one 16px gap must exactly fill it, leaving
+   the peeks to live in the padding slots on each side. */
 .project-list > li {
-    flex: 0 0 calc((100% - 108px) / 2);
+    flex: 0 0 calc((100% - 16px) / 2);
     display: flex;
     min-width: 0;
     scroll-snap-align: start;
@@ -954,6 +960,17 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     max-width: 58ch;
 }
 
+.about-education {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.7;
+    margin: 0 0 20px;
+}
+.edu-gpa {
+    color: var(--accent);
+    font-weight: 600;
+}
+
 .about-availability {
     display: inline-flex;
     align-items: center;
@@ -1104,12 +1121,16 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .btn-row            { flex-wrap: wrap; gap: 10px; }
     h1                  { font-size: clamp(26px, 7vw, 36px); }
 
-    /* Projects carousel: one card with a peek of the next on phones */
+    /* Projects carousel: one card with an equal peek of the neighbour on phones.
+       Same peek-slot trick as desktop, just a smaller 36px slot (20px sliver +
+       16px gap) and a single card filling the content box. */
     .project-list {
         scroll-snap-type: x mandatory;   /* crisp 1-up swiping on phones */
+        padding: 6px 36px;
+        scroll-padding-left: 36px;
     }
     .project-list > li {
-        flex: 0 0 85%;
+        flex: 0 0 100%;
         scroll-snap-stop: always;
     }
     .project-media { height: 130px; }
@@ -1129,3 +1150,15 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .tab-title { font-size: 18px; }
 }
 
+
+/* ── Respect "reduce motion" OS setting ──────────────────────────────────────
+   Disables the ambient background animations, hover lifts, and snap-scroll
+   easing for users who opt out of motion. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+    html, .scroll-container { scroll-behavior: auto !important; }
+}

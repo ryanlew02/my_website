@@ -13,6 +13,12 @@
 
     const LABELS = { light: 'Light', dark: 'Dark' };
 
+    // Respect the OS "reduce motion" setting for programmatic scrolling.
+    function scrollBehavior() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+            ? 'auto' : 'smooth';
+    }
+
     // ── Project data ──────────────────────────────────────────────────────────
     // Add a new project by appending an object here. `image` is optional —
     // cards without it render as text-only. `external: true` opens in a new tab.
@@ -21,7 +27,7 @@
             title: 'DivergeOS',
             status: 'Live Demo',
             href: 'divergeos/index.html',
-            image: { src: 'assets/divergeos_2.png', alt: 'DivergeOS desktop with the Manifesto, Terminal, Calculator, and Chess apps open', pos: 'center 20%' },
+            image: { src: 'assets/divergeos_2.jpg', alt: 'DivergeOS desktop with the Manifesto, Terminal, Calculator, and Chess apps open', pos: 'center 20%' },
             desc: 'A fully functional desktop OS simulation that runs in the browser, themed around the Divergent universe. Complete with a real window manager, 12 working apps, faction-based themes, and a virtual file system.',
             bullets: [
                 'Window manager with drag, resize, minimize, maximize, and z-index stacking',
@@ -35,7 +41,7 @@
             title: 'Inner City',
             status: 'Live on App Store',
             href: 'innercity/index.html',
-            image: { src: 'assets/1.1.0_1.png', alt: 'Inner City app showing an isometric city that grows as habits are completed' },
+            image: { src: 'assets/1.1.0_1.jpg', alt: 'Inner City app showing an isometric city that grows as habits are completed' },
             desc: 'A mobile habit-tracking app that gamifies your daily routines. Complete habits to construct buildings and watch your city grow on an isometric grid.',
             bullets: [
                 'Published and available on the iOS App Store',
@@ -216,52 +222,88 @@
         }
         var dots = dotsWrap ? Array.prototype.slice.call(dotsWrap.children) : [];
 
-        // How much of the previous card peeks in on the left of an active card.
-        // Must match `scroll-padding-left` on .project-list in the CSS.
-        var PEEK = 50;
+        // Where an active card's left edge sits = visible sliver + gap. Read from
+        // the CSS `scroll-padding-left` so it stays in sync across breakpoints (the
+        // peek-slot padding on .project-list is what keeps the peek a constant width).
+        function peek() { return parseFloat(getComputedStyle(track).scrollPaddingLeft) || 0; }
+
+        // The carousel's position is tracked here rather than re-derived from a
+        // (possibly mid-animation) scrollLeft, so the arrows never fire a no-op.
+        var current = 0;
+
         function step() {
             return cards.length > 1 ? (cards[1].offsetLeft - cards[0].offsetLeft) : track.clientWidth;
         }
-        function base() { return cards[0].offsetLeft; }
-        function clamp(i) { return Math.max(0, Math.min(cards.length - 1, i)); }
-        function targetFor(i) { return Math.max(0, cards[clamp(i)].offsetLeft - PEEK); }
-        function index() { return clamp(Math.round((track.scrollLeft - base() + PEEK) / step())); }
-        function go(i) { track.scrollTo({ left: targetFor(i), behavior: 'smooth' }); }
+        function gap() { return cards.length > 1 ? step() - cards[0].offsetWidth : 0; }
+        // How many whole cards fit in the viewable area (2 on desktop, 1 on phones).
+        function visibleCount() {
+            return Math.max(1, Math.round((track.clientWidth - 2 * peek() + gap()) / step()));
+        }
+        // Furthest-left index that still fills the view (no trailing empty space).
+        function maxIndex() { return Math.max(0, cards.length - visibleCount()); }
+        function clamp(i) { return Math.max(0, Math.min(maxIndex(), i)); }
+        function targetFor(i) {
+            var max = track.scrollWidth - track.clientWidth;
+            return Math.min(max, Math.max(0, cards[clamp(i)].offsetLeft - peek()));
+        }
+        // Nearest snap index for the current scroll position (after a manual swipe).
+        function nearestIndex() {
+            return clamp(Math.round((track.scrollLeft - cards[0].offsetLeft + peek()) / step()));
+        }
+        function go(i) {
+            current = clamp(i);
+            track.scrollTo({ left: targetFor(current), behavior: scrollBehavior() });
+            update();
+        }
         function update() {
-            var idx = index();
-            dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
-            var maxScroll = track.scrollWidth - track.clientWidth - 2;
-            if (prev) prev.disabled = track.scrollLeft <= 2;
-            if (next) next.disabled = track.scrollLeft >= maxScroll;
+            dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
+            if (prev) prev.disabled = current <= 0;
+            if (next) next.disabled = current >= maxIndex();
         }
 
-        function fullyVisible(card) {
-            var t = track.getBoundingClientRect();
-            var c = card.getBoundingClientRect();
-            return c.left >= t.left - 1 && c.right <= t.right + 1;
-        }
-
-        if (prev) prev.addEventListener('click', function () { go(index() - 1); });
-        if (next) next.addEventListener('click', function () { go(index() + 1); });
+        if (prev) prev.addEventListener('click', function () { go(current - 1); });
+        if (next) next.addEventListener('click', function () { go(current + 1); });
         dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
 
-        // Clicking a partially-visible (peeking) card scrolls one card toward it
-        // first; it only follows its link once it's fully in the viewable area.
+        // The fully-shown cards run from `current` to `current + visibleCount - 1`.
+        // Clicking one of those follows its link; clicking a card that is only
+        // peeking in on a side moves the carousel one step toward it instead.
         track.addEventListener('click', function (e) {
-            var li = e.target.closest('li');
-            if (!li || li.parentNode !== track) return;
-            if (!fullyVisible(li)) {
+            // Resolve to the card's own <li> via its anchor — closest('li') would
+            // wrongly match the bullet <li> elements inside the card body.
+            var card = e.target.closest('a.project');
+            if (!card || card.parentNode.parentNode !== track) return;
+            var ci = cards.indexOf(card.parentNode);
+            if (ci < current || ci >= current + visibleCount()) {
                 e.preventDefault();
-                var ci = cards.indexOf(li), cur = index();
-                go(ci > cur ? cur + 1 : cur - 1);
+                go(ci < current ? current - 1 : current + 1);
             }
         });
-        track.addEventListener('scroll', function () { window.requestAnimationFrame(update); });
-        track.addEventListener('keydown', function (e) {
-            if (e.key === 'ArrowRight') { e.preventDefault(); go(index() + 1); }
-            else if (e.key === 'ArrowLeft') { e.preventDefault(); go(index() - 1); }
+
+        // Keep `current` in sync when the user scrolls/swipes the track by hand,
+        // then re-align to the exact target so the side peek is always uniform
+        // (a manual swipe under `proximity` snapping can rest at any offset).
+        var settle;
+        track.addEventListener('scroll', function () {
+            window.clearTimeout(settle);
+            settle = window.setTimeout(function () {
+                current = nearestIndex();
+                var target = targetFor(current);
+                if (Math.abs(track.scrollLeft - target) > 1) {
+                    track.scrollTo({ left: target, behavior: scrollBehavior() });
+                }
+                update();
+            }, 120);
         });
-        window.addEventListener('resize', function () { window.requestAnimationFrame(update); });
+        track.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowRight') { e.preventDefault(); go(current + 1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); go(current - 1); }
+        });
+        window.addEventListener('resize', function () {
+            current = clamp(current);
+            track.scrollLeft = targetFor(current);
+            update();
+        });
         update();
     }
 
@@ -309,7 +351,7 @@
                     var target = document.getElementById(id);
                     if (target) {
                         e.preventDefault();
-                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
                     }
                 });
             });
