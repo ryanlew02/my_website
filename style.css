@@ -403,6 +403,12 @@ h1 {
 .project-list {
     list-style: none;
     margin: 0;
+    /* Positioned so each card's offsetLeft is measured from THIS track (the JS
+       reads cards[i].offsetLeft against the track's own scrollLeft). Without it
+       the offsetParent falls back to .snap-section, adding the section's
+       auto-centering margin + padding to every offsetLeft and throwing the
+       scroll targets off by ~a card — arrows skip, the left edge is unreachable. */
+    position: relative;
     /* 56px side padding reserves one "peek slot" (40px sliver + 16px gap) at each
        end. This is what keeps the peek a constant width: the first and last cards
        rest at the same offset as the middle ones, so a card peeks the same amount
