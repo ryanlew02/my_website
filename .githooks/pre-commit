@@ -1,0 +1,24 @@
+#!/bin/sh
+# Auto-bump cache-busting ?v= hashes before every commit so the version string
+# in the HTML can never drift out of sync with the actual script.js / style.css
+# contents. Without this, an edited asset keeps its old ?v= and browsers serve a
+# stale cached copy — e.g. carousel fixes silently reverting days after deploy.
+#
+# Installed via `git config core.hooksPath .githooks`. See cache-bust.js.
+
+# Only run if node is available; otherwise don't block the commit.
+if ! command -v node >/dev/null 2>&1; then
+    echo "pre-commit: node not found, skipping cache-bust (install node to enable)" >&2
+    exit 0
+fi
+
+repo_root=$(git rev-parse --show-toplevel)
+node "$repo_root/cache-bust.js" >/dev/null || {
+    echo "pre-commit: cache-bust.js failed" >&2
+    exit 1
+}
+
+# Stage any HTML files the cache-buster rewrote so the new hashes are committed.
+git add "$repo_root"/index.html "$repo_root"/divergeos/index.html "$repo_root"/innercity/index.html 2>/dev/null
+
+exit 0
