@@ -265,29 +265,22 @@
         if (next) next.addEventListener('click', function () { go(current + 1); });
         dots.forEach(function (d, i) { d.addEventListener('click', function () { go(i); }); });
 
-        // Clicking a fully-shown card follows its link; clicking a card that is
-        // only peeking in at a side slides the carousel one step toward it.
-        // This is decided from the card's live on-screen position rather than the
-        // tracked `current` index — `current` lags a manual swipe (it only resyncs
-        // 120ms after scrolling stops), so trusting it would sometimes misjudge a
-        // peeking card as fully visible (following the link) or move from the wrong
-        // base. Re-deriving the rested index here also keeps the move to exactly
-        // one card, never two.
+        // The fully-shown cards run from `current` to `current + visibleCount - 1`.
+        // Clicking one of those follows its link; clicking a card that is only
+        // peeking in on a side moves the carousel one step toward it instead.
+        // Decided from index math (not live offsetLeft/scrollLeft geometry): the
+        // track is position:static, so a card's offsetLeft is measured from a
+        // page ancestor, not the track, and can't be compared to scrollLeft.
         track.addEventListener('click', function (e) {
             // Resolve to the card's own <li> via its anchor — closest('li') would
             // wrongly match the bullet <li> elements inside the card body.
             var card = e.target.closest('a.project');
             if (!card || card.parentNode.parentNode !== track) return;
-            var li = card.parentNode;
-            var viewLeft = track.scrollLeft;
-            var viewRight = viewLeft + track.clientWidth;
-            var cardLeft = li.offsetLeft;
-            var cardRight = cardLeft + li.offsetWidth;
-            // 1px tolerance so a card resting flush against an edge counts as full.
-            if (cardLeft >= viewLeft - 1 && cardRight <= viewRight + 1) return;
-            e.preventDefault();
-            current = nearestIndex();
-            go(cardLeft < viewLeft ? current - 1 : current + 1);
+            var ci = cards.indexOf(card.parentNode);
+            if (ci < current || ci >= current + visibleCount()) {
+                e.preventDefault();
+                go(ci < current ? current - 1 : current + 1);
+            }
         });
 
         // Keep `current` in sync when the user scrolls/swipes the track by hand,
