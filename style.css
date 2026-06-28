@@ -498,118 +498,6 @@ h1 {
     transform: scale(1.3);
 }
 
-/* ── Certifications (vertical tabs) ──────────────────────────────────────── */
-.tabs {
-    display: flex;
-    gap: 32px;
-    width: 100%;
-    max-width: 860px;
-}
-
-.tab-list {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    min-width: 132px;
-    border-right: 1px solid var(--line);
-}
-
-.tab {
-    appearance: none;
-    background: none;
-    border: 0;
-    text-align: left;
-    padding: 12px 18px;
-    font-size: 13px;
-    letter-spacing: 0.03em;
-    color: var(--muted);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: color 160ms ease;
-}
-.tab:hover { color: var(--text); }
-.tab.active { color: var(--accent); }
-
-.tab-indicator {
-    position: absolute;
-    right: -1px;
-    top: 0;
-    width: 2px;
-    height: 0;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: transform 250ms cubic-bezier(.4, 0, .2, 1), height 250ms ease, width 250ms ease;
-}
-
-.tab-panels {
-    flex: 1;
-    min-width: 0;
-}
-.tab-panel { display: none; }
-.tab-panel.active { display: block; animation: tabfade 260ms ease; }
-@keyframes tabfade {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: none; }
-}
-
-.tab-title {
-    margin: 0 0 6px;
-    font-size: 20px;
-    font-weight: 600;
-}
-.tab-accent { color: var(--accent); }
-.tab-date {
-    margin: 0 0 20px;
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--muted-2);
-}
-.tab-bullets {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    gap: 14px;
-}
-.tab-bullets li {
-    position: relative;
-    padding-left: 24px;
-    color: var(--muted);
-    font-size: 14px;
-    line-height: 1.6;
-}
-.tab-bullets li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    top: 0;
-    color: var(--accent);
-    font-size: 12px;
-}
-.tab-link {
-    display: inline-block;
-    margin-top: 18px;
-    font-size: 13px;
-    color: var(--accent);
-    text-decoration: none;
-}
-.tab-link:hover { text-decoration: underline; }
-
-/* Center the heading + tabs in the space above the footer */
-#certifications .cert-main {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 28px;
-}
-
-/* Footer sits near the bottom of the certifications section, with breathing room */
-#certifications .section-inner { padding-bottom: clamp(28px, 6vh, 64px); }
-
 .project {
   display: flex;
   flex-direction: column;
@@ -810,19 +698,21 @@ h1 {
 }
 
 
-
-/* Footer contact row */
-.contact-row {
-    margin-top: 46px;
+/* ── Site footer ─────────────────────────────────────────────────────────── */
+.site-footer {
+    margin-top: auto;
     padding-top: 18px;
     border-top: 1px solid var(--line);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     gap: 16px;
     flex-wrap: wrap;
     font-size: 13px;
     color: var(--muted-2);
 }
+.footer-copy { color: var(--muted-2); }
+
 
 /* Responsive */
 @media (max-width: 900px) {
@@ -925,6 +815,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .section-inner--top {
     justify-content: flex-start;
     padding-top: calc(76px + clamp(16px, 3vh, 40px));
+    padding-bottom: clamp(14px, 3vh, 32px);
 }
 
 /* ── Section heading ─────────────────────────────────────────────────────── */
@@ -1000,6 +891,112 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 @keyframes pulse-dot {
     0%, 100% { opacity: 1; transform: scale(1); }
     50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* ── "Currently working on" notification toast ───────────────────────────── */
+.work-toast {
+    position: fixed;
+    right: clamp(16px, 3vw, 32px);
+    top: calc(76px + clamp(14px, 2.5vw, 24px));
+    z-index: 400;
+    display: inline-flex;
+    align-items: stretch;
+    max-width: min(320px, calc(100vw - 32px));
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
+    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+    animation: toast-in 500ms cubic-bezier(.2, .8, .2, 1) 600ms both;
+}
+.work-toast:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+.work-toast.dismissed { display: none; }
+
+.work-toast-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 14px 14px 14px;
+    color: var(--text);
+    text-decoration: none;
+}
+.work-toast-logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--line);
+}
+.work-toast-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.work-toast-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+}
+.work-toast-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+.work-toast-text {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.work-toast-dot {
+    width: 8px;
+    height: 8px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+.work-toast-arrow {
+    color: var(--accent);
+    font-size: 14px;
+}
+.work-toast-close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--muted-2);
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 160ms ease, background 160ms ease;
+}
+.work-toast-close:hover {
+    color: var(--text);
+    background: var(--soft-1);
+}
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
 }
 
 .resume-btn {
@@ -1140,20 +1137,6 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
         scroll-snap-stop: always;
     }
     .project-media { height: 130px; }
-
-    /* Certifications: tabs move to a scrollable row above the panel */
-    .tabs { flex-direction: column; gap: 20px; }
-    .tab-list {
-        flex-direction: row;
-        min-width: 0;
-        border-right: none;
-        border-bottom: 1px solid var(--line);
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    .tab-list::-webkit-scrollbar { display: none; }
-    .tab-indicator { right: auto; top: auto; bottom: -1px; left: 0; }
-    .tab-title { font-size: 18px; }
 }
 
 

@@ -29,7 +29,7 @@
             href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=e4aa0405" />
+        <link rel="stylesheet" href="style.css?v=151a701c" />
         <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -62,7 +62,6 @@
                 <a href="#hero"           data-section="hero">Home</a>
                 <a href="#about"          data-section="about">About</a>
                 <a href="#projects"       data-section="projects">Projects</a>
-                <a href="#certifications" data-section="certifications">Certifications</a>
             </nav>
 
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
@@ -145,11 +144,6 @@
                                 B.S. Software Engineering - Southern New Hampshire University<br />
                                 Expected May 2028 · <span class="edu-gpa">4.0 GPA</span>
                             </p>
-                            <h3 class="section-sub-heading section-sub-heading--divided">Currently Learning</h3>
-                            <ul class="learning-list">
-                                <li>Software architecture</li>
-                                <li>System design</li>
-                            </ul>
                             <div class="about-availability">
                                 <span class="availability-dot"></span>
                                 Open to opportunities
@@ -157,7 +151,12 @@
                         </div>
 
                         <div class="about-col">
-                            <h3 class="section-sub-heading">Skills</h3>
+                            <h3 class="section-sub-heading">Currently Learning</h3>
+                            <ul class="learning-list">
+                                <li>Software architecture</li>
+                                <li>System design</li>
+                            </ul>
+                            <h3 class="section-sub-heading section-sub-heading--divided">Skills</h3>
                             <div class="skill-grid">
                                 <span class="skill">Python</span>
                                 <span class="skill">JavaScript / TypeScript</span>
@@ -201,27 +200,9 @@
                     <!-- Cards are rendered from the PROJECTS array in script.js -->
                     <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
                     <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
-                </div>
-            </section>
 
-            <!-- ── 04 · Certifications ─────────────────────── -->
-            <section class="snap-section" id="certifications">
-                <div class="section-inner">
-                    <div class="cert-main">
-                        <div class="section-heading">
-                            <span class="section-number">04</span>
-                            <h2 class="section-title">Certifications</h2>
-                        </div>
-
-                        <!-- Tabs + panels are rendered from the CERTIFICATIONS array in script.js -->
-                        <div class="tabs" id="certTabs">
-                            <div class="tab-list" role="tablist" aria-label="Certifications"></div>
-                            <div class="tab-panels"></div>
-                        </div>
-                    </div>
-
-                    <footer class="contact-row" id="contact">
-                        <div>© <span id="year"></span> Ryan Lewandowski</div>
+                    <footer class="site-footer">
+                        <div class="footer-copy">© <span id="year"></span> Ryan Lewandowski. All rights reserved.</div>
                         <div class="links" aria-label="Social links">
                             <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
                             <span>/</span>
@@ -237,14 +218,26 @@
 
         </main>
 
+        <!-- "Currently working on" notification — Halflight teaser -->
+        <div class="work-toast" id="workToast">
+            <a class="work-toast-link" href="https://halflightdream.com" target="_blank" rel="noopener noreferrer">
+                <img class="work-toast-logo" src="assets/halflight_logo.jpg" alt="Halflight Dream logo" />
+                <span class="work-toast-body">
+                    <span class="work-toast-eyebrow"><span class="work-toast-dot" aria-hidden="true"></span>Currently building</span>
+                    <span class="work-toast-title">Halflight Dream</span>
+                    <span class="work-toast-text">See what Ryan is working on! <span class="work-toast-arrow" aria-hidden="true">↗</span></span>
+                </span>
+            </a>
+            <button class="work-toast-close" type="button" aria-label="Dismiss notification" id="workToastClose">×</button>
+        </div>
+
         <!-- Side navigation dots -->
         <nav class="scroll-dots" aria-label="Section navigation">
             <a class="dot active" href="#hero"           data-label="Home"           aria-label="Go to Home"></a>
             <a class="dot"        href="#about"          data-label="About"          aria-label="Go to About"></a>
             <a class="dot"        href="#projects"       data-label="Projects"       aria-label="Go to Projects"></a>
-            <a class="dot"        href="#certifications" data-label="Certifications" aria-label="Go to Certifications"></a>
         </nav>
 
-        <script src="script.js?v=dc8ef94e"></script>
+        <script src="script.js?v=091e2435"></script>
     </body>
 </html>

@@ -77,26 +77,6 @@
         }
     ];
 
-    // ── Certifications data ───────────────────────────────────────────────────
-    // Add a certification by appending an object. `href` is optional — with it,
-    // the card becomes a link to the credential. `external: true` opens a new tab.
-    const CERTIFICATIONS = [
-        {
-            tab: 'Codecademy',
-            name: 'Computer Science Professional Certification',
-            issuer: 'Codecademy',
-            date: 'Issued Apr 2026 · Credential ID 0E76DC4D-B',
-            bullets: [
-                'Python',
-                'Data Structures',
-                'Algorithms',
-                'Git',
-                'PostgreSQL'
-            ],
-            href: 'https://www.codecademy.com/profiles/ryanlew02/certificates/05009c20e9174378acd37e6c2d0fbfc4'
-        }
-    ];
-
     function escapeHTML(s) {
         return String(s).replace(/[&<>"']/g, function (c) {
             return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -127,81 +107,6 @@
                     '</div>' +
                 '</a>' +
             '</li>';
-    }
-
-    function certPanelHTML(c, i) {
-        var issuer = c.issuer ? ' <span class="tab-accent">@ ' + escapeHTML(c.issuer) + '</span>' : '';
-        var date = c.date ? '<p class="tab-date">' + escapeHTML(c.date) + '</p>' : '';
-        var bullets = (c.bullets || []).map(function (b) { return '<li>' + b + '</li>'; }).join('');
-        var link = c.href
-            ? '<a class="tab-link" href="' + c.href + '" target="_blank" rel="noopener noreferrer">View credential <span aria-hidden="true">↗</span></a>'
-            : '';
-        return '<div class="tab-panel" role="tabpanel" id="certpanel-' + i + '" aria-labelledby="certtab-' + i + '" tabindex="0">' +
-                '<h3 class="tab-title">' + escapeHTML(c.name) + issuer + '</h3>' +
-                date +
-                '<ul class="tab-bullets">' + bullets + '</ul>' +
-                link +
-            '</div>';
-    }
-
-    function initCertTabs() {
-        var root = document.getElementById('certTabs');
-        if (!root) return;
-        var tablist = root.querySelector('.tab-list');
-        var panels = root.querySelector('.tab-panels');
-        if (!tablist || !panels) return;
-
-        tablist.innerHTML = CERTIFICATIONS.map(function (c, i) {
-            return '<button class="tab" type="button" role="tab" id="certtab-' + i + '" ' +
-                'aria-controls="certpanel-' + i + '" aria-selected="' + (i === 0) + '" ' +
-                'tabindex="' + (i === 0 ? 0 : -1) + '">' + escapeHTML(c.tab || c.name) + '</button>';
-        }).join('') + '<span class="tab-indicator" aria-hidden="true"></span>';
-        panels.innerHTML = CERTIFICATIONS.map(certPanelHTML).join('');
-
-        var tabs = Array.prototype.slice.call(tablist.querySelectorAll('.tab'));
-        var panelEls = Array.prototype.slice.call(panels.querySelectorAll('.tab-panel'));
-        var indicator = tablist.querySelector('.tab-indicator');
-        if (!tabs.length) return;
-
-        function moveIndicator(i) {
-            var t = tabs[i];
-            if (getComputedStyle(tablist).flexDirection === 'row') {
-                indicator.style.transform = 'translateX(' + t.offsetLeft + 'px)';
-                indicator.style.width = t.offsetWidth + 'px';
-                indicator.style.height = '2px';
-            } else {
-                indicator.style.transform = 'translateY(' + t.offsetTop + 'px)';
-                indicator.style.height = t.offsetHeight + 'px';
-                indicator.style.width = '2px';
-            }
-        }
-        function select(i) {
-            tabs.forEach(function (t, j) {
-                var on = j === i;
-                t.setAttribute('aria-selected', on);
-                t.tabIndex = on ? 0 : -1;
-                t.classList.toggle('active', on);
-            });
-            panelEls.forEach(function (p, j) { p.classList.toggle('active', j === i); });
-            moveIndicator(i);
-        }
-        function activeIndex() {
-            for (var k = 0; k < tabs.length; k++) if (tabs[k].classList.contains('active')) return k;
-            return 0;
-        }
-
-        tabs.forEach(function (t, i) {
-            t.addEventListener('click', function () { select(i); });
-            t.addEventListener('keydown', function (e) {
-                var ni = null;
-                if (e.key === 'ArrowDown' || e.key === 'ArrowRight') ni = (i + 1) % tabs.length;
-                else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') ni = (i - 1 + tabs.length) % tabs.length;
-                if (ni !== null) { e.preventDefault(); select(ni); tabs[ni].focus(); }
-            });
-        });
-
-        select(0);
-        window.addEventListener('resize', function () { moveIndicator(activeIndex()); });
     }
 
     function initProjectCarousel() {
@@ -329,7 +234,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         applyTheme(getTheme());
         initProjectCarousel();
-        initCertTabs();
 
         const btn = document.getElementById('themeToggle');
         if (btn) {
@@ -407,6 +311,16 @@
                 }
             });
         });
+
+        // ── "Currently working on" notification ────────────────────────────────
+        var workToastClose = document.getElementById('workToastClose');
+        if (workToastClose) {
+            workToastClose.addEventListener('click', function (e) {
+                e.preventDefault();
+                var toast = document.getElementById('workToast');
+                if (toast) toast.classList.add('dismissed');
+            });
+        }
     });
 })();
 
