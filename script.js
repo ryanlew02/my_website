@@ -215,6 +215,56 @@
         update();
     }
 
+    // ── Reading shelf data ─────────────────────────────────────────────────
+    // The bookshelf starts empty. Add a book by appending an object here — it
+    // renders as a spine that lifts off the shelf on hover and reveals its
+    // "what I learned" card (all styling is already in place in style.css).
+    // Only `title` and `learned` are required.
+    var BOOKS = [
+        // {
+        //     title: 'The Pragmatic Programmer',
+        //     author: 'David Thomas & Andrew Hunt',
+        //     learned: 'A sentence or two on what this book taught me.',
+        //     color: '#5b3d8a',   // spine colour (defaults to a leather brown)
+        //     height: 128,        // spine height in px — 96–136 looks best
+        //     width: 40,          // spine width in px
+        //     shelf: 0,           // 0 = top shelf, 1 = bottom shelf
+        // },
+    ];
+
+    function bookHTML(b) {
+        var style = '';
+        if (b.color)  style += '--book-color:' + b.color + ';';
+        if (b.height) style += '--book-h:' + b.height + 'px;';
+        if (b.width)  style += '--book-w:' + b.width + 'px;';
+        var author = b.author
+            ? '<span class="book-info-author">' + escapeHTML(b.author) + '</span>'
+            : '';
+        return '' +
+            '<button class="book" type="button"' + (style ? ' style="' + style + '"' : '') + '>' +
+                '<span class="book-spine-title">' + escapeHTML(b.title) + '</span>' +
+                '<span class="book-info" role="tooltip">' +
+                    '<strong class="book-info-title">' + escapeHTML(b.title) + '</strong>' +
+                    author +
+                    '<span class="book-info-label">What I learned</span>' +
+                    '<span class="book-info-text">' + escapeHTML(b.learned) + '</span>' +
+                '</span>' +
+            '</button>';
+    }
+
+    function initBookshelf() {
+        var shelves = document.querySelectorAll('#bookshelf .shelf-books');
+        // While BOOKS is empty, leave the "arriving soon" hint from the HTML
+        if (!shelves.length || !BOOKS.length) return;
+        document.querySelectorAll('#bookshelf .shelf-hint').forEach(function (el) {
+            el.remove();
+        });
+        BOOKS.forEach(function (b) {
+            var shelf = shelves[Math.min(b.shelf || 0, shelves.length - 1)];
+            shelf.insertAdjacentHTML('beforeend', bookHTML(b));
+        });
+    }
+
     function getTheme() {
         return localStorage.getItem('theme') || 'dark';
     }
@@ -234,6 +284,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         applyTheme(getTheme());
         initProjectCarousel();
+        initBookshelf();
 
         const btn = document.getElementById('themeToggle');
         if (btn) {
@@ -313,14 +364,26 @@
         });
 
         // ── "Currently working on" notification ────────────────────────────────
+        var workToast = document.getElementById('workToast');
         var workToastClose = document.getElementById('workToastClose');
+
+        function dismissWorkToast() {
+            if (!workToast || workToast.classList.contains('leaving')) return;
+            workToast.classList.add('leaving');
+            // Remove from the page once the fade-out finishes
+            setTimeout(function () { workToast.classList.add('dismissed'); }, 300);
+        }
+
         if (workToastClose) {
             workToastClose.addEventListener('click', function (e) {
                 e.preventDefault();
-                var toast = document.getElementById('workToast');
-                if (toast) toast.classList.add('dismissed');
+                dismissWorkToast();
             });
         }
+
+        // Auto-dismiss: 1.1s fly-in (600ms delay + 500ms animation), then the
+        // 3s countdown shown by the .work-toast-progress bar.
+        if (workToast) setTimeout(dismissWorkToast, 1100 + 3000);
     });
 })();
 

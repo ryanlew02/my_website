@@ -29,7 +29,7 @@
             href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=151a701c" />
+        <link rel="stylesheet" href="style.css?v=7241f0bd" />
         <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -62,6 +62,7 @@
                 <a href="#hero"           data-section="hero">Home</a>
                 <a href="#about"          data-section="about">About</a>
                 <a href="#projects"       data-section="projects">Projects</a>
+                <a href="#reading"        data-section="reading">Reading</a>
             </nav>
 
             <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
@@ -200,6 +201,38 @@
                     <!-- Cards are rendered from the PROJECTS array in script.js -->
                     <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
                     <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
+                </div>
+            </section>
+
+            <!-- ── 04 · Hobbies / Reading ──────────────────── -->
+            <section class="snap-section" id="reading">
+                <div class="section-inner section-inner--top">
+                    <div class="section-heading">
+                        <span class="section-number">04</span>
+                        <h2 class="section-title">Reading</h2>
+                    </div>
+
+                    <p class="reading-intro">
+                        Favorite books and what each one taught me. The shelf is waiting for
+                        its first arrivals.
+                    </p>
+
+                    <!-- Books are rendered from the BOOKS array in script.js. Each book
+                         becomes a spine on a shelf that lifts off on hover and reveals a
+                         "what I learned" card — the shelf hint below disappears once the
+                         first book is added. -->
+                    <div class="bookshelf" id="bookshelf" aria-label="Bookshelf of favorite books">
+                        <div class="shelf">
+                            <div class="shelf-books">
+                                <p class="shelf-hint">First books arriving soon</p>
+                            </div>
+                            <div class="shelf-board"></div>
+                        </div>
+                        <div class="shelf">
+                            <div class="shelf-books"></div>
+                            <div class="shelf-board"></div>
+                        </div>
+                    </div>
 
                     <footer class="site-footer">
                         <div class="footer-copy">© <span id="year"></span> Ryan Lewandowski. All rights reserved.</div>
@@ -221,14 +254,15 @@
         <!-- "Currently working on" notification — Halflight teaser -->
         <div class="work-toast" id="workToast">
             <a class="work-toast-link" href="https://halflightdream.com" target="_blank" rel="noopener noreferrer">
-                <img class="work-toast-logo" src="assets/halflight_logo.jpg" alt="Halflight Dream logo" />
+                <img class="work-toast-logo" src="assets/halflight_logo.jpg" alt="Halflight logo" />
                 <span class="work-toast-body">
                     <span class="work-toast-eyebrow"><span class="work-toast-dot" aria-hidden="true"></span>Currently building</span>
-                    <span class="work-toast-title">Halflight Dream</span>
+                    <span class="work-toast-title">Halflight</span>
                     <span class="work-toast-text">See what Ryan is working on! <span class="work-toast-arrow" aria-hidden="true">↗</span></span>
                 </span>
             </a>
             <button class="work-toast-close" type="button" aria-label="Dismiss notification" id="workToastClose">×</button>
+            <span class="work-toast-progress" aria-hidden="true"></span>
         </div>
 
         <!-- Side navigation dots -->
@@ -236,8 +270,9 @@
             <a class="dot active" href="#hero"           data-label="Home"           aria-label="Go to Home"></a>
             <a class="dot"        href="#about"          data-label="About"          aria-label="Go to About"></a>
             <a class="dot"        href="#projects"       data-label="Projects"       aria-label="Go to Projects"></a>
+            <a class="dot"        href="#reading"        data-label="Reading"        aria-label="Go to Reading"></a>
         </nav>
 
-        <script src="script.js?v=091e2435"></script>
+        <script src="script.js?v=8626d048"></script>
     </body>
 </html>
