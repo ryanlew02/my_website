@@ -1317,6 +1317,12 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     #reading.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
     #reading .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
 
+    /* Projects: a full card (image + bullets + tags) is taller than a short
+       phone viewport — let the section grow so cards are never clipped and a
+       hovered/focused card can't lift out of view */
+    #projects.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
+    #projects .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
+
     /* Hero: stack text above photo, tighten gap */
     .hero               { grid-template-columns: 1fr; gap: 24px; }
     .visual             { min-height: 0; order: -1; }
@@ -1352,7 +1358,19 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
         flex: 0 0 100%;
         scroll-snap-stop: always;
     }
-    .project-media { height: 130px; }
+    .project-media { height: 120px; }
+
+    /* Tighter cards so one fits comfortably on a phone screen */
+    .project-body    { padding: 16px; }
+    .project .desc   { font-size: 13px; }
+    .project-bullets li { font-size: 12.5px; }
+
+    /* Heading row is crowded on phones (number + title + button + arrows) —
+       drop the decorative hairline to give the controls room, and center the
+       row vertically so the title and the button pills sit on one line */
+    .section-heading { align-items: center; }
+    .section-title::after { display: none; }
+    .see-all-btn { font-size: 11px; padding: 7px 12px; white-space: nowrap; }
 }
 
 
