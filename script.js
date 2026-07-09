@@ -314,10 +314,12 @@
                 });
             });
 
-            // IntersectionObserver keeps dots in sync with visible section
+            // IntersectionObserver keeps the dots and header nav in sync with
+            // the visible section
             var dots     = document.querySelectorAll('.dot');
+            var navLinks = document.querySelectorAll('.nav a[data-section]');
             var sections = document.querySelectorAll('.snap-section');
-            if (dots.length && sections.length) {
+            if (sections.length) {
                 var io = new IntersectionObserver(function (entries) {
                     entries.forEach(function (entry) {
                         if (entry.isIntersecting) {
@@ -328,11 +330,33 @@
                                     dot.getAttribute('href') === '#' + id
                                 );
                             });
+                            navLinks.forEach(function (link) {
+                                link.classList.toggle('active', link.dataset.section === id);
+                            });
                         }
                     });
                 }, { root: null, threshold: 0.5 });
                 sections.forEach(function (s) { io.observe(s); });
             }
+
+            // Scroll-reveal: fade section content up as it enters the viewport,
+            // staggered by its position within the section. The .reveal class is
+            // only added here so content is never hidden if JS doesn't run.
+            var revealEls = document.querySelectorAll('.section-inner > *:not(.site-footer)');
+            var ro = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        ro.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+            revealEls.forEach(function (el) {
+                var i = Array.prototype.indexOf.call(el.parentNode.children, el);
+                el.style.transitionDelay = Math.min(i, 4) * 90 + 'ms';
+                el.classList.add('reveal');
+                ro.observe(el);
+            });
         }
 
         document.querySelectorAll('.copy-email').forEach(function (btn) {

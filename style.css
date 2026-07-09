@@ -18,6 +18,7 @@ html[data-theme="dark"] {
 
     --line: #2d2555;
     --accent: #c9a84c;
+    --accent-2: #e8cf8a;
     --accent-glow: rgba(201, 168, 76, 0.12);
 }
 
@@ -34,6 +35,7 @@ html[data-theme="light"] {
 
     --line: #bcc5df;
     --accent: #9b6f1a;
+    --accent-2: #c9962e;
     --accent-glow: rgba(155, 111, 26, 0.08);
 }
 
@@ -1328,7 +1330,9 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 
     /* Header: shrink nav text so it fits on one row */
     .site-header        { gap: 12px; padding: 0 16px; }
-    .site-header .nav   { gap: 14px; font-size: 10px; letter-spacing: 0.06em; }
+    /* Four links now — undo the legacy .nav wrap rules and shrink to fit */
+    .site-header .nav   { order: 0; width: auto; flex: 1; min-width: 0; justify-content: center;
+                          gap: 10px; font-size: 9px; letter-spacing: 0.04em; }
     .logo, .theme-toggle { width: 38px; height: 38px; min-width: 38px; min-height: 38px; }
 
     /* Hero */
@@ -1351,6 +1355,175 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     .project-media { height: 130px; }
 }
 
+
+/* ── Polish pass: type, hierarchy, motion, finish details ───────────────────── */
+
+/* Text selection + thin themed scrollbar */
+::selection { background: var(--accent); color: var(--bg); }
+html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
+::-webkit-scrollbar { width: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Visible keyboard focus everywhere */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Hero: gold gradient on the second line of the h1 */
+.h1-accent {
+    background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 55%, var(--accent) 95%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Button hierarchy: one filled primary action, ghosts for the rest */
+.btn { transition: transform 140ms ease, background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease; }
+.btn:hover { transform: translateY(-2px); }
+.btn--primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+}
+.btn--primary:hover {
+    background: var(--accent-2);
+    border-color: var(--accent-2);
+    color: var(--bg);
+    box-shadow: 0 8px 24px var(--accent-glow);
+}
+
+/* Section headings: hairline rule that runs out to the right of the title */
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: 1;
+}
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--line), transparent);
+}
+
+/* Header nav: animated underline + active-section highlight
+   (the .active class is kept in sync by the IntersectionObserver in script.js) */
+.nav a { position: relative; }
+.nav a::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    bottom: 0;
+    height: 1.5px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 220ms ease;
+}
+.nav a:hover::after,
+.nav a.active::after { transform: scaleX(1); }
+.nav a.active { color: var(--accent); }
+
+/* Slowly rotating dashed ring framing the portrait */
+.visual { position: relative; }
+.visual::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 434px;
+    height: 434px;
+    translate: -50% -50%;
+    border-radius: 50%;
+    border: 1px dashed var(--accent);
+    opacity: 0.35;
+    pointer-events: none;
+    animation: ring-spin 60s linear infinite;
+}
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+
+/* Skill chips respond to hover */
+.skill { transition: border-color 160ms ease, color 160ms ease, transform 160ms ease; }
+.skill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+/* Scroll-reveal: .reveal is added by script.js (so content is never hidden
+   without JS); .revealed fades it in with a per-sibling stagger. */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 600ms ease, transform 600ms ease;
+}
+.reveal.revealed {
+    opacity: 1;
+    transform: none;
+}
+
+/* ── Texture & editorial details ─────────────────────────────────────────────
+   Film grain over everything: kills the flat, too-clean gradient look. */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+html[data-theme="light"] body::after { opacity: 0.035; }
+
+/* Oversized outlined numeral ghosted behind each section heading */
+.section-heading { position: relative; }
+.section-heading::before {
+    content: attr(data-num);
+    position: absolute;
+    left: -8px;
+    top: -0.5em;
+    z-index: -1;
+    font-family: 'Cinzel', Georgia, serif;
+    font-size: clamp(64px, 9vw, 116px);
+    font-weight: 700;
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line);
+    opacity: 0.55;
+    pointer-events: none;
+}
+/* Top-aligned sections (Projects, Reading) start just under the fixed header —
+   keep the numeral below it instead of half-hidden behind it */
+.section-inner--top .section-heading::before { top: -0.12em; }
+
+/* Skill chips sit a hair off-axis, like they were placed by hand;
+   they straighten when touched */
+.skill { transition: border-color 160ms ease, color 160ms ease, transform 160ms ease, rotate 160ms ease; }
+.skill:nth-child(2n)   { rotate: 0.9deg; }
+.skill:nth-child(3n+1) { rotate: -0.8deg; }
+.skill:hover           { rotate: 0deg; }
+
+/* Empty-shelf hint reads like a pencilled-in note, not a system label */
+.shelf-hint {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: none;
+}
+
+/* Playful micro-interactions */
+.logo svg { transition: transform 600ms cubic-bezier(0.3, 0.7, 0.3, 1); }
+.logo:hover svg { transform: rotate(360deg); }
+.btn--primary span { transition: transform 200ms ease; }
+.btn--primary:hover span { transform: translateX(4px); }
+
+@media (max-width: 900px) {
+    .visual::before { width: 232px; height: 232px; }
+}
+@media (max-width: 600px) {
+    .visual::before { width: 190px; height: 190px; }
+    .section-heading::before { font-size: 52px; }
+}
 
 /* ── Respect "reduce motion" OS setting ──────────────────────────────────────
    Disables the ambient background animations, hover lifts, and snap-scroll
