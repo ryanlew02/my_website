@@ -225,29 +225,157 @@
         //     title: 'The Pragmatic Programmer',
         //     author: 'David Thomas & Andrew Hunt',
         //     learned: 'A sentence or two on what this book taught me.',
+        //                         // \n starts a new takeaway line; text before
+        //                         // a | renders as its bolded main point
         //     color: '#5b3d8a',   // spine colour (defaults to a leather brown)
-        //     height: 128,        // spine height in px — 96–136 looks best
-        //     width: 40,          // spine width in px
-        //     shelf: 0,           // 0 = top shelf, 1 = bottom shelf
+        //     height: 176,        // spine height in px — 150–190 looks best
+        //     width: 44,          // spine width in px
+        //     image: 'assets/books/slug.jpg', // spine artwork — a tall, narrow
+        //                         // crop works best; it replaces the title text
+        //     imagePos: '100% 50%', // which part of the artwork the spine shows
+        //                         // (background-position; defaults to center)
+        //     shelf: 0,           // only used if a second shelf row is added back
         // },
+        {
+            title: 'The Code of the Extraordinary Mind',
+            author: 'Vishen Lakhiani',
+            learned: '1. Question the “brules” | the bullshit rules that society, family, school, and culture taught you to follow without ever questioning.\n2. Don’t chase goals that aren’t truly yours | a lot of burnout comes from chasing outcomes that sound impressive but don’t actually fulfill you.',
+            color: '#e8e4dc',
+            height: 176,
+            width: 46,
+            image: 'assets/books/code-extraordinary-mind.jpg',
+        },
+        {
+            title: 'Way of the Wolf',
+            author: 'Jordan Belfort',
+            learned: '1. Sales is about certainty | a sale happens when the prospect feels certain about three things: the product, you, and the company behind it.\n2. Control the conversation | the Straight Line System is about keeping the conversation moving toward the close without letting it drift everywhere.',
+            color: '#c8c8c8',
+            height: 170,
+            width: 44,
+            image: 'assets/books/way-of-the-wolf.jpg',
+        },
+        {
+            title: 'Zero to One',
+            author: 'Peter Thiel',
+            learned: '1. Build something new and original | real progress comes from creating something that doesn’t already exist, not just copying what already works.\n2. Start with a small market and dominate it | great companies usually don’t start by trying to serve everyone — and this one applies to personal life, not just business.',
+            color: '#7d96b8',
+            height: 174,
+            width: 44,
+            image: 'assets/books/zero-to-one.jpg',
+        },
+        {
+            title: 'The Pragmatic Programmer',
+            author: 'David Thomas & Andrew Hunt',
+            learned: '1. Take responsibility for your code and your growth | good developers don’t just “write code” — they take ownership.\n2. Write code that is easy to change | software will always change: requirements change, users change, businesses change, and your understanding of the problem changes.',
+            color: '#4a3b30',
+            height: 178,
+            width: 48,
+            image: 'assets/books/pragmatic-programmer.jpg',
+        },
+        {
+            title: 'The Soul of a New Machine',
+            author: 'Tracy Kidder',
+            learned: '1. Great work often comes from obsession, pressure, and pride | building something difficult takes more than technical skill — the engineers are driven by pride, competition, curiosity, and the need to prove themselves.\n2. Technology is built by humans, not just “geniuses” | major breakthroughs aren’t clean, perfect, or magical — they come from teams dealing with stress, tradeoffs, bad communication, deadlines, ego, and uncertainty.',
+            color: '#c2338a',
+            height: 172,
+            width: 44,
+            image: 'assets/books/soul-of-a-new-machine.jpg',
+        },
+        {
+            title: 'Code',
+            author: 'Charles Petzold',
+            learned: '1. Computers are built from simple ideas layered together | computers seem magical, but they’re built from very simple concepts stacked on top of each other.\n2. Code is just a way to represent information | “code” isn’t only programming code — it’s any system for representing meaning.',
+            color: '#1b2a4a',
+            height: 168,
+            width: 42,
+            image: 'assets/books/code-petzold.jpg',
+        },
+        {
+            title: 'The 7 Habits of Highly Effective People',
+            author: 'Stephen R. Covey',
+            learned: '1. Focus on what you can control | stop spending so much energy on things outside your control.\n2. Begin with the end in mind | live and work with a clear picture of who you want to become and what actually matters to you.',
+            color: '#b03028',
+            height: 174,
+            width: 46,
+            image: 'assets/books/seven-habits.jpg',
+        },
+        {
+            title: 'The Courage to Be Disliked',
+            author: 'Ichiro Kishimi & Fumitake Koga',
+            learned: '1. Most problems are relationship problems | a lot of our stress comes from worrying about how other people see us.\n2. Separate your tasks from other people’s tasks | “task separation” — your task is what you can control: your actions, choices, effort, honesty, and direction.',
+            color: '#d8d2c6',
+            height: 170,
+            width: 44,
+            image: 'assets/books/courage-to-be-disliked.jpg',
+        },
+        {
+            title: 'The Subtle Art of Not Giving a F*ck',
+            author: 'Mark Manson',
+            learned: '1. Choose what is actually worth caring about | if you care about every opinion, every failure, every insecurity, every comparison, and every small problem, you burn yourself out.\n2. Problems never disappear, they just improve | life isn’t about reaching a point where you have no problems — it’s about choosing better problems.',
+            color: '#e35336',
+            height: 172,
+            width: 45,
+            image: 'assets/books/subtle-art.jpg',
+        },
+        {
+            title: 'Atomic Habits',
+            author: 'James Clear',
+            learned: '1. Small habits compound into big results | massive change usually comes from tiny improvements repeated consistently.\n2. Make habits satisfying and rewarding | your brain is more likely to repeat a habit when there’s an immediate reward — make good habits more enjoyable, satisfying, or fun.',
+            color: '#eae4da',
+            height: 175,
+            width: 47,
+            image: 'assets/books/atomic-habits.jpg',
+        },
+        {
+            title: 'The Psychology of Money',
+            author: 'Morgan Housel',
+            learned: '1. Wealth is built by behavior, not just intelligence | your behavior matters more: patience, consistency, avoiding ego, controlling spending, and not making emotional decisions.\n2. Freedom is the real goal of money | money’s greatest value isn’t buying expensive things — it’s buying control over your time.',
+            color: '#b7c2b2',
+            height: 172,
+            width: 45,
+            image: 'assets/books/psychology-of-money.jpg',
+        },
+        {
+            title: 'Mastery',
+            author: 'Robert Greene',
+            learned: '1. Mastery comes from patient apprenticeship | most people want shortcuts, but real mastery comes from going through the beginner stage, studying the fundamentals, finding mentors, and slowly building skill over time.\n2. Find the work that naturally pulls you in | Greene calls this your “Life’s Task” — the work that feels meaningful enough to keep improving at even when it gets hard.',
+            color: '#20201e',
+            height: 176,
+            width: 46,
+            image: 'assets/books/mastery.jpg',
+            imagePos: '100% 50%',
+        },
     ];
+
+    // Each \n-separated line is a takeaway; "main point | detail" renders the
+    // main point bold with the detail flowing after a dash.
+    function learnedHTML(text) {
+        return String(text).split('\n').map(function (line) {
+            var i = line.indexOf('|');
+            if (i === -1) return escapeHTML(line.trim());
+            return '<strong class="book-info-point">' + escapeHTML(line.slice(0, i).trim()) + '</strong> — ' +
+                escapeHTML(line.slice(i + 1).trim());
+        }).join('\n');
+    }
 
     function bookHTML(b) {
         var style = '';
         if (b.color)  style += '--book-color:' + b.color + ';';
         if (b.height) style += '--book-h:' + b.height + 'px;';
         if (b.width)  style += '--book-w:' + b.width + 'px;';
+        if (b.image)  style += '--book-image:url(&quot;' + b.image + '&quot;);';
+        if (b.imagePos) style += '--book-image-pos:' + b.imagePos + ';';
         var author = b.author
             ? '<span class="book-info-author">' + escapeHTML(b.author) + '</span>'
             : '';
         return '' +
-            '<button class="book" type="button"' + (style ? ' style="' + style + '"' : '') + '>' +
+            '<button class="book' + (b.image ? ' book--art' : '') + '" type="button"' + (style ? ' style="' + style + '"' : '') + '>' +
                 '<span class="book-spine-title">' + escapeHTML(b.title) + '</span>' +
                 '<span class="book-info" role="tooltip">' +
                     '<strong class="book-info-title">' + escapeHTML(b.title) + '</strong>' +
                     author +
                     '<span class="book-info-label">What I learned</span>' +
-                    '<span class="book-info-text">' + escapeHTML(b.learned) + '</span>' +
+                    '<span class="book-info-text">' + learnedHTML(b.learned) + '</span>' +
                 '</span>' +
             '</button>';
     }
