@@ -182,9 +182,12 @@ html, body {
 
 /* ── Sections ──────────────────────────────────── */
 .dv-snap {
-    height: 100vh;
-    height: calc(var(--dvh, 1vh) * 100);
-    height: 100dvh;
+    /* min-height (not height) so a section whose content is taller than the
+       viewport grows instead of its centered flex content overflowing into
+       the neighboring sections */
+    min-height: 100vh;
+    min-height: calc(var(--dvh, 1vh) * 100);
+    min-height: 100dvh;
     position: relative;
 }
 
@@ -457,7 +460,7 @@ html[data-theme="light"] .dv-themes-inner {
     .dv-dots-nav { display: none; }
 }
 @media (max-width: 600px) {
-    .dv-snap { height: auto; }
+    .dv-snap { min-height: 0; height: auto; }
     #dv-intro { min-height: 0; }
 
     .dv-intro-main { flex: none; justify-content: flex-start; padding: 88px 20px 32px; }

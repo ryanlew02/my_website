@@ -1087,6 +1087,8 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     display: flex;
     flex-direction: column;
     gap: 22px;
+    /* Headroom so a hovered book's info card clears the fixed header */
+    margin-top: clamp(60px, 14vh, 130px);
     border: 1px solid var(--line);
     border-radius: 18px;
     background: var(--soft-2);
@@ -1103,7 +1105,7 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     display: flex;
     align-items: flex-end;
     gap: 7px;
-    min-height: 140px;
+    min-height: 200px;
     padding: 0 12px;
 }
 
@@ -1134,8 +1136,8 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .book {
     position: relative;
     flex: 0 0 auto;
-    width: var(--book-w, 36px);
-    height: var(--book-h, 122px);
+    width: var(--book-w, 42px);
+    height: var(--book-h, 170px);
     padding: 0;
     border: 1px solid rgba(0, 0, 0, 0.28);
     border-radius: 3px 3px 1px 1px;
@@ -1157,6 +1159,19 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     z-index: 5;
 }
 
+/* Spine artwork — set via `image` in BOOKS. The image sits under the same
+   sheen gradient so art spines catch the light like the plain ones. */
+.book--art {
+    background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 30%, rgba(0, 0, 0, 0.18) 94%),
+        var(--book-image) var(--book-image-pos, center) / cover no-repeat,
+        var(--book-color, #6b4f35);
+}
+/* The artwork carries the visible title; keep the text for screen readers */
+.book--art .book-spine-title {
+    opacity: 0;
+}
+
 .book-spine-title {
     position: absolute;
     inset: 10px 0;
@@ -1174,10 +1189,12 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 /* ── "What I learned" card, revealed above the pulled book ── */
 .book-info {
     position: absolute;
-    left: 50%;
+    /* Anchored to the spine's left edge (not centered) so cards on books
+       near the shelf's left end never clip off the viewport */
+    left: -14px;
     bottom: calc(100% + 16px);
-    transform: translateX(-50%) translateY(6px);
-    width: min(260px, 74vw);
+    transform: translateY(6px);
+    width: min(320px, 74vw);
     padding: 13px 16px;
     background: var(--panel);
     border: 1px solid var(--accent);
@@ -1195,15 +1212,15 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     opacity: 1;
     visibility: visible;
     /* rotate(3deg) cancels the pulled book's tilt so the card stays level */
-    transform: translateX(-50%) translateY(0) rotate(3deg);
+    transform: translateY(0) rotate(3deg);
 }
 /* Pointer arrow toward the book */
 .book-info::after {
     content: "";
     position: absolute;
     top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
+    /* Sits over the spine below (card left edge is 14px left of the book) */
+    left: calc(14px + var(--book-w, 42px) / 2 - 7px);
     border: 7px solid transparent;
     border-top-color: var(--accent);
 }
@@ -1237,13 +1254,19 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     font-weight: 400;
     text-transform: none;
     letter-spacing: normal;
-    white-space: normal;
+    /* pre-line so a \n in a book's `learned` starts a new takeaway line */
+    white-space: pre-line;
     writing-mode: horizontal-tb;
+}
+/* The bolded "main point | …" lead of a takeaway line */
+.book-info-point {
+    color: var(--text);
+    font-weight: 600;
 }
 
 @media (max-width: 600px) {
-    .shelf-books { min-height: 112px; gap: 5px; padding: 0 6px; }
-    .book        { --book-h: 100px; --book-w: 30px; }
+    .shelf-books { min-height: 160px; gap: 5px; padding: 0 6px; }
+    .book        { --book-h: 136px; --book-w: 34px; }
 }
 
 /* ── Side navigation dots ────────────────────────────────────────────────── */
