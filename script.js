@@ -1019,6 +1019,7 @@
         function stravaRunMiles(scope) {
             return fetch(STRAVA_MILES_URL + '?range=' + scope)
                 .then(function (res) {
+                    if (res.status === 429) throw new Error('easy there — too many requests, try again in a minute');
                     if (!res.ok) throw new Error('mileage service returned HTTP ' + res.status);
                     return res.json();
                 })
