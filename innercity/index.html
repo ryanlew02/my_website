@@ -2,7 +2,9 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <!-- Colors iOS Safari's status-bar chrome; kept in sync with the theme by script.js -->
+        <meta name="theme-color" content="#07080f" />
         <meta name="description" content="Inner City, a mobile habit-tracking app that gamifies your daily routines. Build your city, one habit at a time. Available on the iOS App Store." />
         <title>Inner City · Ryan Lewandowski</title>
         <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
@@ -14,14 +16,40 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="../style.css?v=55237040" />
-        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;})();</script>
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='light'?'#f7f8fc':'#07080f';}})();</script>
         <style>
+            /* Free-scrolling project page under the fixed site header */
+            .project-page {
+                position: relative;
+                z-index: 1;
+                max-width: var(--maxw);
+                margin: 0 auto;
+                padding: calc(var(--header-h) + clamp(20px, 4vh, 44px)) var(--pad-x) 72px;
+            }
+
+            .back-link {
+                display: inline-flex;
+                gap: 8px;
+                align-items: center;
+                color: var(--muted-2);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 28px;
+            }
+
+            .back-link:hover {
+                color: var(--accent);
+            }
+
             .project-hero {
                 display: grid;
                 grid-template-columns: auto 1fr;
                 gap: 28px;
                 align-items: center;
-                margin-bottom: 44px;
+                margin-bottom: 56px;
             }
 
             .project-logo {
@@ -53,18 +81,12 @@
                 margin-top: 12px;
             }
 
-
-            .project-about {
-                margin-bottom: 48px;
+            .project-section {
+                margin-bottom: 56px;
             }
 
-            .project-about h2 {
-                font-size: 15px;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                margin: 0 0 10px;
-                font-family: 'Cinzel', Georgia, serif;
-                text-transform: uppercase;
+            .project-section .section-heading {
+                margin-bottom: 20px;
             }
 
             .project-about p {
@@ -76,7 +98,7 @@
             .features-list {
                 list-style: none;
                 padding: 0;
-                margin: 0;
+                margin: 18px 0 0;
                 display: grid;
                 gap: 8px;
             }
@@ -96,19 +118,6 @@
                 top: 4px;
             }
 
-            .screenshot-section {
-                margin-bottom: 48px;
-            }
-
-            .screenshot-section h2 {
-                font-size: 15px;
-                font-weight: 600;
-                letter-spacing: 0.08em;
-                margin: 0 0 18px;
-                font-family: 'Cinzel', Georgia, serif;
-                text-transform: uppercase;
-            }
-
             .screenshot-grid {
                 display: grid;
                 grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -120,23 +129,6 @@
                 border-radius: 16px;
                 border: 1px solid var(--line);
                 object-fit: cover;
-            }
-
-            .back-link {
-                display: inline-flex;
-                gap: 8px;
-                align-items: center;
-                color: var(--muted-2);
-                text-decoration: none;
-                font-size: 13px;
-                font-weight: 500;
-                letter-spacing: 0.04em;
-                text-transform: uppercase;
-                margin-bottom: 28px;
-            }
-
-            .back-link:hover {
-                color: var(--accent);
             }
 
             .project-links {
@@ -191,7 +183,9 @@
     </head>
 
     <body>
-        <div class="page">
+
+        <!-- Fixed background decorations — same ambient layer as the main site -->
+        <div class="bg-layer" aria-hidden="true">
             <div class="bg-blob blob-1"></div>
             <div class="bg-blob blob-2"></div>
             <div class="bg-blob blob-3"></div>
@@ -203,110 +197,116 @@
             <div class="cross c1"></div>
             <div class="cross c2"></div>
             <div class="cross c3"></div>
+        </div>
 
-            <main class="container">
+        <!-- Fixed site header -->
+        <header class="site-header">
+            <div class="header-left">
+                <a class="logo" href="../index.html" aria-label="Home">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+            </div>
+
+            <nav class="nav">
+                <a href="../index.html">Home</a>
+                <a href="../index.html#about">About</a>
+                <a href="../index.html#projects">Projects</a>
+                <a href="../index.html#reading">Reading</a>
+            </nav>
+
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
+        </header>
+
+        <main class="scroll-container">
+
+            <!-- Paints the band iOS Safari reveals behind the status bar while
+                 scrolling (see .statusbar-cover in style.css) -->
+            <div class="statusbar-cover" aria-hidden="true"></div>
+
+            <div class="project-page">
                 <div class="meta">
                     <span>Project</span>
                     <span>Inner City</span>
                     <span>2026</span>
                 </div>
 
-                <section class="frame">
-                    <header class="header">
-                        <a class="logo" href="../index.html" aria-label="Home">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
-                        </a>
+                <a class="back-link" href="../index.html#projects">
+                    <span aria-hidden="true">&larr;</span> Back to projects
+                </a>
 
-                        <nav class="nav">
-                            <a href="../index.html">Home</a>
-                            <a href="../index.html#projects">Works</a>
-                            <a href="../index.html#about">About</a>
-                            <a href="../index.html#contact">Contact</a>
-                        </nav>
-
-                        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
-                    </header>
-
-                    <a class="back-link" href="../index.html#projects">
-                        <span aria-hidden="true">&larr;</span> Back to projects
-                    </a>
-
-                    <div class="project-hero">
-                        <img class="project-logo" src="../assets/logo.png" alt="Inner City logo" />
-                        <div>
-                            <h1>Inner City</h1>
-                            <p class="project-tagline">Build your city, one habit at a time.</p>
-                            <div class="tech-stack">
-                                <span class="tech-tag">React Native</span>
-                                <span class="tech-tag">Expo</span>
-                                <span class="tech-tag">TypeScript</span>
-                                <span class="tech-tag">SQL</span>
-                            </div>
-                            <div class="project-links">
-                                <a class="app-store-badge" href="https://apps.apple.com/us/app/inner-city/id6759073471" target="_blank" rel="noopener noreferrer">
-                                    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
-                                </a>
-                                <a class="github-link" href="https://github.com/ryanlew02/inner-city" target="_blank" rel="noopener noreferrer">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-                                    </svg>
-                                    View on GitHub
-                                </a>
-                            </div>
+                <div class="project-hero">
+                    <img class="project-logo" src="../assets/logo.png" alt="Inner City logo" />
+                    <div>
+                        <h1>Inner City</h1>
+                        <p class="project-tagline">Build your city, one habit at a time.</p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">React Native</span>
+                            <span class="tech-tag">Expo</span>
+                            <span class="tech-tag">TypeScript</span>
+                            <span class="tech-tag">SQL</span>
+                        </div>
+                        <div class="project-links">
+                            <a class="app-store-badge" href="https://apps.apple.com/us/app/inner-city/id6759073471" target="_blank" rel="noopener noreferrer">
+                                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" />
+                            </a>
+                            <a class="github-link" href="https://github.com/ryanlew02/inner-city" target="_blank" rel="noopener noreferrer">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.579.688.481C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+                                </svg>
+                                View on GitHub
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    <div class="project-about">
-                        <h2>About</h2>
-                        <p>
-                            Inner City is a mobile habit-tracking app that turns daily routines into a city-building game.
-                            Complete your habits each day to construct buildings and watch your city grow on an isometric grid.
-                        </p>
-                        <h2>Features</h2>
-                        <ul class="features-list">
-                            <li>Track daily habits with customizable goals and streaks</li>
-                            <li>Isometric city that grows as you complete habits</li>
-                            <li>Detailed stats with overview, weekly, monthly, and yearly views</li>
-                            <li>Calendar heatmaps to visualize consistency</li>
-                            <li>Support for both "build" and "quit" habit types</li>
-                        </ul>
+                <div class="project-section project-about">
+                    <div class="section-heading" data-num="01">
+                        <span class="section-number">01</span>
+                        <h2 class="section-title">About</h2>
                     </div>
+                    <p>
+                        Inner City is a mobile habit-tracking app that turns daily routines into a city-building game.
+                        Complete your habits each day to construct buildings and watch your city grow on an isometric grid.
+                    </p>
+                    <ul class="features-list">
+                        <li>Track daily habits with customizable goals and streaks</li>
+                        <li>Isometric city that grows as you complete habits</li>
+                        <li>Detailed stats with overview, weekly, monthly, and yearly views</li>
+                        <li>Calendar heatmaps to visualize consistency</li>
+                        <li>Support for both "build" and "quit" habit types</li>
+                    </ul>
+                </div>
 
-                    <div class="screenshot-section">
-                        <h2>Screenshots</h2>
-                        <div class="screenshot-grid">
-                            <img src="../assets/1.1.0_1.jpg" alt="Inner City screenshot 1" />
-                            <img src="../assets/1.1.0_2.jpg" alt="Inner City screenshot 2" />
-                            <img src="../assets/1.1.0_3.jpg" alt="Inner City screenshot 3" />
-                            <img src="../assets/1.1.0_4.jpg" alt="Inner City screenshot 4" />
-                        </div>
+                <div class="project-section">
+                    <div class="section-heading" data-num="02">
+                        <span class="section-number">02</span>
+                        <h2 class="section-title">Screenshots</h2>
                     </div>
+                    <div class="screenshot-grid">
+                        <img src="../assets/1.1.0_1.jpg" alt="Inner City screenshot 1" />
+                        <img src="../assets/1.1.0_2.jpg" alt="Inner City screenshot 2" />
+                        <img src="../assets/1.1.0_3.jpg" alt="Inner City screenshot 3" />
+                        <img src="../assets/1.1.0_4.jpg" alt="Inner City screenshot 4" />
+                    </div>
+                </div>
 
-                    <footer class="contact-row">
-                        <div>&copy; <span id="year"></span> Ryan Lewandowski</div>
-                        <div class="links" aria-label="Social links">
-                            <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
-                            <span>/</span>
-                            <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
-                            <span>/</span>
-                            <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                            <span>/</span>
-                            <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
-                        </div>
-                    </footer>
-                </section>
-            </main>
-        </div>
+                <footer class="site-footer">
+                    <div class="footer-copy">© <span id="year"></span> Ryan Lewandowski</div>
+                    <div class="links" aria-label="Social links">
+                        <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <span>/</span>
+                        <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
+                        <span>/</span>
+                        <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <span>/</span>
+                        <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                    </div>
+                </footer>
+            </div>
+        </main>
 
-        <script src="../script.js?v=c927f7ba"></script>
-        <script>
-        document.querySelectorAll('body > div').forEach(function(el) {
-            if (el.style.top === '88px' && el.style.right === '20px') {
-                el.classList.add('hp-wand');
-            }
-        });
-        </script>
+        <script src="../script.js?v=2787c557"></script>
     </body>
 </html>
