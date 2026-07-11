@@ -691,3 +691,652 @@
     for (var i = 0; i < 2; i++) setTimeout(spawnEmber, Math.random() * 3000);
 
 })();
+
+// ─── Terminal for nerds ─────────────────────────────────────────────────────
+// Terminal overlay opened from the header button. Runs a small virtual shell
+// (ls, cd, cat, tree, open, …) over an in-memory file system that mirrors the
+// content of the site.
+(function () {
+
+    // ── Virtual file system ────────────────────────────────────────────────
+    // A plain object is a directory; a string is a file's contents. The user's
+    // home is /home/ryan. URLs printed by `cat` are rendered as real links.
+    var FS = {
+        home: {
+            ryan: {
+                'about.txt':
+                    "Hi, I'm Ryan Lewandowski — a software engineering student at\n" +
+                    'Southern New Hampshire University who learns best by building\n' +
+                    'projects that are just a little too ambitious for my current\n' +
+                    'skill level, then figuring them out one problem at a time.\n' +
+                    '\n' +
+                    'Programming keeps me hooked because there is always a new\n' +
+                    'problem to solve, a better way to build something, and, every\n' +
+                    'once in a while, the computer actually does what I asked it\n' +
+                    'to do.\n' +
+                    '\n' +
+                    'Currently learning: software architecture, system design.\n' +
+                    'Status: open to opportunities.',
+                'contact.txt':
+                    'email     ryanlewan.2@gmail.com\n' +
+                    'github    https://github.com/ryanlew02\n' +
+                    'linkedin  https://www.linkedin.com/in/ryan-lewandowski-120546164/\n' +
+                    'leetcode  https://leetcode.com/u/ryanlew02/',
+                'resume.pdf':
+                    "cat: resume.pdf is a binary file — run 'open resume.pdf' to view it.",
+                skills: {
+                    'languages.txt':
+                        'Python\nJavaScript / TypeScript\nJava\nSQL\nC++\nHTML / CSS',
+                    'frameworks.txt':
+                        'React\nReact Native\nExpo\nVite\nZustand\nDiscord.py',
+                    'tools.txt':
+                        'Git & GitHub\nAPIs & REST\nSQLite\nRiot Games API\nCSS custom properties\nPWA / service workers',
+                },
+                projects: {
+                    'diverge-os': {
+                        'README.md':
+                            '# DivergeOS\n' +
+                            '\n' +
+                            'A fully functional desktop OS simulation that runs in the\n' +
+                            'browser, themed around the Divergent universe. Complete with\n' +
+                            'a real window manager, 12 working apps, faction-based themes,\n' +
+                            'and a virtual file system (they seem to follow me around).\n' +
+                            '\n' +
+                            '- Window manager: drag, resize, minimize, maximize, z-stacking\n' +
+                            '- Chess engine with minimax AI, alpha-beta pruning, 3 difficulties\n' +
+                            '- 6 faction themes powered by CSS custom properties at runtime\n' +
+                            '- Ships as a PWA — installable and fully offline-capable',
+                        'tech-stack.txt':
+                            'React\nTypeScript\nVite\nZustand\nCSS Modules',
+                        'links.txt':
+                            'live demo  https://ryanlew02.github.io/DivergeOS/\n' +
+                            'source     https://github.com/ryanlew02/DivergeOS\n' +
+                            'write-up   https://ryanlewan.com/divergeos/',
+                    },
+                    halflight: {
+                        'README.md':
+                            '# Halflight\n' +
+                            '\n' +
+                            'Currently building. Details are still under wraps —\n' +
+                            'follow along at https://halflightdream.com',
+                        'tech-stack.txt':
+                            '[redacted] — check back soon.',
+                        'links.txt':
+                            'site  https://halflightdream.com',
+                    },
+                    'inner-city': {
+                        'README.md':
+                            '# Inner City\n' +
+                            '\n' +
+                            'Build your city, one habit at a time. A mobile habit-tracking\n' +
+                            'app that gamifies your daily routines: complete habits to\n' +
+                            'construct buildings and watch your city grow on an isometric\n' +
+                            'grid.\n' +
+                            '\n' +
+                            '- Live on the iOS App Store\n' +
+                            '- Isometric city that expands in real time as habits complete\n' +
+                            '- Stats dashboard with heatmaps and weekly/monthly/yearly views\n' +
+                            '- Supports "build" and "quit" habits with streak tracking',
+                        'tech-stack.txt':
+                            'React Native\nExpo\nTypeScript\nSQLite',
+                        'links.txt':
+                            'app store  https://apps.apple.com/us/app/inner-city/id6759073471\n' +
+                            'source     https://github.com/ryanlew02/inner-city\n' +
+                            'write-up   https://ryanlewan.com/innercity/',
+                    },
+                },
+                experience: {
+                    'nord.txt':
+                        'Nord\n' +
+                        '----\n' +
+                        'Data Entry\n' +
+                        '\n' +
+                        'Enter orders for parts, where attention to detail is the\n' +
+                        'whole job — a mistyped part number becomes the wrong part\n' +
+                        'on someone’s dock.',
+                    'bemobile.txt':
+                        'BeMobile (Verizon)\n' +
+                        '------------------\n' +
+                        'Sales\n' +
+                        '\n' +
+                        '- Top 20% of sellers for 6 months in a row\n' +
+                        '- Selected for the leadership development program\n' +
+                        '- Where I learned to talk to people — see\n' +
+                        '  ~/hobbies/books/reading-list.txt, entry #2',
+                },
+                education: {
+                    'snhu.txt':
+                        'Southern New Hampshire University\n' +
+                        'B.S. Software Engineering — expected May 2028\n' +
+                        'GPA: 4.0',
+                    'uwlax.txt':
+                        'University of Wisconsin–La Crosse\n' +
+                        '2019–2023\n' +
+                        'Coursework in business and computer science.',
+                },
+                hobbies: {
+                    books: {
+                        'reading-list.txt':
+                            'Every book on this shelf rewired something: how I think,\n' +
+                            'how I build, or what I chase. (The full shelf — takeaways\n' +
+                            'included — lives in the Reading section of the site.)\n' +
+                            '\n' +
+                            ' 1. The Code of the Extraordinary Mind — Vishen Lakhiani\n' +
+                            ' 2. Way of the Wolf — Jordan Belfort\n' +
+                            ' 3. Zero to One — Peter Thiel\n' +
+                            ' 4. The Pragmatic Programmer — David Thomas & Andrew Hunt\n' +
+                            ' 5. The Soul of a New Machine — Tracy Kidder\n' +
+                            ' 6. Code — Charles Petzold\n' +
+                            ' 7. The 7 Habits of Highly Effective People — Stephen R. Covey\n' +
+                            ' 8. The Courage to Be Disliked — Kishimi & Koga\n' +
+                            ' 9. The Subtle Art of Not Giving a F*ck — Mark Manson\n' +
+                            '10. Atomic Habits — James Clear\n' +
+                            '11. The Psychology of Money — Morgan Housel\n' +
+                            '12. Mastery — Robert Greene\n' +
+                            '13. The Lean Startup — Eric Ries',
+                    },
+                    workout: {
+                        'running.txt':
+                            'Running — the other kind of debugging.\n' +
+                            'When the code stops making sense, the problem usually\n' +
+                            'works itself out by mile two.',
+                    },
+                },
+            },
+        },
+    };
+
+    var HOME = ['home', 'ryan'];
+
+    // Files that `open` can launch in a new tab, keyed by absolute path
+    var OPENABLE = {
+        '/home/ryan/resume.pdf':
+            'https://docs.google.com/document/d/1XCIGnPTirWYI1s8AoJ96CaBp_vZpLPoC/view',
+    };
+
+    // Cloudflare Worker that proxies Strava for the `strava` command — it
+    // holds the API credentials and returns only a mileage number. Deploy
+    // strava-worker/ and paste the URL it prints, plus '/miles'.
+    var STRAVA_MILES_URL = 'https://strava-miles.ryanlewan.workers.dev/miles';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var openBtn   = document.getElementById('terminalBtn');
+        var overlay   = document.getElementById('terminalOverlay');
+        var closeBtn  = document.getElementById('terminalClose');
+        var body      = document.getElementById('terminalBody');
+        var history   = document.getElementById('terminalHistory');
+        var typed     = document.getElementById('terminalTyped');
+        var input     = document.getElementById('terminalInput');
+        var promptEl  = document.getElementById('terminalPrompt');
+
+        if (!openBtn || !overlay) return;
+
+        var cwd = HOME.slice();          // current directory as path segments
+        var cmdHistory = [];             // entered commands, for ↑/↓ recall
+        var histIndex = -1;              // -1 = live line (not browsing history)
+        var histDraft = '';              // what was typed before browsing began
+
+        // ── Path helpers ──────────────────────────────────────────────────
+        function isDir(node)  { return node !== null && typeof node === 'object'; }
+        function nodeAt(segs) {
+            var node = FS;
+            for (var i = 0; i < segs.length; i++) {
+                if (!isDir(node) || !(segs[i] in node)) return undefined;
+                node = node[segs[i]];
+            }
+            return node;
+        }
+
+        // "projects/../about.txt", "/home", "~/skills" → absolute segments,
+        // or null when the path climbs above the root.
+        function resolvePath(path) {
+            var segs;
+            if (path.charAt(0) === '/') segs = [];
+            else if (path === '~' || path.slice(0, 2) === '~/') {
+                segs = HOME.slice();
+                path = path.slice(2);
+            }
+            else segs = cwd.slice();
+
+            var parts = path.split('/');
+            for (var i = 0; i < parts.length; i++) {
+                var p = parts[i];
+                if (p === '' || p === '.') continue;
+                if (p === '..') {
+                    if (!segs.length) return null;
+                    segs.pop();
+                } else segs.push(p);
+            }
+            return segs;
+        }
+
+        function displayPath(segs) {
+            if (segs.length >= HOME.length &&
+                segs.slice(0, HOME.length).join('/') === HOME.join('/')) {
+                var rest = segs.slice(HOME.length).join('/');
+                return '~' + (rest ? '/' + rest : '');
+            }
+            return '/' + segs.join('/');
+        }
+
+        function promptText() {
+            return 'visitor@ryanlewan.com:' + displayPath(cwd) + '$';
+        }
+
+        // ── Output helpers ────────────────────────────────────────────────
+        var URL_RE = /https?:\/\/[^\s]+/g;
+
+        // Print a block of text; URLs become real (new tab) links
+        function print(text, className) {
+            var line = document.createElement('div');
+            line.className = 'terminal-line' + (className ? ' ' + className : '');
+            String(text).split(URL_RE).forEach(function (chunk, i) {
+                if (i > 0) {
+                    var url = text.match(URL_RE)[i - 1];
+                    var a = document.createElement('a');
+                    a.className = 'terminal-link';
+                    a.href = url;
+                    a.target = '_blank';
+                    a.rel = 'noopener noreferrer';
+                    a.textContent = url;
+                    line.appendChild(a);
+                }
+                line.appendChild(document.createTextNode(chunk));
+            });
+            history.appendChild(line);
+        }
+
+        // Print a directory listing where each entry is individually styled
+        function printEntries(entries) {
+            var line = document.createElement('div');
+            line.className = 'terminal-line';
+            entries.forEach(function (e, i) {
+                if (i) line.appendChild(document.createTextNode('  '));
+                var span = document.createElement('span');
+                span.className = e.dir ? 'terminal-entry-dir' : '';
+                span.textContent = e.dir ? e.name + '/' : e.name;
+                line.appendChild(span);
+            });
+            history.appendChild(line);
+        }
+
+        // Print one grep hit: an optional file label, then the line with every
+        // pattern match highlighted
+        function printGrepLine(label, text, re) {
+            var line = document.createElement('div');
+            line.className = 'terminal-line';
+            if (label) {
+                var file = document.createElement('span');
+                file.className = 'terminal-grep-file';
+                file.textContent = label + ':';
+                line.appendChild(file);
+            }
+            var last = 0, m;
+            re.lastIndex = 0;
+            while ((m = re.exec(text)) !== null) {
+                line.appendChild(document.createTextNode(text.slice(last, m.index)));
+                var mark = document.createElement('span');
+                mark.className = 'terminal-grep-match';
+                mark.textContent = m[0];
+                line.appendChild(mark);
+                last = m.index + m[0].length;
+                if (m[0] === '') re.lastIndex++;   // zero-length match guard
+            }
+            line.appendChild(document.createTextNode(text.slice(last)));
+            history.appendChild(line);
+        }
+
+        function echoCommand(raw) {
+            var line = document.createElement('div');
+            line.className = 'terminal-line';
+            var prompt = document.createElement('span');
+            prompt.className = 'terminal-prompt';
+            prompt.textContent = promptText();
+            line.appendChild(prompt);
+            line.appendChild(document.createTextNode(raw));
+            history.appendChild(line);
+        }
+
+        function sortedEntries(node) {
+            return Object.keys(node).sort(function (a, b) {
+                var da = isDir(node[a]), db = isDir(node[b]);
+                if (da !== db) return da ? -1 : 1;   // directories first
+                return a.localeCompare(b);
+            }).map(function (name) {
+                return { name: name, dir: isDir(node[name]) };
+            });
+        }
+
+        // ── Strava ────────────────────────────────────────────────────────
+        var stravaCache = {};     // fetched totals, keyed by 'month' / 'year'
+
+        function stravaConfigured() {
+            return STRAVA_MILES_URL.indexOf('YOUR_') !== 0;
+        }
+
+        // The worker (strava-worker/) does the Strava API work and returns
+        // { miles: 24.6, range: "month" }.
+        function stravaRunMiles(scope) {
+            return fetch(STRAVA_MILES_URL + '?range=' + scope)
+                .then(function (res) {
+                    if (!res.ok) throw new Error('mileage service returned HTTP ' + res.status);
+                    return res.json();
+                })
+                .then(function (data) { return data.miles; });
+        }
+
+        // ── Commands ──────────────────────────────────────────────────────
+        var COMMANDS = {
+            help: function () {
+                print(
+                    'ls [path]             list directory contents\n' +
+                    'cd <path>             change directory\n' +
+                    'cat <file>            print a file\n' +
+                    'grep <pattern> <file> search inside files (flags: -i, -r)\n' +
+                    'pwd                   print working directory\n' +
+                    'tree [path]           directory tree\n' +
+                    'open <file>           open a file in a new tab (try resume.pdf)\n' +
+                    "strava [--year]       Ryan's running miles this month (or year)\n" +
+                    'whoami                who is typing\n' +
+                    'clear                 clear the screen\n' +
+                    'exit                  close the terminal\n' +
+                    '\n' +
+                    'Tab completes commands and paths; ↑/↓ browse history.\n' +
+                    'Anything that writes (mkdir, touch, rm, …) is politely refused.'
+                );
+            },
+            ls: function (args) {
+                var segs = resolvePath(args[0] || '.');
+                var node = segs && nodeAt(segs);
+                if (node === undefined || segs === null) {
+                    print('ls: ' + args[0] + ': No such file or directory', 'terminal-error');
+                } else if (!isDir(node)) {
+                    print(args[0]);
+                } else {
+                    var entries = sortedEntries(node);
+                    if (entries.length) printEntries(entries)
+                }
+            },
+            cd: function (args) {
+                var target = args[0] || '~';
+                var segs = resolvePath(target);
+                var node = segs && nodeAt(segs);
+                if (node === undefined || segs === null) {
+                    print('cd: ' + target + ': No such file or directory', 'terminal-error');
+                } else if (!isDir(node)) {
+                    print('cd: ' + target + ': Not a directory', 'terminal-error');
+                } else {
+                    cwd = segs;
+                    promptEl.textContent = promptText();
+                }
+            },
+            cat: function (args) {
+                if (!args.length) { print('usage: cat <file>', 'terminal-error'); return; }
+                args.forEach(function (arg) {
+                    var segs = resolvePath(arg);
+                    var node = segs && nodeAt(segs);
+                    if (node === undefined || segs === null) {
+                        print('cat: ' + arg + ': No such file or directory', 'terminal-error');
+                    } else if (isDir(node)) {
+                        print('cat: ' + arg + ': Is a directory', 'terminal-error');
+                    } else {
+                        print(node);
+                    }
+                });
+            },
+            pwd: function () {
+                print('/' + cwd.join('/'));
+            },
+            tree: function (args) {
+                var segs = resolvePath(args[0] || '.');
+                var node = segs && nodeAt(segs);
+                if (node === undefined || segs === null) {
+                    print('tree: ' + args[0] + ': No such file or directory', 'terminal-error');
+                    return;
+                }
+                if (!isDir(node)) { print(args[0]); return; }
+                var lines = [displayPath(segs)];
+                (function walk(dir, prefix) {
+                    var entries = sortedEntries(dir);
+                    entries.forEach(function (e, i) {
+                        var last = i === entries.length - 1;
+                        lines.push(prefix + (last ? '└── ' : '├── ') + e.name + (e.dir ? '/' : ''));
+                        if (e.dir) walk(dir[e.name], prefix + (last ? '    ' : '│   '));
+                    });
+                })(node, '');
+                print(lines.join('\n'));
+            },
+            open: function (args) {
+                if (!args.length) { print('usage: open <file>', 'terminal-error'); return; }
+                var segs = resolvePath(args[0]);
+                var node = segs && nodeAt(segs);
+                if (node === undefined || segs === null) {
+                    print('open: ' + args[0] + ': No such file or directory', 'terminal-error');
+                    return;
+                }
+                var url = OPENABLE['/' + segs.join('/')];
+                if (url) {
+                    print('Opening ' + segs[segs.length - 1] + '…');
+                    window.open(url, '_blank', 'noopener');
+                } else {
+                    print("open: " + args[0] + ": nothing to open — try 'cat' instead", 'terminal-error');
+                }
+            },
+            grep: function (args) {
+                var opts = '';
+                var rest = [];
+                args.forEach(function (a) {
+                    if (!rest.length && a.charAt(0) === '-' && a.length > 1) opts += a.slice(1);
+                    else rest.push(a);
+                });
+                if (rest.length < 2) {
+                    print('usage: grep [-i] [-r] <pattern> <file …>', 'terminal-error');
+                    return;
+                }
+                var ignoreCase = opts.indexOf('i') !== -1;
+                var recursive  = opts.indexOf('r') !== -1;
+                var pattern = rest[0];
+                var re;
+                try { re = new RegExp(pattern, ignoreCase ? 'gi' : 'g'); }
+                catch (e) {
+                    // Not a valid regex — fall back to a literal substring match
+                    re = new RegExp(pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+                        ignoreCase ? 'gi' : 'g');
+                }
+
+                // Expand the path arguments into a flat list of files to scan
+                var files = [];
+                rest.slice(1).forEach(function (arg) {
+                    var segs = resolvePath(arg);
+                    var node = segs && nodeAt(segs);
+                    if (node === undefined || segs === null) {
+                        print('grep: ' + arg + ': No such file or directory', 'terminal-error');
+                    } else if (!isDir(node)) {
+                        files.push({ label: arg, text: node });
+                    } else if (!recursive) {
+                        print('grep: ' + arg + ': Is a directory (try grep -r)', 'terminal-error');
+                    } else {
+                        (function walk(dir, base) {
+                            sortedEntries(dir).forEach(function (e) {
+                                if (e.dir) walk(dir[e.name], base + '/' + e.name);
+                                else files.push({ label: base + '/' + e.name, text: dir[e.name] });
+                            });
+                        })(node, displayPath(segs));
+                    }
+                });
+
+                var showFile = recursive || files.length > 1;
+                var found = false;
+                files.forEach(function (f) {
+                    f.text.split('\n').forEach(function (lineText) {
+                        re.lastIndex = 0;
+                        if (!re.test(lineText)) return;
+                        found = true;
+                        printGrepLine(showFile ? f.label : '', lineText, re);
+                    });
+                });
+                if (!found && files.length) print('grep: no matches for "' + pattern + '"');
+            },
+            strava: function (args) {
+                var yearMode = false;
+                for (var i = 0; i < args.length; i++) {
+                    if (args[i] === '--year' || args[i] === '-y') yearMode = true;
+                    else { print('usage: strava [--year | -y]', 'terminal-error'); return; }
+                }
+                if (!stravaConfigured()) {
+                    print('strava: not hooked up yet — check back soon.', 'terminal-error');
+                    return;
+                }
+                var scope = yearMode ? 'year' : 'month';
+                var cached = stravaCache[scope];
+                if (cached && Date.now() - cached.at < 5 * 60 * 1000) {
+                    print('Ryan has run ' + cached.miles + ' miles this ' + scope);
+                    return;
+                }
+                print('Pulling runs from Strava…');
+                stravaRunMiles(scope).then(function (miles) {
+                    stravaCache[scope] = { miles: miles, at: Date.now() };
+                    print('Ryan has run ' + miles + ' miles this ' + scope);
+                    body.scrollTop = body.scrollHeight;
+                }).catch(function (err) {
+                    print('strava: ' + err.message, 'terminal-error');
+                    body.scrollTop = body.scrollHeight;
+                });
+            },
+            whoami: function () { print('visitor'); },
+            clear: function () { history.innerHTML = ''; },
+            exit: function () { closeTerminal(); },
+            echo: function (args) { print(args.join(' ')); },
+            sudo: function () {
+                print('visitor is not in the sudoers file. This incident will be reported.', 'terminal-error');
+            },
+        };
+
+        // Write commands exist only to be refused — the file system is
+        // read-only for visitors.
+        ['mkdir', 'touch', 'rm', 'rmdir', 'mv', 'cp', 'chmod', 'chown', 'nano', 'vim', 'vi']
+            .forEach(function (cmd) {
+                COMMANDS[cmd] = function () {
+                    print(cmd + ': request denied — /home/ryan is read-only for visitors.', 'terminal-error');
+                };
+            });
+
+        function run(raw) {
+            var trimmed = raw.trim();
+            echoCommand(raw);
+            if (!trimmed) return;
+            cmdHistory.push(raw);
+
+            var parts = trimmed.split(/\s+/);
+            var cmd = parts[0];
+            // Output redirection would write to the FS, so it's refused too
+            if (parts.indexOf('>') !== -1 || parts.indexOf('>>') !== -1) {
+                print(cmd + ': request denied — /home/ryan is read-only for visitors.', 'terminal-error');
+            }
+            else if (COMMANDS[cmd]) COMMANDS[cmd](parts.slice(1));
+            else print(cmd + ": command not found — try 'help'", 'terminal-error');
+        }
+
+        // ── Tab completion ────────────────────────────────────────────────
+        // Completes the command name for the first word, paths after that.
+        function complete() {
+            var value = input.value;
+            var tokens = value.split(/\s+/);
+            var token = tokens[tokens.length - 1];
+            var options, stem;
+
+            if (tokens.length === 1) {
+                options = Object.keys(COMMANDS);
+                stem = token;
+            } else {
+                var slash = token.lastIndexOf('/');
+                var dirPart = slash === -1 ? '.' : (token.slice(0, slash) || '/');
+                stem = token.slice(slash + 1);
+                var segs = resolvePath(dirPart);
+                var node = segs && nodeAt(segs);
+                if (!node || !isDir(node)) return;
+                options = Object.keys(node).map(function (name) {
+                    return isDir(node[name]) ? name + '/' : name;
+                });
+            }
+
+            var matches = options.filter(function (o) { return o.indexOf(stem) === 0; });
+            if (!matches.length) return;
+            if (matches.length === 1) {
+                var completed = matches[0] + (tokens.length === 1 ? ' ' : '');
+                input.value = value.slice(0, value.length - stem.length) + completed;
+            } else {
+                echoCommand(value);
+                print(matches.join('  '));
+            }
+            typed.textContent = input.value;
+            body.scrollTop = body.scrollHeight;
+        }
+
+        // ── Window open / close ───────────────────────────────────────────
+        function openTerminal() {
+            overlay.hidden = false;
+            document.body.classList.add('terminal-open');
+            input.focus();
+        }
+
+        function closeTerminal() {
+            overlay.hidden = true;
+            document.body.classList.remove('terminal-open');
+            openBtn.focus();
+        }
+
+        openBtn.addEventListener('click', openTerminal);
+        closeBtn.addEventListener('click', closeTerminal);
+
+        // Clicking the dimmed backdrop closes; clicking inside refocuses input
+        overlay.addEventListener('mousedown', function (e) {
+            if (e.target === overlay) closeTerminal();
+        });
+        body.addEventListener('click', function (e) {
+            if (e.target.tagName !== 'A') input.focus();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !overlay.hidden) closeTerminal();
+        });
+
+        // Mirror keystrokes into the visible line
+        input.addEventListener('input', function () {
+            typed.textContent = input.value;
+            histIndex = -1;
+            body.scrollTop = body.scrollHeight;
+        });
+
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                run(input.value);
+                input.value = '';
+                typed.textContent = '';
+                histIndex = -1;
+                body.scrollTop = body.scrollHeight;
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                complete();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (!cmdHistory.length) return;
+                if (histIndex === -1) { histDraft = input.value; histIndex = cmdHistory.length; }
+                if (histIndex > 0) histIndex--;
+                input.value = cmdHistory[histIndex];
+                typed.textContent = input.value;
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (histIndex === -1) return;
+                histIndex++;
+                if (histIndex >= cmdHistory.length) {
+                    histIndex = -1;
+                    input.value = histDraft;
+                } else {
+                    input.value = cmdHistory[histIndex];
+                }
+                typed.textContent = input.value;
+            }
+        });
+    });
+})();

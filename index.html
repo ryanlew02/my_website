@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <meta name="description" content="Ryan Lewandowski, a software developer building clean, reliable software. CS student at SNHU. Open to opportunities." />
         <meta name="author" content="Ryan Lewandowski" />
         <title>Ryan Lewandowski · Software Developer</title>
@@ -29,7 +29,7 @@
             href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=1850af62" />
+        <link rel="stylesheet" href="style.css?v=ab0a062a" />
         <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -52,11 +52,17 @@
 
         <!-- Fixed site header -->
         <header class="site-header">
-            <a class="logo" href="#hero" aria-label="Home">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                </svg>
-            </a>
+            <div class="header-left">
+                <a class="logo" href="#hero" aria-label="Home">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+                <button class="terminal-btn" id="terminalBtn" type="button" title="Open terminal">
+                    <span class="terminal-btn-glyph" aria-hidden="true">&gt;_</span>
+                    <span class="terminal-btn-label">terminal for nerds</span>
+                </button>
+            </div>
 
             <nav class="nav">
                 <a href="#hero"           data-section="hero">Home</a>
@@ -268,6 +274,26 @@
             <a class="dot"        href="#reading"        data-label="Reading"        aria-label="Go to Reading"></a>
         </nav>
 
-        <script src="script.js?v=3b9de66c"></script>
+        <!-- Terminal — opened by the "terminal for nerds" header button. Runs a
+             small virtual shell (ls/cd/cat/…) over an in-memory file system
+             mirroring the site's content; see "Terminal for nerds" in script.js. -->
+        <div class="terminal-overlay" id="terminalOverlay" hidden>
+            <div class="terminal-window" role="dialog" aria-modal="true" aria-label="Terminal">
+                <div class="terminal-titlebar">
+                    <span class="terminal-title">visitor@ryanlewan.com — zsh</span>
+                    <button class="terminal-close" id="terminalClose" type="button" aria-label="Close terminal">×</button>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <p class="terminal-motd">ryanOS 1.0.0<br />Type <span class="terminal-motd-cmd">help</span> to see available commands. Press Esc to exit.</p>
+                    <div class="terminal-history" id="terminalHistory"></div>
+                    <!-- Kept on one line: .terminal-line uses white-space: pre-wrap,
+                         which would render any whitespace between these spans -->
+                    <div class="terminal-line"><span class="terminal-prompt" id="terminalPrompt">visitor@ryanlewan.com:~$</span><span class="terminal-typed" id="terminalTyped"></span><span class="terminal-cursor" aria-hidden="true"></span></div>
+                    <input class="terminal-hidden-input" id="terminalInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Terminal input" />
+                </div>
+            </div>
+        </div>
+
+        <script src="script.js?v=68528e5a"></script>
     </body>
 </html>
