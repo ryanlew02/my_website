@@ -3,6 +3,9 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <!-- Colors iOS Safari's status-bar chrome (the strip behind the clock/battery,
+             which pages can't paint into); kept in sync with the theme by script.js -->
+        <meta name="theme-color" content="#07080f" />
         <meta name="description" content="Ryan Lewandowski, a software developer building clean, reliable software. CS student at SNHU. Open to opportunities." />
         <meta name="author" content="Ryan Lewandowski" />
         <title>Ryan Lewandowski · Software Developer</title>
@@ -30,7 +33,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="style.css?v=7ca0a12f" />
-        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='light'?'#f7f8fc':'#07080f';}if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
     <body>
@@ -294,6 +297,6 @@
             </div>
         </div>
 
-        <script src="script.js?v=f218efe8"></script>
+        <script src="script.js?v=c927f7ba"></script>
     </body>
 </html>

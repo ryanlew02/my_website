@@ -480,6 +480,12 @@
             btn.title = `Theme: ${LABELS[theme]}`;
             btn.setAttribute('aria-label', `Switch theme (current: ${LABELS[theme]})`);
         }
+
+        // iOS Safari paints the status-bar strip (behind the clock) with
+        // theme-color — pages can't draw there, so this is the only way to
+        // keep it matching the page background.
+        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+        if (themeColorMeta) themeColorMeta.content = theme === 'light' ? '#f7f8fc' : '#07080f';
     }
 
     document.addEventListener('DOMContentLoaded', function () {
