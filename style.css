@@ -1082,13 +1082,28 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     max-width: 60ch;
 }
 
+/* Second line of the intro — an interaction hint, so it gets the accent gold */
+.reading-cta {
+    display: block;
+    margin-top: 6px;
+    color: var(--accent-2);
+}
+
 /* The bookcase frame */
 .bookshelf {
+    /* Books multiply their configured size by this; phones shrink it so a
+       row of spines never outgrows the screen (see the 600px media query) */
+    --book-scale: 1;
     display: flex;
     flex-direction: column;
     gap: 22px;
     /* Headroom so a hovered book's info card clears the fixed header */
     margin-top: clamp(60px, 14vh, 130px);
+    /* Hug the row of books and sit centered so the shelf always looks full */
+    width: fit-content;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     border: 1px solid var(--line);
     border-radius: 18px;
     background: var(--soft-2);
@@ -1104,6 +1119,8 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .shelf-books {
     display: flex;
     align-items: flex-end;
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 7px;
     min-height: 200px;
     padding: 0 12px;
@@ -1136,8 +1153,8 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .book {
     position: relative;
     flex: 0 0 auto;
-    width: var(--book-w, 42px);
-    height: var(--book-h, 170px);
+    width: calc(var(--book-w, 42px) * var(--book-scale, 1));
+    height: calc(var(--book-h, 170px) * var(--book-scale, 1));
     padding: 0;
     border: 1px solid rgba(0, 0, 0, 0.28);
     border-radius: 3px 3px 1px 1px;
@@ -1190,8 +1207,10 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 .book-info {
     position: absolute;
     /* Anchored to the spine's left edge (not centered) so cards on books
-       near the shelf's left end never clip off the viewport */
-    left: -14px;
+       near the shelf's left end never clip off the viewport. --card-dx is
+       set inline by script.js on books whose card would clip the row edge
+       (e.g. right-end spines on a phone) and nudges the card back inward. */
+    left: calc(-14px + var(--card-dx, 0px));
     bottom: calc(100% + 16px);
     transform: translateY(6px);
     width: min(320px, 74vw);
@@ -1219,8 +1238,9 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
     content: "";
     position: absolute;
     top: 100%;
-    /* Sits over the spine below (card left edge is 14px left of the book) */
-    left: calc(14px + var(--book-w, 42px) / 2 - 7px);
+    /* Sits over the spine below — card left edge is 14px left of the book,
+       minus any inward --card-dx nudge, at the rendered (scaled) spine width */
+    left: calc(14px + var(--book-w, 42px) * var(--book-scale, 1) / 2 - 7px - var(--card-dx, 0px));
     border: 7px solid transparent;
     border-top-color: var(--accent);
 }
@@ -1265,8 +1285,11 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 }
 
 @media (max-width: 600px) {
-    .shelf-books { min-height: 160px; gap: 5px; padding: 0 6px; }
-    .book        { --book-h: 136px; --book-w: 34px; }
+    /* Shrink spines via the scale factor — each book's inline --book-w/--book-h
+       would override a plain .book re-declaration here, so scale instead.
+       script.js reads this to decide how many books fit per shelf row. */
+    .bookshelf   { --book-scale: 0.78; gap: 16px; }
+    .shelf-books { min-height: 148px; gap: 5px; padding: 0 6px; }
 }
 
 /* ── Side navigation dots ────────────────────────────────────────────────── */

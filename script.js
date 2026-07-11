@@ -33,7 +33,7 @@
                 'Window manager with drag, resize, minimize, maximize, and z-index stacking',
                 'Chess engine with minimax AI, alpha-beta pruning, and 3 difficulty levels',
                 '6 complete faction themes powered by CSS custom properties at runtime',
-                'Ships as a PWA — installable and fully offline-capable'
+                'Ships as a PWA, installable and fully offline-capable'
             ],
             tags: ['React', 'TypeScript', 'Vite', 'Zustand', 'CSS Modules']
         },
@@ -67,7 +67,7 @@
             title: 'This Portfolio',
             href: 'https://github.com/ryanlew02/my_website',
             external: true,
-            desc: 'Built from scratch with zero dependencies — no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript.',
+            desc: 'Built from scratch with zero dependencies: no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript.',
             bullets: [
                 'Fully responsive layout using CSS Grid and fluid <code>clamp()</code> typography',
                 'Dark / light theme system with CSS custom properties and localStorage',
@@ -234,8 +234,9 @@
         //                         // crop works best; it replaces the title text
         //     imagePos: '100% 50%', // which part of the artwork the spine shows
         //                         // (background-position; defaults to center)
-        //     shelf: 0,           // only used if a second shelf row is added back
         // },
+        // Books flow onto extra shelf rows automatically when they outgrow
+        // the screen (see initBookshelf), so just keep appending here.
         {
             title: 'The Code of the Extraordinary Mind',
             author: 'Vishen Lakhiani',
@@ -345,6 +346,15 @@
             image: 'assets/books/mastery.jpg',
             imagePos: '100% 50%',
         },
+        {
+            title: 'The Lean Startup',
+            author: 'Eric Ries',
+            learned: '1. Use the Build–Measure–Learn loop | instead of spending months perfecting an idea, create a basic version, release it, measure how real customers respond, and use what you learn to improve it.\n2. Focus on validated learning, not just growth or activity | progress isn’t measured by how much you build or how busy you are — it’s measured by whether you’re learning what customers actually want and proving your assumptions are correct.',
+            color: '#1e88c7',
+            height: 173,
+            width: 45,
+            image: 'assets/books/lean-startup.jpg',
+        },
     ];
 
     // Each \n-separated line is a takeaway; "main point | detail" renders the
@@ -358,13 +368,14 @@
         }).join('\n');
     }
 
-    function bookHTML(b) {
+    function bookHTML(b, cardDx) {
         var style = '';
         if (b.color)  style += '--book-color:' + b.color + ';';
         if (b.height) style += '--book-h:' + b.height + 'px;';
         if (b.width)  style += '--book-w:' + b.width + 'px;';
         if (b.image)  style += '--book-image:url(&quot;' + b.image + '&quot;);';
         if (b.imagePos) style += '--book-image-pos:' + b.imagePos + ';';
+        if (cardDx)   style += '--card-dx:' + cardDx + 'px;';
         var author = b.author
             ? '<span class="book-info-author">' + escapeHTML(b.author) + '</span>'
             : '';
@@ -381,15 +392,77 @@
     }
 
     function initBookshelf() {
-        var shelves = document.querySelectorAll('#bookshelf .shelf-books');
+        var caseEl = document.getElementById('bookshelf');
         // While BOOKS is empty, leave the "arriving soon" hint from the HTML
-        if (!shelves.length || !BOOKS.length) return;
-        document.querySelectorAll('#bookshelf .shelf-hint').forEach(function (el) {
-            el.remove();
-        });
-        BOOKS.forEach(function (b) {
-            var shelf = shelves[Math.min(b.shelf || 0, shelves.length - 1)];
-            shelf.insertAdjacentHTML('beforeend', bookHTML(b));
+        if (!caseEl || !BOOKS.length) return;
+
+        var lastSig = '';
+
+        // Split BOOKS into as many shelf rows as the available width demands
+        // (one wide row on desktop, two or more on a phone) and render each
+        // row as its own .shelf so every row of spines gets a board under it.
+        function layout() {
+            var probe = caseEl.querySelector('.shelf-books');
+            if (!probe) return;
+
+            var rowCS  = getComputedStyle(probe);
+            var caseCS = getComputedStyle(caseEl);
+            var gap    = parseFloat(rowCS.columnGap) || 7;
+            var scale  = parseFloat(caseCS.getPropertyValue('--book-scale')) || 1;
+
+            // Width a row of spines may occupy: the section's inner width minus
+            // everything the bookcase itself adds around the row.
+            var parent   = caseEl.parentElement;
+            var parentCS = getComputedStyle(parent);
+            var avail = parent.clientWidth -
+                (parseFloat(parentCS.paddingLeft) || 0) - (parseFloat(parentCS.paddingRight) || 0) -
+                (parseFloat(caseCS.paddingLeft) || 0) - (parseFloat(caseCS.paddingRight) || 0) -
+                (parseFloat(caseCS.borderLeftWidth) || 0) - (parseFloat(caseCS.borderRightWidth) || 0) -
+                (parseFloat(rowCS.paddingLeft) || 0) - (parseFloat(rowCS.paddingRight) || 0);
+
+            var rows = [[]];
+            var x = 0;
+            BOOKS.forEach(function (b) {
+                var row = rows[rows.length - 1];
+                var w = (b.width || 42) * scale;
+                var next = x + (row.length ? gap : 0) + w;
+                if (row.length && next > avail) {
+                    rows.push([{ book: b, x: 0, w: w }]);
+                    x = w;
+                } else {
+                    row.push({ book: b, x: x + (row.length ? gap : 0), w: w });
+                    x = next;
+                }
+            });
+
+            // Re-render only when the flow actually changes.
+            var sig = scale + ':' + rows.map(function (r) { return r.length; }).join(',');
+            if (sig === lastSig) return;
+            lastSig = sig;
+
+            var cardW = Math.min(320, window.innerWidth * 0.74); // .book-info width
+            caseEl.innerHTML = rows.map(function (r) {
+                var rowW = r[r.length - 1].x + r[r.length - 1].w;
+                return '<div class="shelf"><div class="shelf-books">' +
+                    r.map(function (item) {
+                        // Nudge a book's info card inward when its default
+                        // spot (14px left of the spine) would clip the row.
+                        var cardLeft = item.x - 14;
+                        var target = rowW <= cardW
+                            ? (rowW - cardW) / 2
+                            : Math.max(0, Math.min(cardLeft, rowW - cardW));
+                        var dx = Math.round(target - cardLeft);
+                        return bookHTML(item.book, dx);
+                    }).join('') +
+                    '</div><div class="shelf-board"></div></div>';
+            }).join('');
+        }
+
+        layout();
+        var settle;
+        window.addEventListener('resize', function () {
+            window.clearTimeout(settle);
+            settle = window.setTimeout(layout, 120);
         });
     }
 
@@ -405,7 +478,7 @@
         if (btn) {
             btn.innerHTML = ICONS[theme];
             btn.title = `Theme: ${LABELS[theme]}`;
-            btn.setAttribute('aria-label', `Switch theme — current: ${LABELS[theme]}`);
+            btn.setAttribute('aria-label', `Switch theme (current: ${LABELS[theme]})`);
         }
     }
 
