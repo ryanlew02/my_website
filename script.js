@@ -856,8 +856,7 @@
 
     // Files that `open` can launch in a new tab, keyed by absolute path
     var OPENABLE = {
-        '/home/ryan/resume.pdf':
-            'https://docs.google.com/document/d/1XCIGnPTirWYI1s8AoJ96CaBp_vZpLPoC/view',
+        '/home/ryan/resume.pdf': 'assets/resume.pdf',
     };
 
     // Cloudflare Worker that proxies Strava for the `strava` command — it
