@@ -722,7 +722,8 @@
                     'to do.\n' +
                     '\n' +
                     'Currently learning: software architecture, system design.\n' +
-                    'Status: open to opportunities.',
+                    "Status: open to opportunities. (Run 'status' to see what\n" +
+                    "I'm up to right now.)",
                 'contact.txt':
                     'email     ryanlewan.2@gmail.com\n' +
                     'github    https://github.com/ryanlew02\n' +
@@ -770,6 +771,41 @@
                         'links.txt':
                             'site  https://halflightdream.com',
                     },
+                    'lol-discord-bot': {
+                        'README.md':
+                            '# League of Legends Discord Bot\n' +
+                            '\n' +
+                            "A Discord bot that pulls live match data from Riot Games'\n" +
+                            'API, parses player performance, and delivers a humorous\n' +
+                            'verdict directly to the server.\n' +
+                            '\n' +
+                            '- Integrates with the Riot Games API for real-time match history\n' +
+                            '- Analyzes KDA, damage output, vision score, and objectives\n' +
+                            '- Generates and posts performance verdicts to Discord channels',
+                        'tech-stack.txt':
+                            'Python\nRiot Games API\nDiscord.py',
+                        'links.txt':
+                            'source  https://github.com/ryanlew02/lol-inted-bot',
+                    },
+                    'this-website': {
+                        'README.md':
+                            '# This Portfolio\n' +
+                            '\n' +
+                            'The site you are on right now — this terminal included.\n' +
+                            'Built from scratch with zero dependencies: no frameworks,\n' +
+                            'no libraries. Pure HTML, CSS, and vanilla JavaScript.\n' +
+                            '\n' +
+                            '- Fully responsive layout with CSS Grid and fluid clamp() type\n' +
+                            '- Dark / light themes via CSS custom properties + localStorage\n' +
+                            '- Ambient animations with the Web Animations API\n' +
+                            '- This shell: an in-memory file system, tab completion, and\n' +
+                            '  live status + strava commands backed by Cloudflare Workers',
+                        'tech-stack.txt':
+                            'HTML\nCSS\nJavaScript (vanilla)\nCloudflare Workers',
+                        'links.txt':
+                            'live    https://ryanlewan.com\n' +
+                            'source  https://github.com/ryanlew02/my_website',
+                    },
                     'inner-city': {
                         'README.md':
                             '# Inner City\n' +
@@ -795,7 +831,7 @@
                     'nord.txt':
                         'Nord\n' +
                         '----\n' +
-                        'Data Entry\n' +
+                        'Data Entry · June 2026 – present\n' +
                         '\n' +
                         'Enter orders for parts, where attention to detail is the\n' +
                         'whole job — a mistyped part number becomes the wrong part\n' +
@@ -803,7 +839,7 @@
                     'bemobile.txt':
                         'BeMobile (Verizon)\n' +
                         '------------------\n' +
-                        'Sales\n' +
+                        'Sales · Feb 2024 – May 2026\n' +
                         '\n' +
                         '- Top 20% of sellers for 6 months in a row\n' +
                         '- Selected for the leadership development program\n' +
@@ -845,7 +881,9 @@
                         'running.txt':
                             'Running — the other kind of debugging.\n' +
                             'When the code stops making sense, the problem usually\n' +
-                            'works itself out by mile two.',
+                            'works itself out by mile two.\n' +
+                            '\n' +
+                            "Run 'strava' to see this month's mileage, live.",
                     },
                 },
             },
@@ -1048,6 +1086,11 @@
         var COMMANDS = {
             help: function () {
                 print(
+                    'status                what Ryan is up to right now\n' +
+                    "strava [--year]       Ryan's running miles this month (or year)",
+                    'terminal-featured'
+                );
+                print(
                     'ls [path]             list directory contents\n' +
                     'cd <path>             change directory\n' +
                     'cat <file>            print a file\n' +
@@ -1055,8 +1098,6 @@
                     'pwd                   print working directory\n' +
                     'tree [path]           directory tree\n' +
                     'open <file>           open a file in a new tab (try resume.pdf)\n' +
-                    "strava [--year]       Ryan's running miles this month (or year)\n" +
-                    'status                what Ryan is up to right now\n' +
                     'whoami                who is typing\n' +
                     'clear                 clear the screen\n' +
                     'exit                  close the terminal\n' +

@@ -1729,6 +1729,7 @@ html[data-theme="light"] body::after { opacity: 0.035; }
 .terminal-motd { margin: 0 0 12px; color: #9e8a68; }
 .terminal-motd-cmd { color: #c9a84c; }
 .terminal-error { color: #e06c55; }
+.terminal-featured { color: #c9a84c; font-weight: 700; }
 .terminal-entry-dir { color: #6ea8d8; font-weight: 600; }
 .terminal-link { color: #6ea8d8; text-decoration: underline; }
 .terminal-link:hover { color: #9cc7ea; }
