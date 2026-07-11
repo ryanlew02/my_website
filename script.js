@@ -1307,14 +1307,30 @@
         }
 
         // ── Window open / close ───────────────────────────────────────────
+        // On phones the on-screen keyboard covers the lower half of the
+        // layout viewport without resizing it, hiding the prompt line. Track
+        // the visual viewport and size the overlay to just the visible area.
+        function fitOverlay() {
+            if (overlay.hidden || !window.visualViewport) return;
+            overlay.style.top = window.visualViewport.offsetTop + 'px';
+            overlay.style.height = window.visualViewport.height + 'px';
+            body.scrollTop = body.scrollHeight;
+        }
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', fitOverlay);
+            window.visualViewport.addEventListener('scroll', fitOverlay);
+        }
+
         function openTerminal() {
             overlay.hidden = false;
             document.body.classList.add('terminal-open');
             input.focus();
+            fitOverlay();
         }
 
         function closeTerminal() {
             overlay.hidden = true;
+            overlay.style.top = overlay.style.height = '';
             document.body.classList.remove('terminal-open');
             openBtn.focus();
         }
