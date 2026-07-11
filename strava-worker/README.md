@@ -9,7 +9,8 @@ GET /miles?range=month  →  { "miles": 24.6, "range": "month" }
 GET /miles?range=year   →  { "miles": 318.4, "range": "year" }
 ```
 
-Responses are edge-cached for 15 minutes.
+Responses are edge-cached for 15 minutes, and each visitor IP is limited to
+5 requests per minute (429 beyond that).
 
 ## One-time setup
 

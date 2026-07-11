@@ -14,6 +14,13 @@ export default {
         const url = new URL(request.url);
         if (url.pathname !== '/miles') return json({ error: 'not found' }, 404);
 
+        // 5 requests per minute per visitor IP. Counters live per Cloudflare
+        // location and sync lazily, so brief bursts can slip a little over —
+        // fine here, it just needs to stop someone hammering the endpoint.
+        const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+        const { success } = await env.RATE_LIMITER.limit({ key: ip });
+        if (!success) return json({ error: 'rate limit exceeded — try again in a minute' }, 429);
+
         const range = url.searchParams.get('range') === 'year' ? 'year' : 'month';
 
         // Serve from the edge cache so repeat visitors don't hit Strava's
