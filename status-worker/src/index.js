@@ -38,7 +38,10 @@ export default {
             const raw = await env.STATUS_KV.get('current');
             if (!raw) return json({ status: null });
             const { status, since } = JSON.parse(raw);
-            return json({ status: display(status), since });
+            // A status pushed before (or masked by) an override "resumes"
+            // when the window closes, so its age restarts at that boundary.
+            const resumedAt = lastOverrideEnd(env.TIMEZONE || 'America/Chicago');
+            return json({ status: display(status), since: Math.max(since, resumedAt) });
         }
 
         return json({ error: 'not found' }, 404);
@@ -61,25 +64,52 @@ function display(raw) {
     return DISPLAY[String(raw).trim().toLowerCase()] || raw;
 }
 
-// Fixed schedule that trumps whatever the phone last pushed:
-// 11pm–7am → sleeping; Tue/Thu/Sat 5–6pm → running. Times are wall-clock
-// in `tz`, so DST is handled by the runtime. `since` is when the current
-// window opened, so the site can show how long it's been going.
-function scheduledOverride(tz, now = new Date()) {
+const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const RUN_DAYS = ['Tue', 'Thu', 'Sat'];
+
+// Current wall-clock time in `tz` (DST handled by the runtime).
+function wallClock(tz, now) {
     const parts = Object.fromEntries(
         new Intl.DateTimeFormat('en-US', { timeZone: tz, hour: 'numeric', minute: 'numeric', hourCycle: 'h23', weekday: 'short' })
             .formatToParts(now)
             .map((p) => [p.type, p.value]),
     );
-    const hour = Number(parts.hour);
-    const minsIntoWindow = (startHour) => ((hour - startHour + 24) % 24) * 60 + Number(parts.minute);
+    return { hour: Number(parts.hour), minute: Number(parts.minute), weekday: parts.weekday };
+}
+
+// Fixed schedule that trumps whatever the phone last pushed:
+// 11pm–7am → sleeping; Tue/Thu/Sat 5–6pm → running. `since` is when the
+// current window opened, so the site can show how long it's been going.
+function scheduledOverride(tz, now = new Date()) {
+    const { hour, minute, weekday } = wallClock(tz, now);
+    const minsIntoWindow = (startHour) => ((hour - startHour + 24) % 24) * 60 + minute;
     if (hour >= 23 || hour < 7) {
         return { status: 'sleeping', since: now.getTime() - minsIntoWindow(23) * 60000 };
     }
-    if (hour === 17 && ['Tue', 'Thu', 'Sat'].includes(parts.weekday)) {
+    if (hour === 17 && RUN_DAYS.includes(weekday)) {
         return { status: 'running', since: now.getTime() - minsIntoWindow(17) * 60000 };
     }
     return null;
+}
+
+// Epoch ms of the most recent override-window close: 7am daily (sleep),
+// 6pm on run days. The fallback status's "as of" clock restarts here.
+function lastOverrideEnd(tz, now = new Date()) {
+    const { hour, minute, weekday } = wallClock(tz, now);
+    const minsOfDay = hour * 60 + minute;
+
+    let sleepEndAgo = minsOfDay - 7 * 60;
+    if (sleepEndAgo < 0) sleepEndAgo += 24 * 60;
+
+    let runEndAgo = Infinity;
+    for (let d = 0; d < 7; d++) {
+        if (RUN_DAYS.includes(DAYS[(DAYS.indexOf(weekday) - d + 7) % 7])) {
+            const mins = d * 24 * 60 + (minsOfDay - 18 * 60);
+            if (mins >= 0) { runEndAgo = mins; break; }
+        }
+    }
+
+    return now.getTime() - Math.min(sleepEndAgo, runEndAgo) * 60000;
 }
 
 function json(body, status = 200) {
