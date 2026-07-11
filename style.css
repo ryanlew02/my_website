@@ -789,6 +789,20 @@ h1 {
 html[data-theme="dark"]  .site-header { background: rgba(7,   8,  15, 0.72); }
 html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 
+/* Opaque strip over the iPhone status-bar inset (time/battery) — the frosted
+   header tint is translucent, so without this, scrolling content shows
+   through up there. Same hue as the header, just fully solid. */
+.site-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--safe-top);
+}
+html[data-theme="dark"]  .site-header::before { background: rgb(7,   8,  15); }
+html[data-theme="light"] .site-header::before { background: rgb(243,228,192); }
+
 /* ── Page content container (normal document flow scrolling) ─────────────── */
 .scroll-container {
     position: relative;
@@ -1720,14 +1734,19 @@ html[data-theme="light"] body::after { opacity: 0.035; }
 }
 @keyframes terminal-blink { 50% { opacity: 0; } }
 
-/* Real keyboard input lands here; it's parked offscreen and mirrored
-   into .terminal-typed so the block cursor can sit at the end */
+/* Real keyboard input lands here; it's invisible and mirrored into
+   .terminal-typed so the block cursor can sit at the end. It must stay
+   ≥16px and on-screen: iOS zooms the whole page when focusing a smaller
+   input, and lurches the viewport toward off-screen ones. */
 .terminal-hidden-input {
     position: absolute;
-    left: -9999px;
+    left: 0;
+    bottom: 0;
     width: 1px;
     height: 1px;
+    font-size: 16px;
     opacity: 0;
+    pointer-events: none;
 }
 
 body.terminal-open { overflow: hidden; }
@@ -1736,6 +1755,12 @@ body.terminal-open { overflow: hidden; }
     .terminal-btn { height: 38px; padding: 0 12px; }   /* logo shrinks to 38px here */
     .terminal-btn-label { display: none; }   /* just the >_ glyph on phones */
     .header-left { gap: 8px; }
+
+    /* Phones: fill the visible area (JS keeps the overlay above the
+       on-screen keyboard via visualViewport) instead of a floating card */
+    .terminal-overlay { padding: 8px; }
+    .terminal-window { height: 100%; border-radius: 10px; }
+    .terminal-body { padding: 12px 12px; }
 }
 
 /* ── Respect "reduce motion" OS setting ──────────────────────────────────────
