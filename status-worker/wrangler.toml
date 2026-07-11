@@ -1,0 +1,17 @@
+name = "ryan-status"
+main = "src/index.js"
+compatibility_date = "2026-07-11"
+
+[vars]
+# Schedule overrides (sleep, runs) are computed in this timezone.
+TIMEZONE = "America/Chicago"
+
+[[kv_namespaces]]
+binding = "STATUS_KV"
+id = "2610d76bf0b9415db8bc86b248aad3e5"
+
+# Each visitor gets at most 5 status reads per minute (period must be 10 or 60).
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1002"
+simple = { limit = 5, period = 60 }
