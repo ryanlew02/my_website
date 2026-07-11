@@ -45,3 +45,7 @@ yarn-error.*
 
 # claude/ai tooling
 .claude/
+
+# secrets kept out of the repo
+.status-token
+.wrangler/

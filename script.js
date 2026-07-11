@@ -859,6 +859,10 @@
     // strava-worker/ and paste the URL it prints, plus '/miles'.
     var STRAVA_MILES_URL = 'https://strava-miles.ryanlewan.workers.dev/miles';
 
+    // Cloudflare Worker behind the `status` command — the phone pushes a
+    // status string via iOS Shortcuts automations, this reads the latest.
+    var STATUS_URL = 'https://ryan-status.ryanlewan.workers.dev/status';
+
     document.addEventListener('DOMContentLoaded', function () {
         var openBtn   = document.getElementById('terminalBtn');
         var overlay   = document.getElementById('terminalOverlay');
@@ -1026,6 +1030,15 @@
                 .then(function (data) { return data.miles; });
         }
 
+        // "as of 14m ago" — rough age of a status update timestamp.
+        function sinceAgo(ts) {
+            var mins = Math.floor((Date.now() - ts) / 60000);
+            if (mins < 2) return 'just now';
+            if (mins < 60) return 'as of ' + mins + 'm ago';
+            if (mins < 48 * 60) return 'as of ' + Math.floor(mins / 60) + 'h ago';
+            return 'as of ' + Math.floor(mins / 1440) + 'd ago';
+        }
+
         // ── Commands ──────────────────────────────────────────────────────
         var COMMANDS = {
             help: function () {
@@ -1038,6 +1051,7 @@
                     'tree [path]           directory tree\n' +
                     'open <file>           open a file in a new tab (try resume.pdf)\n' +
                     "strava [--year]       Ryan's running miles this month (or year)\n" +
+                    'status                what Ryan is up to right now\n' +
                     'whoami                who is typing\n' +
                     'clear                 clear the screen\n' +
                     'exit                  close the terminal\n' +
@@ -1203,6 +1217,24 @@
                     print('strava: ' + err.message, 'terminal-error');
                     body.scrollTop = body.scrollHeight;
                 });
+            },
+            status: function () {
+                print('Pinging Ryan’s phone…');
+                fetch(STATUS_URL)
+                    .then(function (res) {
+                        if (res.status === 429) throw new Error('easy there — too many requests, try again in a minute');
+                        if (!res.ok) throw new Error('status service returned HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        if (!data.status) { print('status: no word from Ryan’s phone yet.'); }
+                        else { print('Ryan is ' + data.status + (data.since ? ' (' + sinceAgo(data.since) + ')' : '')); }
+                        body.scrollTop = body.scrollHeight;
+                    })
+                    .catch(function (err) {
+                        print('status: ' + err.message, 'terminal-error');
+                        body.scrollTop = body.scrollHeight;
+                    });
             },
             whoami: function () { print('visitor'); },
             clear: function () { history.innerHTML = ''; },
