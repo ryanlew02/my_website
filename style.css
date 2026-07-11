@@ -803,6 +803,27 @@ html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
 html[data-theme="dark"]  .site-header::before { background: rgb(7,   8,  15); }
 html[data-theme="light"] .site-header::before { background: rgb(243,228,192); }
 
+/* While scrolling, iOS Safari's translucent status bar shows the slice of
+   page canvas just above the viewport — a region fixed elements, safe-area
+   CSS, and theme-color can never reach. This zero-height sticky rides at
+   the viewport top and paints a solid strip upward into that slice, so the
+   area behind the clock/battery always reads as blank page background. */
+.statusbar-cover {
+    position: sticky;
+    top: 0;
+    height: 0;
+    z-index: 600;
+}
+.statusbar-cover::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 120px;
+    background: var(--bg);
+}
+
 /* ── Page content container (normal document flow scrolling) ─────────────── */
 .scroll-container {
     position: relative;

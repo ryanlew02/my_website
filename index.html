@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=7ca0a12f" />
+        <link rel="stylesheet" href="style.css?v=55237040" />
         <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='light'?'#f7f8fc':'#07080f';}if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -81,6 +81,10 @@
              Section container
         ════════════════════════════════════════════════════ -->
         <main class="scroll-container" id="scroll-container">
+
+            <!-- Paints the band iOS Safari reveals behind the status bar while
+                 scrolling (see .statusbar-cover in style.css) -->
+            <div class="statusbar-cover" aria-hidden="true"></div>
 
             <!-- ── 01 · Hero ──────────────────────────────── -->
             <section class="snap-section" id="hero">
