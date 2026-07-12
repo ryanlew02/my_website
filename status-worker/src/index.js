@@ -52,8 +52,8 @@ export default {
 // "Ryan is ", so phrases must continue that sentence. Unknown statuses
 // pass through unchanged.
 const DISPLAY = {
-    'at home': 'studying/chilling',
-    'at home studying or chilling': 'studying/chilling',
+    'at home': 'at home studying or chilling',
+    'at home studying or chilling': 'at home studying or chilling',
     'at work': 'working',
     'at the gym': 'at the gym',
     'driving': 'driving',
