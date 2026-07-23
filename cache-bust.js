@@ -19,7 +19,12 @@ const crypto = require("crypto");
 const root = __dirname;
 
 // HTML files to process.
-const htmlFiles = ["index.html", "divergeos/index.html", "innercity/index.html"];
+const htmlFiles = [
+  "index.html",
+  "divergeos/index.html",
+  "innercity/index.html",
+  "halflight/index.html",
+];
 
 // Matches href/src of local .css or .js assets, capturing an existing ?v=... if present.
 const assetRe = /(href|src)=("|')([^"'?>]+\.(?:css|js))(?:\?v=[^"']*)?\2/g;

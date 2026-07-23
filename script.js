@@ -24,6 +24,19 @@
     // cards without it render as text-only. `external: true` opens in a new tab.
     const PROJECTS = [
         {
+            title: 'HalfLight',
+            href: 'halflight/index.html',
+            image: { src: 'assets/halflight_banner.jpg', alt: 'HalfLight on three iPhones: the dream feed, the home screen, and a profile' },
+            desc: 'An AI-assisted dream journal and lucid-dreaming guide for iOS. Offline-first SwiftUI client, a Postgres backend locked down by row-level security, and server-side AI that no client can run up the bill on.',
+            bullets: [
+                'Offline-first sync with tombstones and last-write-wins conflict resolution',
+                'Custom feed ranking on like-per-view conversion, smoothed and batch-normalized',
+                'On-device semantic search over dreams using Apple’s sentence embeddings',
+                'Apple receipt JWS + x509 chain verified server-side, gating every AI call'
+            ],
+            tags: ['SwiftUI', 'SwiftData', 'Supabase', 'Postgres / RLS', 'Deno', 'Claude API', 'StoreKit 2']
+        },
+        {
             title: 'DivergeOS',
             status: 'Live Demo',
             href: 'divergeos/index.html',
@@ -762,14 +775,25 @@
                     },
                     halflight: {
                         'README.md':
-                            '# Halflight\n' +
+                            '# HalfLight\n' +
                             '\n' +
-                            'Currently building. Details are still under wraps —\n' +
-                            'follow along at https://halflightdream.com',
+                            'Remember your dreams. Learn to wake inside them. An\n' +
+                            'AI-assisted dream journal and lucid-dreaming guide for iOS,\n' +
+                            'currently in development.\n' +
+                            '\n' +
+                            '- Offline-first sync: tombstones + last-write-wins merge\n' +
+                            '- Feed ranked on smoothed like-per-view conversion, not recency\n' +
+                            '- On-device semantic search via Apple sentence embeddings\n' +
+                            '- AI runs server-side only: JWT + entitlement + atomic daily credits\n' +
+                            '- Apple receipt JWS verified against a pinned root, in Deno\n' +
+                            '- Every table under row-level security; abuse caps live in triggers',
                         'tech-stack.txt':
-                            '[redacted] — check back soon.',
+                            'SwiftUI\nSwiftData\nSwift Concurrency\nSupabase\n' +
+                            'Postgres (RLS)\nDeno Edge Functions\nClaude API\n' +
+                            'StoreKit 2\nAPNs\nWidgetKit',
                         'links.txt':
-                            'site  https://halflightdream.com',
+                            'site      https://halflightdream.com\n' +
+                            'write-up  https://ryanlewan.com/halflight/',
                     },
                     'lol-discord-bot': {
                         'README.md':

@@ -1,0 +1,920 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <!-- Colors iOS Safari's status-bar chrome; kept in sync with the theme by script.js -->
+        <meta name="theme-color" content="#07080f" />
+        <meta name="description" content="HalfLight — the engineering behind an AI-assisted dream journal and lucid-dreaming app for iOS. SwiftUI, SwiftData, Supabase, Postgres RLS, Edge Functions, Claude, StoreKit 2." />
+        <title>HalfLight · Engineering · Ryan Lewandowski</title>
+        <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="../style.css?v=f150910a" />
+        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='light'?'#f7f8fc':'#07080f';}})();</script>
+        <style>
+            /* Free-scrolling project page under the fixed site header */
+            .project-page {
+                position: relative;
+                z-index: 1;
+                max-width: var(--maxw);
+                margin: 0 auto;
+                padding: calc(var(--header-h) + clamp(20px, 4vh, 44px)) var(--pad-x) 72px;
+            }
+
+            .back-link {
+                display: inline-flex;
+                gap: 8px;
+                align-items: center;
+                color: var(--muted-2);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+                margin-bottom: 28px;
+            }
+
+            .back-link:hover { color: var(--accent); }
+
+            .project-hero {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                gap: 28px;
+                align-items: center;
+                margin-bottom: 56px;
+            }
+
+            .project-logo {
+                width: 120px;
+                height: 120px;
+                border-radius: 22px;
+                object-fit: cover;
+                border: 1px solid var(--line);
+            }
+
+            .project-hero h1 {
+                font-size: clamp(30px, 4vw, 46px);
+                margin: 0 0 6px;
+                font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+                font-weight: 600;
+                letter-spacing: -0.025em;
+            }
+
+            .project-tagline {
+                color: var(--muted);
+                font-size: 16px;
+                margin: 0;
+            }
+
+            .tech-stack {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            .project-section { margin-bottom: 56px; }
+            .project-section .section-heading { margin-bottom: 20px; }
+
+            .lede {
+                color: var(--muted);
+                margin: 0 0 12px;
+                max-width: 68ch;
+            }
+
+            .project-links {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-top: 16px;
+                flex-wrap: wrap;
+            }
+
+            .site-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                background: var(--soft-1);
+                color: var(--text);
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 500;
+                transition: border-color 120ms ease, color 120ms ease;
+            }
+
+            .site-link:hover { border-color: var(--accent); color: var(--accent); }
+
+            .site-link--primary {
+                border-color: var(--accent);
+                color: var(--accent);
+                background: var(--accent-glow);
+            }
+
+            /* ── At-a-glance numbers ─────────────────────────────── */
+            .stat-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 14px;
+            }
+
+            .stat {
+                border: 1px solid var(--line);
+                background: var(--soft-2);
+                border-radius: 16px;
+                padding: 18px 20px;
+            }
+
+            .stat-value {
+                display: block;
+                font-family: 'Space Grotesk', 'Inter', sans-serif;
+                font-size: 26px;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                color: var(--text);
+                line-height: 1.2;
+            }
+
+            .stat-label {
+                display: block;
+                font-size: 12.5px;
+                color: var(--muted-2);
+                margin-top: 4px;
+            }
+
+            /* ── Architecture diagram (pure CSS, no dependencies) ── */
+            .arch {
+                display: grid;
+                gap: 12px;
+            }
+
+            .arch-layer {
+                border: 1px solid var(--line);
+                background: var(--soft-2);
+                border-radius: 18px;
+                padding: 16px 18px;
+            }
+
+            .arch-layer-title {
+                display: block;
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 12px;
+            }
+
+            .arch-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .arch-node {
+                border: 1px solid var(--line);
+                background: var(--panel);
+                border-radius: 12px;
+                padding: 9px 13px;
+                font-size: 13px;
+                color: var(--text);
+                line-height: 1.35;
+            }
+
+            .arch-node small {
+                display: block;
+                font-size: 11.5px;
+                color: var(--muted-2);
+            }
+
+            .arch-arrow {
+                text-align: center;
+                color: var(--muted-2);
+                font-size: 15px;
+                line-height: 1;
+            }
+
+            /* ── Deep-dive cards ─────────────────────────────────── */
+            .dive-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+                gap: 18px;
+            }
+
+            .dive {
+                border: 1px solid var(--line);
+                background: var(--soft-2);
+                border-radius: 20px;
+                padding: 22px 24px;
+                display: flex;
+                flex-direction: column;
+                /* Grid items default to min-width:auto, which would let the
+                   `white-space: pre` code blocks widen the whole column (and
+                   the page) on a phone. 0 lets them scroll inside instead. */
+                min-width: 0;
+            }
+
+            .dive h3 {
+                font-family: 'Space Grotesk', 'Inter', sans-serif;
+                font-size: 17px;
+                font-weight: 600;
+                letter-spacing: -0.015em;
+                margin: 0 0 4px;
+                color: var(--text);
+            }
+
+            .dive-kicker {
+                display: block;
+                font-size: 11.5px;
+                font-weight: 600;
+                letter-spacing: 0.09em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 10px;
+            }
+
+            .dive p {
+                color: var(--muted);
+                font-size: 14.5px;
+                margin: 0 0 10px;
+            }
+
+            .dive p:last-of-type { margin-bottom: 0; }
+
+            /* The seventh card would otherwise sit alone in its row; on wide
+               screens it spans the grid and flows its copy into two columns. */
+            @media (min-width: 1080px) {
+                .dive--wide { grid-column: 1 / -1; }
+                .dive--wide .dive-body {
+                    columns: 2;
+                    column-gap: 36px;
+                }
+                .dive--wide .dive-body p { break-inside: avoid; }
+            }
+
+            .dive-label {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .dive .tech-stack { margin-top: 14px; }
+
+            .code {
+                display: block;
+                font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+                font-size: 12.5px;
+                line-height: 1.65;
+                color: var(--muted);
+                background: var(--panel);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                padding: 12px 14px;
+                margin: 12px 0;
+                overflow-x: auto;
+                white-space: pre;
+            }
+
+            .code b { color: var(--accent); font-weight: 600; }
+
+            .features-list {
+                list-style: none;
+                padding: 0;
+                margin: 14px 0 0;
+                display: grid;
+                gap: 8px;
+            }
+
+            .features-list li {
+                color: var(--muted);
+                padding-left: 20px;
+                position: relative;
+                font-size: 14.5px;
+            }
+
+            .features-list li::before {
+                content: "✦";
+                position: absolute;
+                left: 0;
+                color: var(--accent);
+                font-size: 10px;
+                top: 4px;
+            }
+
+            .features-list strong { color: var(--text); font-weight: 600; }
+
+            /* ── Screenshot grid ─────────────────────────────────── */
+            .shot-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 24px;
+                margin-top: 22px;
+                max-width: 920px;
+            }
+
+            .shot-grid figure { margin: 0; }
+
+            .shot-grid img {
+                width: 100%;
+                border-radius: 22px;
+                border: 1px solid var(--line);
+                display: block;
+            }
+
+            .shot-grid figcaption {
+                color: var(--muted-2);
+                font-size: 12.5px;
+                line-height: 1.5;
+                margin-top: 10px;
+            }
+
+            @media (max-width: 720px) {
+                .shot-grid {
+                    grid-template-columns: 1fr;
+                    max-width: 300px;
+                    gap: 28px;
+                }
+            }
+
+            @media (max-width: 600px) {
+                .project-hero {
+                    grid-template-columns: 1fr;
+                    text-align: center;
+                    justify-items: center;
+                }
+                .project-links { justify-content: center; }
+                .tech-stack { justify-content: center; }
+                .dive-grid { grid-template-columns: 1fr; }
+
+                /* The formula blocks keep their column alignment, so they scroll
+                   sideways rather than wrap; a smaller face fits more of each
+                   line before the reader has to swipe. */
+                .code { font-size: 11.5px; padding: 11px 12px; }
+            }
+
+            /* Smallest phones: auto-fit would drop the stat grid to one very tall
+               column, so pin it at two and shrink the figures to match. */
+            @media (max-width: 380px) {
+                .stat-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 12px;
+                }
+                .stat { padding: 14px 16px; }
+                .stat-value { font-size: 22px; }
+                .stat-label { font-size: 12px; }
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <!-- Fixed background decorations — same ambient layer as the main site -->
+        <div class="bg-layer" aria-hidden="true">
+            <div class="bg-blob blob-1"></div>
+            <div class="bg-blob blob-2"></div>
+            <div class="bg-blob blob-3"></div>
+            <div class="bg-blob blob-4"></div>
+            <div class="bg-blob blob-5"></div>
+            <div class="bg-ring ring-1"></div>
+            <div class="bg-ring ring-2"></div>
+            <div class="bg-ring ring-3"></div>
+            <div class="cross c1"></div>
+            <div class="cross c2"></div>
+            <div class="cross c3"></div>
+        </div>
+
+        <!-- Fixed site header -->
+        <header class="site-header">
+            <div class="header-left">
+                <a class="logo" href="../index.html" aria-label="Home">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </a>
+            </div>
+
+            <nav class="nav">
+                <a href="../index.html">Home</a>
+                <a href="../index.html#about">About</a>
+                <a href="../index.html#projects">Projects</a>
+                <a href="../index.html#reading">Reading</a>
+            </nav>
+
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
+        </header>
+
+        <main class="scroll-container">
+
+            <!-- Paints the band iOS Safari reveals behind the status bar while
+                 scrolling (see .statusbar-cover in style.css) -->
+            <div class="statusbar-cover" aria-hidden="true"></div>
+
+            <div class="project-page">
+                <div class="meta">
+                    <span>Project</span>
+                    <span>HalfLight</span>
+                    <span>2026</span>
+                </div>
+
+                <a class="back-link" href="../index.html#projects">
+                    <span aria-hidden="true">&larr;</span> Back to projects
+                </a>
+
+                <div class="project-hero">
+                    <img class="project-logo" src="../assets/halflight_logo.jpg" alt="HalfLight logo" />
+                    <div>
+                        <h1>HalfLight</h1>
+                        <p class="project-tagline">
+                            Remember your dreams. Learn to wake inside them. An AI-assisted dream journal
+                            and lucid-dreaming guide for iPhone.
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-tag">SwiftUI</span>
+                            <span class="tech-tag">SwiftData</span>
+                            <span class="tech-tag">Swift Concurrency</span>
+                            <span class="tech-tag">Supabase</span>
+                            <span class="tech-tag">Postgres / RLS</span>
+                            <span class="tech-tag">Deno Edge Functions</span>
+                            <span class="tech-tag">Claude API</span>
+                            <span class="tech-tag">StoreKit 2</span>
+                            <span class="tech-tag">APNs</span>
+                            <span class="tech-tag">WidgetKit</span>
+                        </div>
+                        <div class="project-links">
+                            <a class="site-link site-link--primary" href="https://halflightdream.com" target="_blank" rel="noopener noreferrer">
+                                Visit halflightdream.com
+                                <span aria-hidden="true">↗</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 01 · What it is ───────────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="01">
+                        <span class="section-number">01</span>
+                        <h2 class="section-title">What it is</h2>
+                    </div>
+                    <p class="lede">
+                        HalfLight catches a dream before it slips away. You record it the moment you wake —
+                        typing or dictating — and the app interprets it, tags its recurring themes, tracks your
+                        journaling streak, and walks you through a structured curriculum for becoming aware
+                        <em>inside</em> a dream. Dreams you choose to share land in a social feed with likes,
+                        comments, and follows.
+                    </p>
+                    <p class="lede">
+                        Under the hood it's a full product, not a demo: an offline-first iOS client with its own
+                        conflict-resolution layer, a Postgres backend where every table is locked down by
+                        row-level security, server-side AI that can't be run up by a leaked key, a subscription
+                        whose receipts are cryptographically verified on the server, and an automated
+                        moderation pipeline. The sections below are the parts I'd actually want to talk through
+                        in an interview.
+                    </p>
+                    <ul class="features-list">
+                        <li><strong>Dream journal</strong> — title, entry, mood, tags, lucidity, and on-device speech-to-text dictation</li>
+                        <li><strong>AI assists</strong> — one-tap interpretation, theme extraction, and title generation, all executed server-side</li>
+                        <li><strong>Lucid path</strong> — 45 lessons across 9 units covering recall, reality checks, and the MILD, WBTB, and WILD induction methods</li>
+                        <li><strong>Progression</strong> — XP, named ranks, weekly quests, streaks, a tiered achievement system, and a per-year activity grid</li>
+                        <li><strong>Social feed</strong> — publish, like, comment, follow, report; ranked by a custom scoring model rather than reverse-chronology</li>
+                        <li><strong>Platform integration</strong> — home/lock-screen widgets, an App Intent for one-tap capture, local reminders, and push notifications</li>
+                    </ul>
+                </div>
+
+                <!-- ── 02 · Architecture ─────────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="02">
+                        <span class="section-number">02</span>
+                        <h2 class="section-title">Architecture</h2>
+                    </div>
+                    <p class="lede">
+                        The client owns your private library; the server owns everything shared and everything
+                        that costs money. That split drives every decision below — the app works fully offline
+                        on a plane, but no client is ever trusted with a spend decision or another user's data.
+                    </p>
+
+                    <div class="arch">
+                        <div class="arch-layer">
+                            <span class="arch-layer-title">iOS client · SwiftUI</span>
+                            <div class="arch-row">
+                                <span class="arch-node">SwiftData store<small>local source of truth</small></span>
+                                <span class="arch-node">DreamStore<small>every mutation funnels here</small></span>
+                                <span class="arch-node">FeedRanker / CommentRanker<small>pure scoring functions</small></span>
+                                <span class="arch-node">DreamSearch<small>on-device NLEmbedding</small></span>
+                                <span class="arch-node">ContentFilter<small>client-side moderation</small></span>
+                                <span class="arch-node">SubscriptionManager<small>StoreKit 2</small></span>
+                                <span class="arch-node">WidgetKit + App Intents<small>shared app group snapshot</small></span>
+                            </div>
+                        </div>
+
+                        <div class="arch-arrow" aria-hidden="true">↓ &nbsp; authenticated sync (user JWT) &nbsp; ↓</div>
+
+                        <div class="arch-layer">
+                            <span class="arch-layer-title">Supabase · Postgres</span>
+                            <div class="arch-row">
+                                <span class="arch-node">dreams<small>RLS: owner-only</small></span>
+                                <span class="arch-node">profiles<small>username cooldown + validation</small></span>
+                                <span class="arch-node">feed_posts / likes / views / comments<small>counts kept by triggers</small></span>
+                                <span class="arch-node">follows<small>rate-limited, self-follow blocked</small></span>
+                                <span class="arch-node">subscriptions<small>written only by verified Apple payloads</small></span>
+                                <span class="arch-node">ai_usage<small>atomic daily credits</small></span>
+                                <span class="arch-node">feed_reports<small>triage queue</small></span>
+                            </div>
+                        </div>
+
+                        <div class="arch-arrow" aria-hidden="true">↓ &nbsp; service-role, server-side only &nbsp; ↓</div>
+
+                        <div class="arch-layer">
+                            <span class="arch-layer-title">Edge Functions · Deno</span>
+                            <div class="arch-row">
+                                <span class="arch-node">analyze-dream<small>Claude, structured output</small></span>
+                                <span class="arch-node">suggest-tags / suggest-title<small>Claude</small></span>
+                                <span class="arch-node">sync-subscription<small>verifies Apple JWS</small></span>
+                                <span class="arch-node">app-store-notifications<small>Apple V2 webhook</small></span>
+                                <span class="arch-node">moderate-reports<small>daily pg_cron triage</small></span>
+                                <span class="arch-node">push-notify<small>APNs delivery</small></span>
+                                <span class="arch-node">delete-account<small>GDPR / Guideline 5.1.1(v)</small></span>
+                            </div>
+                        </div>
+
+                        <div class="arch-arrow" aria-hidden="true">↓</div>
+
+                        <div class="arch-layer">
+                            <span class="arch-layer-title">External services</span>
+                            <div class="arch-row">
+                                <span class="arch-node">Anthropic Claude<small>key never leaves the server</small></span>
+                                <span class="arch-node">Apple App Store<small>StoreKit + server notifications</small></span>
+                                <span class="arch-node">APNs<small>token-based auth</small></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 03 · Engineering deep dives ───────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="03">
+                        <span class="section-number">03</span>
+                        <h2 class="section-title">Engineering deep dives</h2>
+                    </div>
+                    <p class="lede">
+                        Seven problems that were more interesting than they looked, and how I solved each.
+                    </p>
+
+                    <div class="dive-grid">
+
+                        <!-- Sync -->
+                        <div class="dive">
+                            <span class="dive-kicker">Offline-first sync</span>
+                            <h3>Making sure a deleted dream stays deleted</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> the local database is the source of
+                                truth, but the same account can be signed in on two devices, edited offline, and
+                                reconciled later. Naïve sync resurrects deleted rows, duplicates entries, and — worst
+                                case — leaks one account's dreams into another's session.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> a reconcile pass that merges remote and
+                                local by <em>last-write-wins on <code>updated_at</code></em>, plus a tombstone table.
+                                Deleting a dream writes a tombstone with <code>needsRemoteDelete</code>; every
+                                reconcile skips re-inserting a tombstoned id and retries the remote delete until it's
+                                confirmed, then prunes the tombstone. Sign-in also compares the stored last-owner id
+                                against the current user and wipes the local store if they differ, so an interrupted
+                                sign-out can't bleed data across accounts. Signing in as a guest offers to claim and
+                                upload the dreams recorded before the account existed.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">SwiftData</span>
+                                <span class="tech-tag">Tombstones</span>
+                                <span class="tech-tag">Idempotent upsert</span>
+                            </div>
+                        </div>
+
+                        <!-- Feed ranking -->
+                        <div class="dive">
+                            <span class="dive-kicker">Ranking</span>
+                            <h3>A feed that rewards resonance, not reach</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> a reverse-chronological feed means the
+                                loudest poster wins and a great dream from a new user is invisible. I wanted the
+                                signal to be <em>how strongly a dream lands with the people who see it</em>.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> a weighted score over four signals, with
+                                like-per-view conversion at its heart. Conversion is Bayesian-smoothed so one like on
+                                one view isn't 100%, then normalized across the batch so the weights stay meaningful
+                                as absolute rates drift.
+                            </p>
+                            <code class="code"><b>viral</b>      = likes / (views + 8)        · 1.00
+<b>interest</b>   = themeMatch × viral         · 0.60
+<b>following</b>  = follows(author) ? 1 : 0    · 0.35
+<b>freshness</b>  = e^(−ageHrs/6) / (1 + views)· 0.15</code>
+                            <p>
+                                Interest is learned locally: every theme on a dream you liked earns a point, and that
+                                affinity is <em>multiplied</em> by conversion, so relevance and quality have to
+                                co-occur to win. Freshness deliberately combines recency with <em>low</em> impressions,
+                                giving brand-new posts a window before the conversion signal has any data. The whole
+                                ranker is a pure function of its inputs — no I/O — which makes it trivially unit-testable.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">Bayesian smoothing</span>
+                                <span class="tech-tag">Exponential decay</span>
+                                <span class="tech-tag">Pure functions</span>
+                            </div>
+                        </div>
+
+                        <!-- Semantic search -->
+                        <div class="dive">
+                            <span class="dive-kicker">On-device ML</span>
+                            <h3>Searching a dream journal by vibe</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> people don't remember the words they used
+                                at 4am. Substring search fails on "that one about being chased" when the entry says
+                                "someone was following me."
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> three layers, all offline. Tokenized
+                                order-independent matching with stop-words dropped; synonym expansion via Apple's
+                                on-device word embedding, weighted low so a fuzzy hit can never outrank a literal one;
+                                and true semantic ranking with sentence embeddings compared by cosine similarity.
+                            </p>
+                            <p>
+                                The performance problem was re-embedding the whole journal on every keystroke. I
+                                built an index that caches one vector per dream keyed by a <em>content hash</em>, so
+                                a vector is recomputed only when that dream's text actually changes. Embedding runs on
+                                a detached background task — SwiftData models aren't safe to touch off the main actor,
+                                so the text is snapshotted to plain strings first — and bumps a version counter when
+                                it lands so ranked views recompute exactly once.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">NaturalLanguage</span>
+                                <span class="tech-tag">Cosine similarity</span>
+                                <span class="tech-tag">Actor isolation</span>
+                            </div>
+                        </div>
+
+                        <!-- AI gating -->
+                        <div class="dive">
+                            <span class="dive-kicker">Cost &amp; security</span>
+                            <h3>An AI feature nobody can run up the bill on</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> an API key shipped in a mobile binary is
+                                a published key. And gating a paid feature in the UI protects nothing — the endpoint is
+                                still one <code>curl</code> away.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> the app never talks to Anthropic. It calls
+                                an Edge Function that runs a shared guard before a single token is spent:
+                            </p>
+                            <code class="code">1. verify the caller's Supabase JWT
+2. <b>has_active_subscription()</b>  → 402 if not Pro
+3. <b>consume_ai_credit()</b>        → 429 past 12/day
+4. only then → Claude</code>
+                            <p>
+                                Both gates are Postgres functions, and the credit is consumed <em>atomically</em> so
+                                parallel requests can't race past the daily cap. The entitlement row is writable only
+                                by the subscription functions, and only from a payload Apple actually signed — so a
+                                stolen publishable key plus a valid session still returns 402. Responses use Claude's
+                                structured-output JSON schema, which makes the category an enum the UI can rely on
+                                rather than a string I have to defensively parse.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">Deno</span>
+                                <span class="tech-tag">JWT verification</span>
+                                <span class="tech-tag">Structured outputs</span>
+                            </div>
+                        </div>
+
+                        <!-- Subscriptions -->
+                        <div class="dive">
+                            <span class="dive-kicker">Payments</span>
+                            <h3>Verifying Apple's receipts without Apple's library</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> the server has to know whether a
+                                subscription is genuinely active — including renewals, refunds, and revocations that
+                                happen while the app is closed. Apple's official server library depends on Node's
+                                <code>crypto.X509Certificate</code> internals, which the Deno edge runtime doesn't
+                                implement.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> I implemented the JWS verification myself
+                                with Web Crypto — pulling the <code>x5c</code> chain from the header, confirming it
+                                terminates at a pinned Apple root, checking each certificate is in date and signed by
+                                the one above it, verifying the signature with the leaf key, and finally confirming the
+                                payload's bundle id is mine. Purchases carry the Supabase user id in StoreKit's
+                                <code>appAccountToken</code>, so Apple's Server Notifications V2 webhook resolves back
+                                to the right account with no guessing, and entitlements stay correct after a renewal or
+                                a refund the app never saw.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">StoreKit 2</span>
+                                <span class="tech-tag">JWS / x509</span>
+                                <span class="tech-tag">Webhooks</span>
+                            </div>
+                        </div>
+
+                        <!-- Moderation -->
+                        <div class="dive">
+                            <span class="dive-kicker">Trust &amp; safety</span>
+                            <h3>Moderating content where "disturbing" is the point</h3>
+                            <p>
+                                <span class="dive-label">The problem:</span> App Review requires moderation for
+                                user-generated content, but this is a <em>dream</em> app — dark, frightening, and deeply
+                                strange are exactly what users are supposed to post. An off-the-shelf filter would
+                                delete the product.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> three layers with deliberately different
+                                strictness. The client filter is obfuscation-aware — it folds leetspeak
+                                (<code>0→o</code>, <code>$→s</code>) and strips separators so <code>f_u_c_k</code>
+                                still matches — and applies whole-word matching plus an allow-list to avoid the
+                                Scunthorpe problem. Usernames block profanity <em>and</em> slurs, since a handle is a
+                                permanent public label; published dreams block only hate speech, because swearing in
+                                your own dream is fine. Postgres triggers re-enforce the same rules server-side as a
+                                backstop against direct API writes. Reports go to a queue triaged daily by Claude via
+                                <code>pg_cron</code>, which decides keep / hide / escalate — and, crucially,
+                                <em>defaults to escalate on any failure</em>, so a bad model call puts a human in the
+                                loop instead of silently hiding someone's dream.
+                            </p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">pg_cron</span>
+                                <span class="tech-tag">Postgres triggers</span>
+                                <span class="tech-tag">Fail-safe defaults</span>
+                            </div>
+                        </div>
+
+                        <!-- i18n + perf -->
+                        <div class="dive dive--wide">
+                            <span class="dive-kicker">Platform craft</span>
+                            <h3>Twelve languages that switch without a relaunch</h3>
+                            <div class="dive-body">
+                            <p>
+                                <span class="dive-label">The problem:</span> iOS resolves localized strings through
+                                <code>Bundle.main</code> using the language chosen <em>at launch</em>. Changing language
+                                in-app normally means telling the user to restart — a bad first impression.
+                            </p>
+                            <p>
+                                <span class="dive-label">The approach:</span> swap <code>Bundle.main</code>'s class at
+                                runtime for a subclass that redirects every localized lookup to the chosen language's
+                                <code>.lproj</code>, then re-render the view tree. All 12 languages switch instantly.
+                            </p>
+                            <p>
+                                Similar attention went elsewhere: the launch screen prebuilds every tab in the
+                                background so the first tap on each is instant, and its animation runs on Core
+                                Animation rather than SwiftUI — CA animates on the render server, so the mark stays
+                                fluid while the main thread is busy. Avatars are decoded once into a cache keyed by
+                                the image data itself, which removed scroll hitching from feed cards repeating the
+                                same author.
+                            </p>
+                            </div>
+                            <div class="tech-stack">
+                                <span class="tech-tag">String Catalogs</span>
+                                <span class="tech-tag">Core Animation</span>
+                                <span class="tech-tag">NSCache</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ── 04 · Data security ────────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="04">
+                        <span class="section-number">04</span>
+                        <h2 class="section-title">Data &amp; security model</h2>
+                    </div>
+                    <p class="lede">
+                        A dream journal is about as personal as user data gets. The rule I built to is that the
+                        database should be safe even if someone talks to it directly with a stolen client key.
+                    </p>
+                    <ul class="features-list">
+                        <li><strong>Row-level security on every table</strong> — dream policies match <code>auth.uid()</code> against the row's owner for select, insert, update, and delete alike; signed-out users get no grant at all</li>
+                        <li><strong>Abuse limits in the database, not the client</strong> — <code>BEFORE INSERT</code> triggers cap publishing (3/day), comments (20/day), reports (5/day), and follows, raising a custom SQLSTATE the app translates into a friendly "come back tomorrow" instead of a generic error</li>
+                        <li><strong>Server-side integrity constraints</strong> — triggers block self-follows, enforce author integrity on feed posts, validate usernames, and hold a 30-day username-change cooldown</li>
+                        <li><strong>Privacy by default</strong> — dreams are private unless explicitly published; private dreams are never moderated, never embedded remotely, and never leave the account</li>
+                        <li><strong>Secret isolation</strong> — only the publishable anon key ships in the app; the Anthropic key, service-role key, and moderation cron secret exist solely as Edge Function secrets</li>
+                        <li><strong>Real account deletion</strong> — a dedicated function permanently erases the account and its cascade, satisfying App Store Guideline 5.1.1(v)</li>
+                    </ul>
+                </div>
+
+                <!-- ── 05 · Testing ──────────────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="05">
+                        <span class="section-number">05</span>
+                        <h2 class="section-title">How it's tested</h2>
+                    </div>
+                    <p class="lede">
+                        The ranking and moderation logic is written as pure functions over immutable inputs
+                        specifically so it can be tested without a database, a network, or a simulator screen.
+                        The unit suite covers the three pieces where a silent regression would be most
+                        expensive: feed ordering, comment ordering, and the content filter — including the
+                        obfuscation cases (spaced-out and leetspeak evasions) and the false-positive cases
+                        ("class", "assassin") that a naïve substring filter gets wrong.
+                    </p>
+                    <p class="lede">
+                        The subscription path has its own verification ladder: a local StoreKit configuration
+                        for fast iteration, then Sandbox on a real device, then a direct <code>curl</code>
+                        against the AI endpoint with a non-subscriber's token to confirm the <em>server</em>
+                        returns 402 — because that's the check the UI can't prove.
+                    </p>
+                </div>
+
+                <!-- ── 06 · By the numbers ───────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="06">
+                        <span class="section-number">06</span>
+                        <h2 class="section-title">By the numbers</h2>
+                    </div>
+                    <div class="stat-grid">
+                        <div class="stat">
+                            <span class="stat-value">~24,700</span>
+                            <span class="stat-label">lines of Swift, TypeScript, and SQL</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">31</span>
+                            <span class="stat-label">Postgres migrations</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">7</span>
+                            <span class="stat-label">Deno Edge Functions</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">45</span>
+                            <span class="stat-label">lucid-dreaming lessons in 9 units</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">12</span>
+                            <span class="stat-label">supported languages</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">secrets shipped in the client</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── 07 · A look at it ─────────────────────────── -->
+                <div class="project-section">
+                    <div class="section-heading" data-num="07">
+                        <span class="section-number">07</span>
+                        <h2 class="section-title">A look at it</h2>
+                    </div>
+                    <p class="lede">
+                        The visual language is its own design system — spacing, type, cards, and a night-sky
+                        backdrop defined in one place so every screen agrees. Moods carry their own palettes,
+                        and the home screen shifts with the time of day.
+                    </p>
+
+                    <div class="shot-grid">
+                        <figure>
+                            <img src="../assets/halflightdemo.jpg" alt="HalfLight home screen: a capture prompt, the latest dream, streak and quest cards" loading="lazy" />
+                            <figcaption>Home — capture the dream before it fades</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="../assets/halflightdemo3.jpg" alt="HalfLight feed: a shared dream with its AI insight and theme tags" loading="lazy" />
+                            <figcaption>Feed — a shared dream and its AI insight</figcaption>
+                        </figure>
+                        <figure>
+                            <img src="../assets/halflightdemo2.jpg" alt="HalfLight profile: rank, progress, and the dreamer's most repeated themes" loading="lazy" />
+                            <figcaption>Profile — rank, progress, and recurring themes</figcaption>
+                        </figure>
+                    </div>
+
+                    <p class="lede" style="margin-top: 28px;">
+                        The product site has the full feature tour, the lucid path, and pricing.
+                    </p>
+                    <div class="project-links">
+                        <a class="site-link site-link--primary" href="https://halflightdream.com" target="_blank" rel="noopener noreferrer">
+                            halflightdream.com
+                            <span aria-hidden="true">↗</span>
+                        </a>
+                        <a class="site-link" href="../index.html#projects">
+                            <span aria-hidden="true">←</span>
+                            More projects
+                        </a>
+                    </div>
+                </div>
+
+                <footer class="site-footer">
+                    <div class="footer-copy">© <span id="year"></span> Ryan Lewandowski</div>
+                    <div class="links" aria-label="Social links">
+                        <a href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">GitHub</a>
+                        <span>/</span>
+                        <button class="copy-email" data-email="ryanlewan.2@gmail.com">Email</button>
+                        <span>/</span>
+                        <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                        <span>/</span>
+                        <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                    </div>
+                </footer>
+            </div>
+        </main>
+
+        <script src="../script.js?v=dead15f8"></script>
+    </body>
+</html>
