@@ -19,6 +19,6 @@ node "$repo_root/cache-bust.js" >/dev/null || {
 }
 
 # Stage any HTML files the cache-buster rewrote so the new hashes are committed.
-git add "$repo_root"/index.html "$repo_root"/divergeos/index.html "$repo_root"/innercity/index.html 2>/dev/null
+git add "$repo_root"/index.html "$repo_root"/divergeos/index.html "$repo_root"/innercity/index.html "$repo_root"/halflight/index.html 2>/dev/null
 
 exit 0
