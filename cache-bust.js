@@ -2,8 +2,9 @@
 /*
  * Cache busting for this static site.
  *
- * Rewrites the `?v=<hash>` query string on local .css/.js references in every
- * HTML file to a short hash of that file's *contents*. Run it before deploying:
+ * Rewrites the `?v=<hash>` query string on local .css/.js/.pdf references in
+ * every HTML file to a short hash of that file's *contents*. Run it before
+ * deploying:
  *
  *     node cache-bust.js
  *
@@ -26,8 +27,8 @@ const htmlFiles = [
   "halflight/index.html",
 ];
 
-// Matches href/src of local .css or .js assets, capturing an existing ?v=... if present.
-const assetRe = /(href|src)=("|')([^"'?>]+\.(?:css|js))(?:\?v=[^"']*)?\2/g;
+// Matches href/src of local .css, .js or .pdf assets, capturing an existing ?v=... if present.
+const assetRe = /(href|src)=("|')([^"'?>]+\.(?:css|js|pdf))(?:\?v=[^"']*)?\2/g;
 
 const hashCache = new Map();
 function hashFor(absPath) {

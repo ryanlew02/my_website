@@ -921,6 +921,17 @@
         '/home/ryan/resume.pdf': 'assets/resume.pdf',
     };
 
+    // The "View Résumé" link carries the ?v=<hash> that cache-bust.js stamps
+    // in, so prefer its href — that way `open resume.pdf` busts the cache too
+    // without this file needing its own copy of the hash.
+    function openableUrl(path) {
+        var url = OPENABLE[path];
+        if (!url) return url;
+        var link = document.querySelector('.resume-btn[href]');
+        var href = link && link.getAttribute('href');
+        return href && href.split('?')[0] === url ? href : url;
+    }
+
     // Cloudflare Worker that proxies Strava for the `strava` command — it
     // holds the API credentials and returns only a mileage number. Deploy
     // strava-worker/ and paste the URL it prints, plus '/miles'.
@@ -1199,7 +1210,7 @@
                     print('open: ' + args[0] + ': No such file or directory', 'terminal-error');
                     return;
                 }
-                var url = OPENABLE['/' + segs.join('/')];
+                var url = openableUrl('/' + segs.join('/'));
                 if (url) {
                     print('Opening ' + segs[segs.length - 1] + '…');
                     window.open(url, '_blank', 'noopener');
