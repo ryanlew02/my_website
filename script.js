@@ -25,7 +25,7 @@
     const PROJECTS = [
         {
             title: 'HalfLight',
-            href: 'halflight/index.html',
+            href: 'halflight/',
             image: { src: 'assets/halflight_banner.jpg', alt: 'HalfLight on three iPhones: the dream feed, the home screen, and a profile' },
             desc: 'An AI-assisted dream journal and lucid-dreaming guide for iOS. Offline-first SwiftUI client, a Postgres backend locked down by row-level security, and server-side AI that no client can run up the bill on.',
             bullets: [
@@ -39,7 +39,7 @@
         {
             title: 'DivergeOS',
             status: 'Live Demo',
-            href: 'divergeos/index.html',
+            href: 'divergeos/',
             image: { src: 'assets/divergeos_2.jpg', alt: 'DivergeOS desktop with the Manifesto, Terminal, Calculator, and Chess apps open', pos: 'center 20%' },
             desc: 'A fully functional desktop OS simulation that runs in the browser, themed around the Divergent universe. Complete with a real window manager, 12 working apps, faction-based themes, and a virtual file system.',
             bullets: [
@@ -53,7 +53,7 @@
         {
             title: 'Inner City',
             status: 'Live on App Store',
-            href: 'innercity/index.html',
+            href: 'innercity/',
             image: { src: 'assets/1.1.0_1.jpg', alt: 'Inner City app showing an isometric city that grows as habits are completed' },
             desc: 'A mobile habit-tracking app that gamifies your daily routines. Complete habits to construct buildings and watch your city grow on an isometric grid.',
             bullets: [
