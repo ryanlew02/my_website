@@ -416,26 +416,31 @@ a:active { color: var(--color-accent-400); }
     line-height: 1.2;
     cursor: pointer;
     transition: border-color 160ms var(--ease), color 160ms var(--ease),
-                background-color 160ms var(--ease);
+                background-color 160ms var(--ease), box-shadow 200ms var(--ease);
 }
-.btn:hover,
-.resume-btn:hover {
+.btn:hover {
     border-color: var(--color-neutral-600);
     color: var(--color-neutral-300);
 }
-.btn:active,
-.resume-btn:active { color: var(--color-neutral-400); }
+.btn:active { color: var(--color-neutral-400); }
 
-.btn--primary {
+/* Accent-outlined. The résumé link is the primary action of its section, so
+   it carries the same weight as "See my works" in the hero. */
+.btn--primary,
+.resume-btn {
     border-color: var(--color-accent);
     color: var(--color-accent-300);
 }
-.btn--primary:hover {
+.btn--primary:hover,
+.resume-btn:hover {
     background: var(--color-accent-900);
     border-color: var(--color-accent);
     color: var(--color-accent-200);
+    /* the accent as a glow, not a flood */
+    box-shadow: 0 0 0 1px var(--color-accent-800), 0 4px 18px rgba(145, 132, 217, 0.16);
 }
-.btn--primary:active { color: var(--color-accent-400); }
+.btn--primary:active,
+.resume-btn:active { color: var(--color-accent-400); }
 
 .resume-btn svg { flex-shrink: 0; }
 
