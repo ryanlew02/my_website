@@ -124,8 +124,11 @@ html, body {
 .dv-nav { display: flex; gap: 30px; list-style: none; }
 .dv-nav a { font-family: 'Share Tech Mono', monospace; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--d-muted); text-decoration: none; transition: color 120ms; }
 .dv-nav a:hover { color: var(--d-red); }
-#themeToggle { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--d-border); background: transparent; cursor: pointer; color: var(--d-muted); display: flex; align-items: center; justify-content: center; transition: border-color 120ms, color 120ms; font-size: 16px; }
-#themeToggle:hover { border-color: var(--d-red); color: var(--d-red); }
+/* The theme toggle used to be the header's third flex child, which is what
+   held the nav in the centre under `justify-content: space-between`. The site
+   is dark-only now and the button is gone, so this spacer keeps its exact
+   38px slot and the nav stays where it has always been. */
+.dv-header::after { content: ""; width: 38px; height: 38px; flex: 0 0 auto; }
 
 /* ── Side dots ─────────────────────────────────── */
 .dv-dots-nav {

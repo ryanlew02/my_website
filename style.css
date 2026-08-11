@@ -614,7 +614,7 @@ h1 {
     margin-top: var(--space-2);
     font-family: var(--font-mono);
     font-size: 11.5px;
-    font-weight: 500;      /* the heaviest JetBrains Mono weight loaded */
+    font-weight: 700;      /* loaded alongside 400/500 in the font link */
     letter-spacing: 0.04em;
     color: var(--color-accent-300);
 }
@@ -960,10 +960,12 @@ h1 {
     flex-direction: column;
     gap: var(--space-8);
     /* Headroom so a hovered book's info card clears the fixed header */
-    margin-top: clamp(48px, 9vh, 96px);
-    /* Full-width so the shelf rule runs out to the right of the spines; the
-       row of books inside hugs the left. */
+    margin-top: clamp(32px, 6vh, 64px);
     width: 100%;
+    /* Pulls the centred row (and the rule under it, so the two stay aligned)
+       left of the content column's true centre. script.js subtracts this
+       padding when working out how many spines fit a row. */
+    padding-right: clamp(0px, 9vw, 130px);
 }
 
 .shelf {
@@ -975,18 +977,21 @@ h1 {
 .shelf-books {
     display: flex;
     align-items: flex-end;
+    justify-content: center;
     flex-wrap: wrap;
     gap: var(--space-2);
     min-height: 150px;
     padding: 0;
 }
 
-/* The shelf itself is a rule, and it fades out to the right */
+/* The shelf itself is a rule. Symmetric now that the spines are centred —
+   the same fade-at-both-ends language as the section dividers. */
 .shelf-board {
     height: 1px;
     background: linear-gradient(to right,
-        var(--color-neutral-600), var(--color-neutral-700) 45%,
-        var(--color-divider) 72%, transparent);
+        transparent, var(--color-divider) 18%,
+        var(--color-neutral-600) 50%,
+        var(--color-divider) 82%, transparent);
 }
 
 .shelf-hint {
@@ -1011,7 +1016,9 @@ h1 {
     color: var(--color-neutral-400);
     font-family: var(--font-mono);
     cursor: pointer;
-    overflow: hidden;
+    /* No overflow:hidden here — .book-info is positioned outside the spine and
+       would be clipped away. The cover art is a background, so border-radius
+       already rounds it. */
     transform-origin: 50% 100%;
     transition: transform 240ms var(--ease), border-color 200ms var(--ease),
                 background-color 200ms var(--ease);
@@ -1528,7 +1535,7 @@ body.terminal-open { overflow: hidden; }
     /* Shrink spines via the scale factor — each book's inline --book-w/--book-h
        would override a plain .book re-declaration here. script.js reads this
        to decide how many books fit per shelf row. */
-    .bookshelf   { --book-scale: 0.68; margin-top: 72px; }
+    .bookshelf   { --book-scale: 0.68; margin-top: 72px; padding-right: 0; }
     .shelf-books { min-height: 120px; }
 
     .work-toast { width: calc(100vw - 2 * var(--page-x)); }
