@@ -4,8 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
         <!-- Colors iOS Safari's status-bar chrome (the strip behind the clock/battery,
-             which pages can't paint into); kept in sync with the theme by script.js -->
-        <meta name="theme-color" content="#07080f" />
+             which pages can't paint into); matches --color-bg -->
+        <meta name="theme-color" content="#161826" />
         <meta name="description" content="Ryan Lewandowski, a software developer building clean, reliable software. CS student at SNHU. Open to opportunities." />
         <meta name="author" content="Ryan Lewandowski" />
         <title>Ryan Lewandowski · Software Developer</title>
@@ -17,41 +17,26 @@
         <meta property="og:url" content="https://ryanlewan.com/" />
         <meta property="og:title" content="Ryan Lewandowski · Software Developer" />
         <meta property="og:description" content="Software developer building clean, reliable software. CS student at SNHU. Open to opportunities." />
-        <meta property="og:image" content="https://ryanlewan.com/assets/myPhoto.jpg" />
+        <meta property="og:image" content="https://ryanlewan.com/assets/myPhoto.jpeg" />
         <meta property="og:image:alt" content="Ryan Lewandowski" />
 
         <!-- Twitter / X card -->
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Ryan Lewandowski · Software Developer" />
         <meta name="twitter:description" content="Software developer building clean, reliable software. CS student at SNHU. Open to opportunities." />
-        <meta name="twitter:image" content="https://ryanlewan.com/assets/myPhoto.jpg" />
+        <meta name="twitter:image" content="https://ryanlewan.com/assets/myPhoto.jpeg" />
 
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=f150910a" />
-        <script>(function(){var t=localStorage.getItem('theme')||'dark';document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m){m.content=t==='light'?'#f7f8fc':'#07080f';}if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
+        <link rel="stylesheet" href="style.css?v=78ed6466" />
+        <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
     <body>
-
-        <!-- Fixed background decorations — persist across all sections -->
-        <div class="bg-layer" aria-hidden="true">
-            <div class="bg-blob blob-1"></div>
-            <div class="bg-blob blob-2"></div>
-            <div class="bg-blob blob-3"></div>
-            <div class="bg-blob blob-4"></div>
-            <div class="bg-blob blob-5"></div>
-            <div class="bg-ring ring-1"></div>
-            <div class="bg-ring ring-2"></div>
-            <div class="bg-ring ring-3"></div>
-            <div class="cross c1"></div>
-            <div class="cross c2"></div>
-            <div class="cross c3"></div>
-        </div>
 
         <!-- Fixed site header -->
         <header class="site-header">
@@ -61,20 +46,21 @@
                         <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </a>
+            </div>
+
+            <div class="header-right">
+                <nav class="nav">
+                    <a href="#hero"           data-section="hero">Home</a>
+                    <a href="#about"          data-section="about">About</a>
+                    <a href="#projects"       data-section="projects">Projects</a>
+                    <a href="#reading"        data-section="reading">Reading</a>
+                </nav>
+
                 <button class="terminal-btn" id="terminalBtn" type="button" title="Open terminal">
                     <span class="terminal-btn-glyph" aria-hidden="true">&gt;_</span>
                     <span class="terminal-btn-label">terminal for nerds</span>
                 </button>
             </div>
-
-            <nav class="nav">
-                <a href="#hero"           data-section="hero">Home</a>
-                <a href="#about"          data-section="about">About</a>
-                <a href="#projects"       data-section="projects">Projects</a>
-                <a href="#reading"        data-section="reading">Reading</a>
-            </nav>
-
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle theme"></button>
         </header>
 
         <!-- ═══════════════════════════════════════════════════
@@ -97,7 +83,7 @@
 
                     <div class="hero">
                         <div>
-                            <h1>Ryan Lewandowski<br /><span class="h1-accent">Software Developer.</span></h1>
+                            <h1>Ryan Lewandowski</h1>
 
                             <p class="sub">
                                 I like problems I don't know how to solve yet, and I learn the tools to solve them as I go.
@@ -126,7 +112,7 @@
                         </div>
 
                         <div class="visual">
-                            <img class="profile-circle" src="assets/myPhoto.jpg" alt="Ryan Lewandowski" />
+                            <img class="profile-circle" src="assets/myPhoto.jpeg" alt="Ryan Lewandowski" />
                         </div>
                     </div>
                 </div>
@@ -141,55 +127,65 @@
                     </div>
 
                     <div class="about-grid">
-                        <div class="about-col">
-                            <p class="about-text">
-                                I'm Ryan, a software engineering student at Southern New Hampshire University who
-                                learns best by building projects that are just a little too ambitious for my current
-                                skill level, then figuring them out one problem at a time.
-                            </p>
-                            <p class="about-text">
-                                Programming keeps me hooked because there is always a new problem to solve, a better
-                                way to build something, and, every once in a while, the computer actually does what
-                                I asked it to do.
-                            </p>
-                            <h3 class="section-sub-heading section-sub-heading--divided">Education</h3>
-                            <p class="about-education">
-                                B.S. Software Engineering - Southern New Hampshire University<br />
-                                Expected May 2028 · <span class="edu-gpa">4.0 GPA</span>
-                            </p>
-                            <div class="about-availability">
-                                <span class="availability-dot"></span>
-                                Open to opportunities
+                        <p class="about-text">
+                            I'm Ryan, a software engineering student at Southern New Hampshire University who
+                            learns best by building projects that are just a little too ambitious for my current
+                            skill level, then figuring them out one problem at a time.
+                        </p>
+                        <p class="about-text">
+                            Programming keeps me hooked because there is always a new problem to solve, a better
+                            way to build something, and, every once in a while, the computer actually does what
+                            I asked it to do.
+                        </p>
+
+                        <!-- Three labelled blocks across the content column -->
+                        <div class="about-meta">
+                            <div class="about-col">
+                                <h3 class="section-sub-heading">Education</h3>
+                                <p class="about-education">
+                                    B.S. Software Engineering - Southern New Hampshire University<br />
+                                    Expected May 2028 · <span class="edu-gpa">4.0 GPA</span>
+                                </p>
+                            </div>
+
+                            <div class="about-col">
+                                <h3 class="section-sub-heading">Currently Learning</h3>
+                                <ul class="learning-list">
+                                    <li>Software architecture</li>
+                                    <li>System design</li>
+                                </ul>
+                            </div>
+
+                            <div class="about-col">
+                                <h3 class="section-sub-heading">Status</h3>
+                                <div class="about-availability">
+                                    <span class="availability-dot"></span>
+                                    Open to opportunities
+                                </div>
                             </div>
                         </div>
 
-                        <div class="about-col">
-                            <h3 class="section-sub-heading">Currently Learning</h3>
-                            <ul class="learning-list">
-                                <li>Software architecture</li>
-                                <li>System design</li>
-                            </ul>
-                            <h3 class="section-sub-heading section-sub-heading--divided">Skills</h3>
-                            <div class="skill-grid">
-                                <span class="skill">Python</span>
-                                <span class="skill">JavaScript / TypeScript</span>
-                                <span class="skill">HTML / CSS</span>
-                                <span class="skill">React / React Native</span>
-                                <span class="skill">APIs &amp; REST</span>
-                                <span class="skill">Java</span>
-                                <span class="skill">SQL</span>
-                                <span class="skill">C++</span>
-                            </div>
-                            <a class="resume-btn" href="assets/resume.pdf?v=2d1d52cb" target="_blank" rel="noopener noreferrer">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                                    <polyline points="14 2 14 8 20 8"/>
-                                    <line x1="12" y1="18" x2="12" y2="12"/>
-                                    <line x1="9" y1="15" x2="15" y2="15"/>
-                                </svg>
-                                View Résumé
-                            </a>
+                        <h3 class="section-sub-heading section-sub-heading--divided">Skills</h3>
+                        <div class="skill-grid">
+                            <span class="skill">Python</span>
+                            <span class="skill">JavaScript / TypeScript</span>
+                            <span class="skill">HTML / CSS</span>
+                            <span class="skill">React / React Native</span>
+                            <span class="skill">APIs &amp; REST</span>
+                            <span class="skill">Java</span>
+                            <span class="skill">SQL</span>
+                            <span class="skill">C++</span>
                         </div>
+
+                        <a class="resume-btn" href="assets/resume.pdf?v=409b0251" target="_blank" rel="noopener noreferrer">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="12" y1="18" x2="12" y2="12"/>
+                                <line x1="9" y1="15" x2="15" y2="15"/>
+                            </svg>
+                            View Résumé
+                        </a>
                     </div>
                 </div>
             </section>
@@ -200,19 +196,22 @@
                     <div class="section-heading" data-num="03">
                         <span class="section-number">03</span>
                         <h2 class="section-title">Projects</h2>
-                        <a class="btn see-all-btn" href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">
-                            See all projects
-                            <span aria-hidden="true">↗</span>
-                        </a>
-                        <div class="carousel-controls">
-                            <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous project">‹</button>
-                            <button class="carousel-arrow carousel-next" type="button" aria-label="Next project">›</button>
-                        </div>
+                    </div>
+
+                    <!-- Sits opposite the heading, at the far right of the page -->
+                    <div class="carousel-controls">
+                        <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous project">‹</button>
+                        <button class="carousel-arrow carousel-next" type="button" aria-label="Next project">›</button>
                     </div>
 
                     <!-- Cards are rendered from the PROJECTS array in script.js -->
                     <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
                     <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
+
+                    <a class="btn see-all-btn" href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">
+                        See all projects
+                        <span aria-hidden="true">↗</span>
+                    </a>
                 </div>
             </section>
 
@@ -301,6 +300,6 @@
             </div>
         </div>
 
-        <script src="script.js?v=3d3bbb8c"></script>
+        <script src="script.js?v=b329cd0f"></script>
     </body>
 </html>
