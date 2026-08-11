@@ -1,772 +1,182 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   ryanlewan.com — "dossier" direction
+
+   Structure comes from type, hairline rules and whitespace. There are no
+   cards, panels or filled surfaces on the page: the accent is a line and a
+   glow, never a flood.
+
+   Every colour in this file resolves to a token defined on :root below. The
+   legacy aliases at the end of the token block (--bg, --text, --accent, …)
+   exist because /halflight, /innercity and /divergeos share this stylesheet
+   and reference those names from their own inline styles.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
-    --maxw: 1500px;
-    --r-lg: 28px;
-    --pad-x: clamp(20px, 4vw, 56px);
-    --pad-y: clamp(18px, 3.5vw, 52px);
-    /* Notch/status-bar inset on iOS (0 elsewhere); header height includes it */
+    /* ── ground + text ── */
+    --color-bg:       #161826;
+    --color-surface:  #232532;
+    --color-text:     #e9e9ed;
+    --color-accent:   #9184d9;
+    --color-divider:  color-mix(in srgb, #e9e9ed 16%, transparent);
+
+    /* ── neutral ramp ── */
+    --color-neutral-100: #f3f5fe;
+    --color-neutral-200: #e4e7f5;
+    --color-neutral-300: #cfd3e5;
+    --color-neutral-400: #b2b6ca;
+    --color-neutral-500: #9397ab;
+    --color-neutral-600: #75798c;
+    --color-neutral-700: #595d6c;
+    --color-neutral-800: #3f424d;
+    --color-neutral-900: #292b31;
+
+    /* ── accent ramp ── */
+    --color-accent-100: #f5f4ff;
+    --color-accent-200: #e7e5fe;
+    --color-accent-300: #d2cefd;
+    --color-accent-400: #b5abfc;
+    --color-accent-500: #968ae0;
+    --color-accent-600: #796cbf;
+    --color-accent-700: #5d5294;
+    --color-accent-800: #423a6a;
+    --color-accent-900: #2b2741;
+
+    /* The one saturated field. Reserved for deck dividers — unused on the
+       page itself, kept so the system stays complete. */
+    --color-section:       #262a60;
+    --color-section-glow:  #353b80;
+    --color-section-ghost: #4c5397;
+
+    /* ── spacing (0.7x density — dense on purpose) ── */
+    --space-1: 2.8px;
+    --space-2: 5.6px;
+    --space-3: 8.4px;
+    --space-4: 11.2px;
+    --space-6: 16.8px;
+    --space-8: 22.4px;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 14px;
+
+    /* Elevation on a dark ground is an edge plus ambient darkness — one
+       shadow, never a stack. */
+    --shadow-sm: 0 0 0 1px #3f424d;
+    --shadow-md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0, 0, 0, 0.65);
+
+    /* ── type ── */
+    --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* ── layout ── */
+    --maxw: 1400px;
+    --page-x: clamp(20px, 4vw, 56px);   /* page padding, horizontal */
+    --page-y: 78px;                     /* section padding, vertical */
+    --gutter: 180px;                    /* left column: section number + heading */
+    --gutter-gap: 56px;
+    /* Where the content column starts, measured from the page edge */
+    --content-x: calc(var(--page-x) + var(--gutter) + var(--gutter-gap));
+
     --safe-top: env(safe-area-inset-top, 0px);
-    --header-h: calc(76px + var(--safe-top));
+    --header-h: calc(64px + var(--safe-top));
+
+    --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+    /* ── legacy aliases — consumed by the project subpages ── */
+    --bg:          var(--color-bg);
+    --panel:       var(--color-surface);
+    --soft-1:      #1c1e2d;
+    --soft-2:      #1a1c2a;
+    --text:        var(--color-text);
+    --muted:       var(--color-neutral-300);
+    --muted-2:     var(--color-neutral-500);
+    --line:        var(--color-neutral-800);
+    --accent:      var(--color-accent);
+    --accent-2:    var(--color-accent-300);
+    --accent-glow: rgba(145, 132, 217, 0.14);
+    --r-lg: var(--radius-lg);
+    --pad-x: var(--page-x);
+    --pad-y: var(--page-y);
 }
 
-/* Dark theme */
-html[data-theme="dark"] {
-    --bg: #07080f;
-    --panel: #0d0f1c;
-    --soft-1: #131628;
-    --soft-2: #0f1220;
-
-    --text: #e8d5b0;
-    --muted: #b9a07a;
-    --muted-2: #9e8a68;
-
-    --line: #2d2555;
-    --accent: #c9a84c;
-    --accent-2: #e8cf8a;
-    --accent-glow: rgba(201, 168, 76, 0.12);
-}
-
-/* Light theme */
-html[data-theme="light"] {
-    --bg: #f7f8fc;
-    --panel: #ffffff;
-    --soft-1: #e2e7f4;
-    --soft-2: #d6ddf0;
-
-    --text: #0f1117;
-    --muted: #4a5568;
-    --muted-2: #64748b;
-
-    --line: #bcc5df;
-    --accent: #9b6f1a;
-    --accent-2: #c9962e;
-    --accent-glow: rgba(155, 111, 26, 0.08);
-}
-
-/* Smooth theme transitions */
-body, .frame, .btn, .project, .skill, .tech-tag, .logo, .theme-toggle {
-    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
-}
+/* ═══ Base ═══════════════════════════════════════════════════════════════ */
 
 * { box-sizing: border-box; }
-html, body { height: 100%; }
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    min-height: 100%;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 400;
     line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Page wrapper */
-.page {
-    position: relative;
-    min-height: 100vh;
-    overflow: hidden;
-}
-
-.container {
-    max-width: var(--maxw);
-    margin: 0 auto;
-    padding: 72px var(--pad-x);
-}
-
-/* Subtle background geometry (like the reference) */
-.bg-blob {
-    position: absolute;
-    inset: auto;
-    border-radius: 999px;
-    background: var(--soft-1);
-    opacity: 0.55;
-    filter: blur(0px);
-    pointer-events: none;
-}
-
-.blob-1 {
-    width: 780px;
-    height: 780px;
-    left: 50%;
-    top: 52%;
-    transform: translate(-45%, -45%);
-}
-
-.blob-2 {
-    width: 420px;
-    height: 420px;
-    right: -120px;
-    top: 120px;
-    background: var(--soft-2);
-    opacity: 0.35;
-}
-
-.blob-3 {
-    width: 260px;
-    height: 260px;
-    left: -80px;
-    bottom: 80px;
-    background: var(--soft-1);
-    opacity: 0.3;
-}
-
-.blob-4 {
-    width: 180px;
-    height: 180px;
-    left: 38%;
-    top: -60px;
-    background: var(--soft-2);
-    opacity: 0.4;
-}
-
-.blob-5 {
-    width: 320px;
-    height: 320px;
-    right: 12%;
-    bottom: -100px;
-    background: var(--soft-1);
-    opacity: 0.25;
-}
-
-/* Outline rings */
-.bg-ring {
-    position: absolute;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    opacity: 0.35;
-    pointer-events: none;
-}
-
-.ring-1 {
-    width: 600px;
-    height: 600px;
-    left: -200px;
-    top: -180px;
-}
-
-.ring-2 {
-    width: 440px;
-    height: 440px;
-    right: -140px;
-    bottom: 60px;
-}
-
-.ring-3 {
-    width: 240px;
-    height: 240px;
-    left: 55%;
-    top: 60%;
-}
-
-.cross {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    pointer-events: none;
-    animation: twinkle var(--twinkle-dur, 3s) ease-in-out infinite;
-}
-.cross::before,
-.cross::after {
+/* The one radial glow on the page — an ambient wash behind the hero, so the
+   ground isn't a flat field. Fixed, so it never scrolls into the sections. */
+body::before {
     content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 16px;
-    height: 1.5px;
-    background: var(--accent);
-    transform: translate(-50%, -50%);
-    opacity: 0.25;
-}
-.cross::after {
-    transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.cross.c1 { left: 10%; top: 14%; --twinkle-dur: 2.8s; }
-.cross.c2 { right: 8%; top: 22%; --twinkle-dur: 3.7s; }
-.cross.c3 { right: 10%; bottom: 18%; --twinkle-dur: 4.3s; }
-
-@keyframes twinkle {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
-}
-
-/* Frame (main card) */
-.frame {
-    position: relative;
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: var(--pad-y) var(--pad-x);
-}
-
-/* Top meta line */
-.meta {
-    display: flex;
-    gap: 18px;
-    align-items: baseline;
-    color: var(--accent);
-    opacity: 0.7;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    margin-bottom: 22px;
-}
-
-/* Header / nav */
-.header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 44px;
-}
-
-.logo {
-    width: 46px;
-    height: 46px;
-    min-width: 46px;
-    min-height: 46px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    display: grid;
-    place-items: center;
-    color: var(--text);
-    text-decoration: none;
-    flex-shrink: 0;
-    transition: border-color 200ms ease, color 200ms ease;
-}
-.logo:hover { border-color: var(--accent); color: var(--accent); }
-
-.nav {
-    display: flex;
-    gap: 28px;
-    align-items: center;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-}
-.nav a {
-    color: var(--muted-2);
-    text-decoration: none;
-    padding: 6px 2px;
-}
-.nav a:hover { color: var(--accent); }
-
-.theme-toggle {
-    width: 46px;
-    height: 46px;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--muted-2);
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    padding: 0;
-    flex-shrink: 0;
-}
-.theme-toggle:hover { color: var(--accent); border-color: var(--accent); }
-
-/* Hero */
-.hero {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: clamp(28px, 6vw, 76px);
-    align-items: center;
-}
-
-h1 {
-    margin: 0 0 16px;
-    font-size: clamp(36px, 5vw, 58px);
-    line-height: 1.08;
-    letter-spacing: -0.025em;
-    font-weight: 600;
-    font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
-}
-
-.sub {
-    margin: 0 0 22px;
-    color: var(--muted);
-    font-size: 16px;
-    max-width: 52ch;
-}
-
-.btn-row {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin: 18px 0 30px;
-}
-
-.btn {
-    display: inline-flex;
-    gap: 10px;
-    align-items: center;
-    border: 1px solid var(--line);
-    background: var(--soft-1);
-    color: var(--text);
-    text-decoration: none;
-    padding: 10px 14px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 500;
-}
-.btn:hover { border-color: var(--accent); color: var(--accent); }
-
-.links {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    font-size: 13px;
-    color: var(--muted-2);
-}
-.links a {
-    color: var(--muted-2);
-    text-decoration: none;
-}
-.links a:hover {
-    color: var(--accent);
-}
-
-.copy-email {
-    -webkit-appearance: none;
-    appearance: none;
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0;
-    margin: 0;
-    font: inherit;
-    font-size: 13px;
-    color: var(--muted-2);
-    cursor: pointer;
-    display: inline;
-    vertical-align: baseline;
-}
-.copy-email:hover { color: var(--accent); }
-.copy-email:focus { outline: none; }
-.copy-email.copied { color: var(--text); }
-
-/* Hero visual */
-.visual {
-    display: grid;
-    place-items: center;
-    min-height: 360px;
-}
-
-.profile-circle {
-    width: 390px;
-    height: 390px;
-    border-radius: 50%;
-    object-fit: cover;
-    object-position: center 25%;
-    border: 2px solid var(--accent);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(201, 168, 76, 0.2);
-    animation: float 9s ease-in-out infinite, profile-glow 6s ease-in-out infinite;
-}
-
-@keyframes profile-glow {
-    0%, 100% {
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
-                    0 0 18px rgba(201, 168, 76, 0.10);
-    }
-    50% {
-        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
-                    0 0 32px rgba(201, 168, 76, 0.22);
-    }
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-6px); }
-}
-
-
-/* Sections */
-.sections {
-    margin-top: 56px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 42px;
-}
-
-.section h2 {
-    margin: 0 0 10px;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
-    text-transform: uppercase;
-}
-
-.section p { margin: 0; color: var(--muted); }
-
-/* Projects span full card width */
-#projects {
-    grid-column: 1 / -1;
-}
-
-/* ── Projects carousel ───────────────────────────────────────────────────── */
-.project-list {
-    list-style: none;
-    margin: 0;
-    /* Positioned so each card's offsetLeft is measured from THIS track (the JS
-       reads cards[i].offsetLeft against the track's own scrollLeft). Without it
-       the offsetParent falls back to .snap-section, adding the section's
-       auto-centering margin + padding to every offsetLeft and throwing the
-       scroll targets off by ~a card — arrows skip, the left edge is unreachable. */
-    position: relative;
-    /* 56px side padding reserves one "peek slot" (40px sliver + 16px gap) at each
-       end. This is what keeps the peek a constant width: the first and last cards
-       rest at the same offset as the middle ones, so a card peeks the same amount
-       whether the slot is filled by a neighbour card or by this empty edge space.
-       (6px top/bottom leaves room for the cards' hover lift + glow.) */
-    padding: 6px 56px;
-    display: flex;
-    gap: 16px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    /* proximity (not mandatory) so the 2-up layout never traps you near the
-       end — you can freely scroll back and a previous card stays clickable */
-    scroll-snap-type: x proximity;
-    /* a card snaps so its left edge sits 56px in — matches PEEK in script.js */
-    scroll-padding-left: 56px;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-}
-.project-list::-webkit-scrollbar { display: none; }
-.project-list:focus-visible { outline: none; }
-
-.project-list li { list-style: none; }
-
-/* Two cards up. With the 56px peek-slot padding on the track, the content box is
-   (viewport - 112px), and two cards + one 16px gap must exactly fill it, leaving
-   the peeks to live in the padding slots on each side. */
-.project-list > li {
-    flex: 0 0 calc((100% - 16px) / 2);
-    display: flex;
-    min-width: 0;
-    scroll-snap-align: start;
-}
-
-/* "See all projects" button, pushed to the right of the heading */
-.see-all-btn {
-    margin-left: auto;
-    align-self: center;
-    font-size: 12px;
-    padding: 8px 14px;
-}
-
-/* Prev / next controls live in the section heading, next to the button */
-.carousel-controls {
-    display: flex;
-    gap: 8px;
-    align-self: center;
-}
-.carousel-arrow {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 1px solid var(--line);
-    background: var(--soft-1);
-    color: var(--muted);
-    font-size: 18px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: border-color 140ms ease, color 140ms ease, opacity 140ms ease;
-}
-.carousel-arrow:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
-.carousel-arrow:disabled { opacity: 0.3; cursor: default; }
-
-/* Position indicator dots */
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 9px;
-    margin-top: 18px;
-}
-.carousel-dot {
-    width: 8px;
-    height: 8px;
-    padding: 0;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    background: transparent;
-    opacity: 0.4;
-    cursor: pointer;
-    transition: background 250ms ease, transform 250ms ease, opacity 250ms ease;
-}
-.carousel-dot.active {
-    background: var(--accent);
-    opacity: 1;
-    transform: scale(1.3);
-}
-
-.project {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  overflow: hidden;
-  background: var(--soft-1);
-  text-decoration: none;
-  color: var(--text);
-  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
-}
-
-.project:hover {
-  transform: translateY(-3px);
-  border-color: var(--accent);
-  box-shadow: 0 6px 32px var(--accent-glow);
-}
-
-/* Optional screenshot banner (only on cards that define an image) */
-.project-media {
-  height: 150px;
-  flex-shrink: 0;
-  overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background: var(--soft-2);
-}
-.project-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: var(--media-pos, center);
-  display: block;
-}
-
-.project-body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
-  padding: 22px;
-}
-
-.project-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.project-title-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.project strong {
-  font-size: 15px;
-  font-weight: 600;
-}
-
-.project-status {
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(201, 168, 76, 0.10);
-  border: 1px solid rgba(201, 168, 76, 0.35);
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-.project .desc {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0 0 12px;
-}
-
-.project-bullets {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 16px;
-  display: grid;
-  gap: 6px;
-}
-
-.project-bullets li {
-  color: var(--muted);
-  font-size: 13px;
-  padding-left: 18px;
-  position: relative;
-  line-height: 1.5;
-}
-
-.project-bullets li::before {
-  content: "–";
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--accent);
-  font-size: 13px;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: auto;
-  padding-top: 14px;
-  border-top: 1px solid var(--line);
-}
-
-.tech-tag {
-  font-size: 11px;
-  padding: 4px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  color: var(--muted-2);
-  background: var(--soft-2);
-}
-
-.project-bullets code {
-  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
-  font-size: 12px;
-  background: var(--soft-2);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 1px 5px;
-  color: var(--accent);
-}
-
-.arrow {
-  color: var(--muted-2);
-  font-size: 16px;
-  flex-shrink: 0;
-}
-
-.project:hover .arrow {
-  color: var(--accent);
-}
-
-
-/* Right column wrapper — keeps About + Currently learning close together */
-.right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
-    align-self: start;
-}
-
-/* Currently learning section */
-.learning-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 8px;
-}
-
-.learning-list li {
-    color: var(--muted);
-    padding-left: 20px;
-    position: relative;
-}
-
-.learning-list li::before {
-    content: "–";
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 13px;
-    top: 0;
-}
-
-/* Skills section */
-.skills {
-    margin-top: 0;
-}
-
-.skill-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 12px;
-    max-width: 520px;
-}
-
-.skill {
-    padding: 8px 12px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    font-size: 13px;
-    color: var(--muted);
-    background: var(--soft-1);
-}
-
-
-/* ── Site footer ─────────────────────────────────────────────────────────── */
-.site-footer {
-    margin-top: auto;
-    padding-top: 18px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-    font-size: 13px;
-    color: var(--muted-2);
-}
-.footer-copy { color: var(--muted-2); }
-
-
-/* Responsive */
-@media (max-width: 900px) {
-    .container { padding-top: 44px; }
-    .hero { grid-template-columns: 1fr; }
-    .visual { min-height: 300px; }
-    .sections { grid-template-columns: 1fr; }
-}
-
-
-@media (max-width: 600px) {
-    /* Header: keep everything on one row, matching the main page */
-    .header {
-        gap: 12px;
-    }
-
-    /* Nav stays inline and shrinks to fit, like the fixed site header */
-    .nav {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 14px;
-        font-size: 10px;
-        letter-spacing: 0.06em;
-    }
-
-    .theme-toggle {
-        margin-left: auto;
-    }
-
-    .profile-circle {
-        width: 260px;
-        height: 260px;
-    }
-
-    .visual { min-height: 220px; }
-}
-
-
-/* Fixed background layer — visible through all sections */
-.bg-layer {
     position: fixed;
     inset: 0;
-    pointer-events: none;
     z-index: 0;
-    overflow: hidden;
+    pointer-events: none;
+    /* Kept off the right-hand side: the portrait dissolves into flat ground
+       there, and the fade that does it is painted in --color-bg. */
+    background:
+        radial-gradient(820px 540px at 24% -12%, var(--color-accent-900), transparent 70%),
+        radial-gradient(600px 420px at -6% 26%, #1c1e30, transparent 72%);
+    opacity: 0.7;
 }
 
-/* ── Fixed site header ───────────────────────────────────────────────────── */
+h1, h2, h3, h4 {
+    font-weight: 500;      /* headings never go past 500 — hierarchy is size */
+    margin: 0;
+}
+
+p { margin: 0; }
+
+img { max-width: 100%; }
+
+/* ═══ Interaction states — no browser defaults anywhere ═══════════════════ */
+
+a {
+    color: var(--color-accent-400);
+    text-decoration: none;
+    transition: color 160ms var(--ease);
+}
+a:hover  { color: var(--color-accent-300); }
+a:active { color: var(--color-accent-400); }
+
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+}
+
+::selection { background: var(--color-accent-800); color: var(--color-text); }
+
+:disabled, [disabled] { opacity: 0.45; }
+
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-800);
+    border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-neutral-700); }
+
+/* ═══ Header ═════════════════════════════════════════════════════════════ */
+
 .site-header {
     position: fixed;
     top: 0;
@@ -777,37 +187,116 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 24px;
-    padding: var(--safe-top) clamp(20px, 4vw, 56px) 0;
-    border-bottom: 1px solid var(--line);
-    /* Frosted-glass effect */
-    background: transparent;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    gap: var(--space-8);
+    padding: var(--safe-top) var(--page-x) 0;
+    background: color-mix(in srgb, var(--color-bg) 82%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
-html[data-theme="dark"]  .site-header { background: rgba(7,   8,  15, 0.72); }
-html[data-theme="light"] .site-header { background: rgba(243,228,192, 0.78); }
+/* Hairline under the header, fading out at both ends like the section rules */
+.site-header::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: linear-gradient(to right,
+        transparent, var(--color-divider) var(--page-x),
+        var(--color-divider) calc(100% - var(--page-x)), transparent);
+}
 
-/* Opaque strip over the iPhone status-bar inset (time/battery) — the frosted
-   header tint is translucent, so without this, scrolling content shows
-   through up there. Same hue as the header, just fully solid. */
+/* Opaque strip over the iPhone status-bar inset (time/battery) — the header
+   tint is translucent, so without this the page shows through up there. */
 .site-header::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: var(--safe-top);
+    background: var(--color-bg);
 }
-html[data-theme="dark"]  .site-header::before { background: rgb(7,   8,  15); }
-html[data-theme="light"] .site-header::before { background: rgb(243,228,192); }
 
-/* While scrolling, iOS Safari's translucent status bar shows the slice of
-   page canvas just above the viewport — a region fixed elements, safe-area
-   CSS, and theme-color can never reach. This zero-height sticky rides at
-   the viewport top and paints a solid strip upward into that slice, so the
-   area behind the clock/battery always reads as blank page background. */
+.header-left,
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    flex-shrink: 0;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    color: var(--color-neutral-400);
+    transition: color 160ms var(--ease);
+}
+.logo:hover { color: var(--color-accent-300); }
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+}
+.nav a {
+    position: relative;
+    font-size: 14.5px;
+    color: var(--color-neutral-500);
+    padding: var(--space-1) 0;
+}
+.nav a:hover        { color: var(--color-neutral-300); }
+.nav a.active       { color: var(--color-text); }
+/* The active section is marked with an accent tick under the label */
+.nav a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -3px;
+    height: 1px;
+    background: var(--color-accent);
+}
+
+/* ── ">_ terminal" pill ── */
+.terminal-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-neutral-500);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease),
+                background-color 160ms var(--ease);
+}
+.terminal-btn:hover {
+    border-color: var(--color-accent-700);
+    background: var(--color-accent-900);
+    color: var(--color-accent-300);
+}
+.terminal-btn-glyph { color: var(--color-accent-400); }
+
+/* ═══ Page shell ═════════════════════════════════════════════════════════ */
+
+.scroll-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* iOS Safari shows the slice of canvas just above the viewport behind its
+   translucent status bar — a region fixed elements can never reach. This
+   zero-height sticky paints a solid strip upward into it. */
 .statusbar-cover {
     position: sticky;
     top: 0;
@@ -815,337 +304,666 @@ html[data-theme="light"] .site-header::before { background: rgb(243,228,192); }
     z-index: 600;
 }
 .statusbar-cover::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     right: 0;
     bottom: 0;
     height: 120px;
-    background: var(--bg);
+    background: var(--color-bg);
 }
 
-/* ── Page content container (normal document flow scrolling) ─────────────── */
-.scroll-container {
-    position: relative;
-    z-index: 1;
-}
-
-/* ── Each full-screen section ────────────────────────────────────────────── */
+/* Sections are natural-height; the class name is kept because script.js
+   observes .snap-section to drive the nav + dot highlighting. */
 .snap-section {
-    height: 100vh;
-    height: 100dvh;
     position: relative;
-    overflow: hidden;
+    scroll-margin-top: var(--header-h);
 }
 
-/* ── Content wrapper ─────────────────────────────────────────────────────── */
+/* The signature detail: a hairline between sections that fades to
+   transparent at both ends, rather than a border that runs edge to edge. */
+.snap-section + .snap-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right,
+        transparent, var(--color-divider) var(--page-x),
+        var(--color-divider) calc(100% - var(--page-x)), transparent);
+}
+
+/* Two columns: the mono section number + heading sit in the left margin,
+   all content lives in the right column. The heading is taken out of flow so
+   .section-inner's content box is exactly the content column — the bookshelf
+   layout code in script.js measures against it. */
 .section-inner {
-    height: 100%;
-    max-width: 1400px;
+    position: relative;
+    max-width: var(--maxw);
     margin: 0 auto;
-    padding: 0 clamp(20px, 4vw, 56px);
-    padding-top: var(--header-h);          /* clear the fixed header */
+    padding: var(--page-y) var(--page-x) var(--page-y) var(--content-x);
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 28px;
+    gap: var(--space-8);
 }
 
-/* Projects section — more content, start from top with breathing room */
-.section-inner--top {
-    justify-content: flex-start;
-    padding-top: calc(var(--header-h) + clamp(16px, 3vh, 40px));
-    padding-bottom: clamp(14px, 3vh, 32px);
+.section-inner > .section-heading {
+    position: absolute;
+    top: var(--page-y);
+    left: var(--page-x);
+    width: var(--gutter);
+    margin: 0;
 }
 
-/* ── Section heading ─────────────────────────────────────────────────────── */
 .section-heading {
     display: flex;
-    align-items: baseline;
-    gap: 14px;
+    flex-direction: column;
+    gap: var(--space-2);
+    align-items: flex-start;
 }
 
 .section-number {
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: var(--accent);
-    opacity: 0.65;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    color: var(--color-accent);
 }
 
 .section-title {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    font-family: 'Cinzel', Georgia, serif;
-    text-transform: uppercase;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--color-text);
 }
 
-/* ── About section ───────────────────────────────────────────────────────── */
-.about-grid {
+/* Shared label above a sub-block: mono, uppercase, quiet */
+.section-sub-heading {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-neutral-600);
+    margin: 0 0 var(--space-3);
+}
+
+/* Modifier: a fading hairline above the block this label introduces */
+.section-sub-heading--divided {
+    padding-top: var(--space-8);
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(to right, var(--color-divider), transparent) 1;
+}
+
+/* ═══ Buttons ════════════════════════════════════════════════════════════ */
+
+/* Outlined, never filled. Hover fills with the darkest step of the ramp. */
+.btn,
+.resume-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--space-8);
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-neutral-500);
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease),
+                background-color 160ms var(--ease);
+}
+.btn:hover,
+.resume-btn:hover {
+    border-color: var(--color-neutral-600);
+    color: var(--color-neutral-300);
+}
+.btn:active,
+.resume-btn:active { color: var(--color-neutral-400); }
+
+.btn--primary {
+    border-color: var(--color-accent);
+    color: var(--color-accent-300);
+}
+.btn--primary:hover {
+    background: var(--color-accent-900);
+    border-color: var(--color-accent);
+    color: var(--color-accent-200);
+}
+.btn--primary:active { color: var(--color-accent-400); }
+
+.resume-btn svg { flex-shrink: 0; }
+
+/* ═══ 01 · Hero ══════════════════════════════════════════════════════════ */
+
+#hero .section-inner {
+    padding: calc(var(--header-h) + 84px) var(--page-x) var(--page-y);
+    gap: 0;
+}
+
+/* Mono kicker line above the name */
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-neutral-600);
+}
+/* Separators are drawn, not typed, so the copy stays as authored */
+.meta span + span::before {
+    content: "· ";
+    color: var(--color-neutral-700);
+}
+#hero .meta::before {
+    content: "01 /";
+    color: var(--color-accent);
+}
+
+.hero {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 48px;
-    align-items: start;
+    grid-template-columns: 1fr 340px;
+    gap: var(--gutter-gap);
+    align-items: end;
+    margin-top: var(--space-8);
+}
+
+h1 {
+    font-size: clamp(48px, 8.2vw, 104px);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    color: var(--color-text);
+    /* Two lines, flush left — the wrap point is the layout, not a <br> */
+    max-width: 8ch;
+    text-wrap: balance;
+}
+
+.sub {
+    margin-top: var(--space-8);
+    max-width: 520px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-neutral-400);
+    text-wrap: pretty;
+}
+
+.btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: 28px;
+}
+
+/* Social row — mono, quiet, no separators drawn by CSS (the "/" is markup) */
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-top: 28px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+}
+.links a,
+.links button { color: var(--color-neutral-600); }
+.links a:hover,
+.links button:hover { color: var(--color-accent-300); }
+.links > span { color: var(--color-neutral-800); }
+
+.copy-email {
+    -webkit-appearance: none;
+    appearance: none;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--color-neutral-600);
+    cursor: pointer;
+    transition: color 160ms var(--ease);
+}
+.copy-email.copied { color: var(--color-accent-300); }
+
+/* ── Portrait ──
+   The brief calls for mix-blend-mode: lighten so the photo sits in the page
+   rather than on it. That only works on a photo shot against a dark backdrop;
+   this headshot has a light-grey one, which blending would turn into a bright
+   slab. Same intent, different mechanism: desaturate and dim the image, then
+   vignette its edges into --color-bg so it dissolves into the ground. The
+   fade is painted in the background colour, which is why the hero glow above
+   is kept away from this corner. */
+/* Shrink-wraps the portrait so ::after lines up with it exactly. The image
+   below must keep an explicit px width for this: a percentage width inside a
+   shrink-to-fit box resolves against the image's intrinsic size (971px) and
+   blows the page out sideways on a phone. */
+.visual {
+    position: relative;
+    width: max-content;
+    max-width: 100%;
+    margin-left: auto;
+    line-height: 0;
+}
+
+.visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(to bottom, transparent 30%, var(--color-bg) 94%),
+        linear-gradient(to top,    transparent 78%, var(--color-bg) 100%),
+        linear-gradient(to right,  var(--color-bg), transparent 34%),
+        linear-gradient(to left,   var(--color-bg), transparent 34%);
+}
+
+.profile-circle {
+    display: block;
+    width: 340px;
+    height: 420px;
+    object-fit: cover;
+    object-position: center 16%;
+    filter: grayscale(0.72) contrast(1.06) brightness(0.74);
+}
+
+/* ═══ 02 · About ═════════════════════════════════════════════════════════ */
+
+.about-grid {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
 }
 
 .about-text {
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.75;
-    margin: 0 0 20px;
-    max-width: 58ch;
+    max-width: 640px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-neutral-300);
+    text-wrap: pretty;
 }
 
+/* Three labelled blocks in a row: education / currently learning / status */
+.about-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gutter-gap);
+    margin-top: var(--space-8);
+    max-width: 900px;
+}
+
+.about-col { min-width: 0; }
+
 .about-education {
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.7;
-    margin: 0 0 20px;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-neutral-300);
 }
 .edu-gpa {
-    color: var(--accent);
-    font-weight: 600;
+    display: inline-block;
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 500;      /* the heaviest JetBrains Mono weight loaded */
+    letter-spacing: 0.04em;
+    color: var(--color-accent-300);
+}
+.about-education br + span { display: inline-block; }
+
+.learning-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-neutral-300);
 }
 
 .about-availability {
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 20px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    color: #6bcc8a;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-neutral-300);
 }
 
 .availability-dot {
-    width: 8px;
-    height: 8px;
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
-    background: #6bcc8a;
-    box-shadow: 0 0 6px #6bcc8a;
-    animation: pulse-dot 2s ease-in-out infinite;
+    background: var(--color-accent-400);
+    box-shadow: 0 0 8px var(--color-accent-500);
+    animation: pulse-dot 2.4s ease-in-out infinite;
 }
-
 @keyframes pulse-dot {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.5; transform: scale(0.75); }
+    0%, 100% { opacity: 1;   }
+    50%      { opacity: 0.35; }
 }
 
-/* ── "Currently working on" notification toast ───────────────────────────── */
-.work-toast {
-    position: fixed;
-    right: clamp(16px, 3vw, 32px);
-    top: calc(var(--header-h) + clamp(14px, 2.5vw, 24px));
-    z-index: 400;
-    display: inline-flex;
-    align-items: stretch;
-    max-width: min(320px, calc(100vw - 32px));
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.32);
-    transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
-    animation: toast-in 500ms cubic-bezier(.2, .8, .2, 1) 600ms both;
-}
-.work-toast:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-}
-.work-toast.dismissed { display: none; }
-
-.work-toast-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 14px 14px 14px;
-    color: var(--text);
-    text-decoration: none;
-}
-.work-toast-logo {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-    border-radius: 12px;
-    object-fit: cover;
-    border: 1px solid var(--line);
-}
-.work-toast-body {
+/* ── Skill chips ── */
+.skill-grid {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-}
-.work-toast-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted-2);
-}
-.work-toast-title {
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-}
-.work-toast-text {
-    font-size: 12px;
-    color: var(--muted);
+    flex-wrap: wrap;
+    gap: var(--space-2);
 }
 
-.work-toast-dot {
-    width: 8px;
-    height: 8px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
-    animation: pulse-dot 2s ease-in-out infinite;
+.skill,
+.tech-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.35;
+    color: var(--color-neutral-400);
+    transition: border-color 160ms var(--ease), color 160ms var(--ease);
 }
-.work-toast-arrow {
-    color: var(--accent);
-    font-size: 14px;
+.skill:hover {
+    border-color: var(--color-accent-700);
+    color: var(--color-accent-300);
 }
-.work-toast-close {
-    position: absolute;
-    top: 6px;
-    right: 6px;
-    width: 22px;
-    height: 22px;
-    display: grid;
-    place-items: center;
+
+.about-grid > .resume-btn { align-self: flex-start; }
+
+/* ═══ 03 · Projects ══════════════════════════════════════════════════════ */
+
+/* Arrows sit at the far right, opposite the section number. Kept in flow
+   rather than absolute: .project-list is positioned (script.js needs it as
+   the offsetParent), so an absolute sibling earlier in the DOM would be
+   painted underneath the track. In flow it also reserves its own row. */
+.carousel-controls {
+    display: flex;
+    gap: var(--space-2);
+    align-self: flex-end;
+}
+
+.carousel-arrow {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: none;
-    color: var(--muted-2);
-    font-size: 16px;
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-neutral-500);
+    font-family: var(--font-mono);
+    font-size: 15px;
     line-height: 1;
     cursor: pointer;
-    transition: color 160ms ease, background 160ms ease;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease),
+                background-color 160ms var(--ease), opacity 160ms var(--ease);
 }
-.work-toast-close:hover {
-    color: var(--text);
-    background: var(--soft-1);
+.carousel-arrow:hover:not(:disabled) {
+    border-color: var(--color-accent-700);
+    background: var(--color-accent-900);
+    color: var(--color-accent-300);
 }
+.carousel-arrow:disabled { opacity: 0.45; cursor: default; }
 
-/* Countdown bar along the toast's bottom edge — drains over the same 3s
-   window as the auto-dismiss timeout in script.js (which starts its clock
-   after the 1.1s fly-in, matching this animation's delay). */
-.work-toast-progress {
-    position: absolute;
-    left: 14px;
-    right: 14px;
-    bottom: 5px;
-    height: 3px;
-    border-radius: 2px;
-    background: var(--accent);
-    opacity: 0.7;
-    transform-origin: left center;
-    animation: toast-progress 3s linear 1100ms forwards;
-}
-
-@keyframes toast-progress {
-    from { transform: scaleX(1); }
-    to   { transform: scaleX(0); }
-}
-
-/* Fade-out used by both the timeout and the × button */
-.work-toast.leaving {
-    animation: toast-out 260ms ease forwards;
-    pointer-events: none;
-}
-
-@keyframes toast-in {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: none; }
-}
-
-@keyframes toast-out {
-    from { opacity: 1; transform: none; }
-    to   { opacity: 0; transform: translateY(-10px); }
-}
-
-.resume-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 20px;
-    padding: 10px 18px;
-    border: 1px solid var(--accent);
-    border-radius: 999px;
-    color: var(--accent);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    transition: background 120ms ease, color 120ms ease;
-}
-
-.resume-btn:hover {
-    background: var(--accent);
-    color: var(--bg);
-}
-
-.section-sub-heading {
-    margin: 0 0 12px;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
-/* Divider that separates the bio from the sub-sections below it */
-.section-sub-heading--divided {
-    margin-top: 28px;
-    padding-top: 24px;
-    border-top: 1px solid var(--line);
-}
-
-/* ── Reading / bookshelf ─────────────────────────────────────────────────────
-   The case and shelves are static HTML; books are rendered onto .shelf-books
-   from the BOOKS array in script.js. The .book / .book-info rules below are
-   already wired up, so adding a book to the array gets the spine, the
-   hover pull-off, and the "what I learned" card with no CSS changes. */
-.reading-intro {
+/* ── The track ──
+   position: relative is load-bearing: script.js compares each card's
+   offsetLeft against this element's own scrollLeft, so the track has to be
+   the offsetParent. scroll-padding-left is read by the same code as the
+   "peek" inset — with a flush-left track it is 0. */
+.project-list {
+    position: relative;
+    list-style: none;
     margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-    max-width: 60ch;
+    padding: 0;
+    display: flex;
+    gap: var(--gutter-gap);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x proximity;
+    scroll-padding-left: 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.project-list::-webkit-scrollbar { display: none; }
+.project-list:focus-visible { outline: none; }
+
+.project-list > li {
+    list-style: none;
+    flex: 0 0 400px;
+    max-width: 400px;
+    display: flex;
+    scroll-snap-align: start;
 }
 
-/* Second line of the intro — an interaction hint, so it gets the accent gold */
-.reading-cta {
-    display: block;
-    margin-top: 6px;
-    color: var(--accent-2);
-}
-
-/* The bookcase frame */
-.bookshelf {
-    /* Books multiply their configured size by this; phones shrink it so a
-       row of spines never outgrows the screen (see the 600px media query) */
-    --book-scale: 1;
+/* ── A card that isn't a card ──
+   No container, no fill, no border around the whole thing: an image, then
+   type. The only edge is the 1px line around the screenshot. */
+.project {
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    flex: 1;
+    min-width: 0;
+    color: var(--color-text);
+}
+
+.project-media {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    transition: border-color 200ms var(--ease);
+}
+.project-media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--media-pos, center);
+    filter: grayscale(0.25) brightness(0.9);
+    transition: filter 260ms var(--ease), transform 420ms var(--ease);
+}
+.project:hover .project-media          { border-color: var(--color-accent-800); }
+.project:hover .project-media img      { filter: none; transform: scale(1.015); }
+
+.project-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    padding-top: var(--space-6);
+}
+
+.project-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+
+.project-title-row {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.project strong {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.005em;
+    color: var(--color-text);
+}
+
+/* Status is the machine voice — mono, lowercase-ish, no pill, no fill */
+.project-status {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--color-accent-400);
+    white-space: nowrap;
+}
+
+.arrow {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-neutral-700);
+    transition: color 160ms var(--ease), transform 200ms var(--ease);
+}
+.project:hover .arrow {
+    color: var(--color-accent-400);
+    transform: translate(2px, -2px);
+}
+
+.project .desc {
+    margin-top: var(--space-3);
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--color-neutral-500);
+    text-wrap: pretty;
+}
+
+.project-bullets {
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+.project-bullets li {
+    position: relative;
+    padding-left: var(--space-6);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--color-neutral-600);
+}
+.project-bullets li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-neutral-800);
+}
+.project-bullets code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-accent-400);
+}
+
+/* The stack line under the card — one mono run, not chips */
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-top: auto;
+    padding-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
+}
+.project .tech-tag {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    font-size: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+}
+.project .tech-tag + .tech-tag::before {
+    content: "· ";
+    color: var(--color-neutral-800);
+}
+
+/* ── Position counter ──
+   The dots are relabelled as a mono "01 / 05" counter; script.js still
+   toggles .active on each dot, and CSS turns the active one into the
+   left-hand number while the rest collapse to a hairline tick. */
+.carousel-dots {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-6);
+}
+.carousel-dot {
+    width: 18px;
+    height: 1px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-neutral-800);
+    cursor: pointer;
+    transition: background-color 200ms var(--ease), width 320ms var(--ease);
+}
+.carousel-dot:hover  { background: var(--color-neutral-600); }
+.carousel-dot.active { width: 30px; background: var(--color-accent); }
+
+/* "See all projects ↗" — a mono link under the track, not a button */
+.see-all-btn {
+    align-self: flex-start;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-500);
+}
+.see-all-btn:hover {
+    background: none;
+    border: 0;
+    color: var(--color-accent-300);
+}
+
+/* ═══ 04 · Reading ═══════════════════════════════════════════════════════ */
+
+.reading-intro {
+    max-width: 640px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--color-neutral-300);
+    text-wrap: pretty;
+}
+.reading-cta { color: var(--color-neutral-500); }
+
+/* ── The shelf ──
+   No case, no frame: spines standing on a hairline. script.js reads
+   --book-scale and the row's column-gap to decide how many spines fit a row,
+   and measures the available width from .section-inner's content box. */
+.bookshelf {
+    --book-scale: 0.85;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
     /* Headroom so a hovered book's info card clears the fixed header */
-    margin-top: clamp(60px, 14vh, 130px);
-    /* Hug the row of books and sit centered so the shelf always looks full */
-    width: fit-content;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid var(--line);
-    border-radius: 18px;
-    background: var(--soft-2);
-    padding: clamp(18px, 3vw, 30px) clamp(16px, 3vw, 34px);
+    margin-top: clamp(48px, 9vh, 96px);
+    /* Full-width so the shelf rule runs out to the right of the spines; the
+       row of books inside hugs the left. */
+    width: 100%;
 }
 
 .shelf {
@@ -1153,613 +971,477 @@ html[data-theme="light"] .site-header::before { background: rgb(243,228,192); }
     flex-direction: column;
 }
 
-/* Row the books stand on — bottom-aligned so mixed spine heights sit flush */
+/* Bottom-aligned so mixed spine heights sit flush on the shelf line */
 .shelf-books {
     display: flex;
     align-items: flex-end;
-    justify-content: center;
     flex-wrap: wrap;
-    gap: 7px;
-    min-height: 200px;
-    padding: 0 12px;
+    gap: var(--space-2);
+    min-height: 150px;
+    padding: 0;
 }
 
-/* The wooden board under each row */
+/* The shelf itself is a rule, and it fades out to the right */
 .shelf-board {
-    height: 11px;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    /* Faint gold top edge so the board reads as a lit shelf lip */
-    background:
-        linear-gradient(180deg, rgba(201, 168, 76, 0.16), rgba(201, 168, 76, 0.03) 55%),
-        var(--soft-1);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.22);
+    height: 1px;
+    background: linear-gradient(to right,
+        var(--color-neutral-600), var(--color-neutral-700) 45%,
+        var(--color-divider) 72%, transparent);
 }
 
-/* Placeholder shown while the shelf is empty (removed by JS once books exist) */
 .shelf-hint {
-    margin: auto;
-    align-self: center;
-    color: var(--muted-2);
+    margin: auto 0;
+    font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    opacity: 0.65;
+    color: var(--color-neutral-700);
 }
 
-/* ── A single book spine ── */
+/* ── A single spine ── */
 .book {
     position: relative;
     flex: 0 0 auto;
     width: calc(var(--book-w, 42px) * var(--book-scale, 1));
     height: calc(var(--book-h, 170px) * var(--book-scale, 1));
     padding: 0;
-    border: 1px solid rgba(0, 0, 0, 0.28);
-    border-radius: 3px 3px 1px 1px;
-    /* Sheen down the spine over the book's own colour */
-    background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 30%, rgba(0, 0, 0, 0.18) 94%),
-        var(--book-color, #6b4f35);
-    color: #f4ecd9;
-    font-family: inherit;
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-sm);
+    background: var(--color-neutral-900);
+    color: var(--color-neutral-400);
+    font-family: var(--font-mono);
     cursor: pointer;
-    /* Pivot at the base so the hover pull reads as tipping off the shelf */
+    overflow: hidden;
     transform-origin: 50% 100%;
-    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.3, 1.15), box-shadow 220ms ease;
+    transition: transform 240ms var(--ease), border-color 200ms var(--ease),
+                background-color 200ms var(--ease);
 }
 .book:hover,
 .book:focus-visible {
-    transform: translateY(-16px) rotate(-3deg);
-    box-shadow: 0 14px 22px rgba(0, 0, 0, 0.3);
+    transform: translateY(-14px);
+    border-color: var(--color-accent-800);
+    background: var(--color-accent-900);
     z-index: 5;
 }
 
-/* Spine artwork — set via `image` in BOOKS. The image sits under the same
-   sheen gradient so art spines catch the light like the plain ones. */
+/* Cover artwork, when a book defines one. Desaturated and dimmed so the
+   shelf reads as one material inside the palette; full colour on hover. */
 .book--art {
     background:
-        linear-gradient(90deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 30%, rgba(0, 0, 0, 0.18) 94%),
         var(--book-image) var(--book-image-pos, center) / cover no-repeat,
-        var(--book-color, #6b4f35);
+        var(--color-neutral-900);
+    filter: grayscale(0.82) brightness(0.55) contrast(1.02);
+    transition: transform 240ms var(--ease), border-color 200ms var(--ease),
+                filter 260ms var(--ease);
 }
-/* The artwork carries the visible title; keep the text for screen readers */
-.book--art .book-spine-title {
-    opacity: 0;
+.book--art:hover,
+.book--art:focus-visible {
+    background:
+        var(--book-image) var(--book-image-pos, center) / cover no-repeat,
+        var(--color-neutral-900);
+    filter: grayscale(0.1) brightness(0.98);
 }
+/* The artwork carries the visible title; the text stays for screen readers */
+.book--art .book-spine-title { opacity: 0; }
 
 .book-spine-title {
     position: absolute;
-    inset: 10px 0;
+    inset: var(--space-3) 0;
     margin: auto;
     writing-mode: vertical-rl;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-/* ── "What I learned" card, revealed above the pulled book ── */
+/* ── "What I learned", revealed above the pulled spine ── */
 .book-info {
     position: absolute;
-    /* Anchored to the spine's left edge (not centered) so cards on books
-       near the shelf's left end never clip off the viewport. --card-dx is
-       set inline by script.js on books whose card would clip the row edge
-       (e.g. right-end spines on a phone) and nudges the card back inward. */
+    /* Anchored to the spine's left edge (not centred) so cards on books near
+       the shelf's left end never clip off the viewport. --card-dx is set
+       inline by script.js to nudge a clipping card back inward. */
     left: calc(-14px + var(--card-dx, 0px));
-    bottom: calc(100% + 16px);
+    bottom: calc(100% + var(--space-6));
     transform: translateY(6px);
     width: min(320px, 74vw);
-    padding: 13px 16px;
-    background: var(--panel);
-    border: 1px solid var(--accent);
-    border-radius: 12px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    padding: var(--space-4) var(--space-6);
+    background: rgba(13, 14, 22, 0.97);
+    border: 1px solid var(--color-accent-800);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
     text-align: left;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms;
+    /* the spine may be filtered/greyed — the card must not inherit that */
+    filter: none;
+    transition: opacity 180ms var(--ease), transform 180ms var(--ease), visibility 180ms;
     z-index: 10;
 }
 .book:hover .book-info,
 .book:focus-visible .book-info {
     opacity: 1;
     visibility: visible;
-    /* rotate(3deg) cancels the pulled book's tilt so the card stays level */
-    transform: translateY(0) rotate(3deg);
+    transform: translateY(0);
 }
-/* Pointer arrow toward the book */
 .book-info::after {
     content: "";
     position: absolute;
     top: 100%;
-    /* Sits over the spine below — card left edge is 14px left of the book,
-       minus any inward --card-dx nudge, at the rendered (scaled) spine width */
-    left: calc(14px + var(--book-w, 42px) * var(--book-scale, 1) / 2 - 7px - var(--card-dx, 0px));
-    border: 7px solid transparent;
-    border-top-color: var(--accent);
+    left: calc(14px + var(--book-w, 42px) * var(--book-scale, 1) / 2 - 6px - var(--card-dx, 0px));
+    border: 6px solid transparent;
+    border-top-color: var(--color-accent-800);
 }
 
 .book-info-title {
     display: block;
-    color: var(--text);
-    font-size: 13px;
-    font-weight: 600;
+    font-family: var(--font-sans);
+    font-size: 14.5px;
+    font-weight: 500;
     line-height: 1.4;
+    letter-spacing: normal;
+    color: var(--color-text);
 }
 .book-info-author {
     display: block;
-    color: var(--muted-2);
+    font-family: var(--font-mono);
     font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
 }
 .book-info-label {
     display: block;
-    margin: 9px 0 3px;
-    color: var(--accent);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    margin: var(--space-3) 0 var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
+    color: var(--color-accent-400);
 }
 .book-info-text {
     display: block;
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.55;
+    font-family: var(--font-sans);
+    font-size: 13.5px;
     font-weight: 400;
-    text-transform: none;
+    line-height: 1.6;
     letter-spacing: normal;
+    text-transform: none;
+    color: var(--color-neutral-500);
     /* pre-line so a \n in a book's `learned` starts a new takeaway line */
     white-space: pre-line;
     writing-mode: horizontal-tb;
 }
-/* The bolded "main point | …" lead of a takeaway line */
 .book-info-point {
-    color: var(--text);
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--color-neutral-300);
 }
 
-@media (max-width: 600px) {
-    /* Shrink spines via the scale factor — each book's inline --book-w/--book-h
-       would override a plain .book re-declaration here, so scale instead.
-       script.js reads this to decide how many books fit per shelf row. */
-    .bookshelf   { --book-scale: 0.78; gap: 16px; }
-    .shelf-books { min-height: 148px; gap: 5px; padding: 0 6px; }
+/* ═══ Footer ═════════════════════════════════════════════════════════════ */
+
+.site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding-top: var(--space-8);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
 }
 
-/* ── Side navigation dots ────────────────────────────────────────────────── */
+/* Pull the footer out of the content column so it spans the full page width,
+   and give it its own fading rule. */
+.section-inner > .site-footer {
+    margin-top: 78px;
+    margin-left: calc(-1 * (var(--gutter) + var(--gutter-gap)));
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(to right,
+        var(--color-divider), var(--color-divider) 70%, transparent) 1;
+}
+
+.site-footer .links {
+    margin-top: 0;
+    font-size: 11.5px;
+}
+
+/* ═══ Side navigation dots ═══════════════════════════════════════════════ */
+
 .scroll-dots {
     position: fixed;
-    right: 28px;
+    right: 22px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 600;
+    z-index: 400;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    align-items: center;
+    align-items: flex-end;
+    gap: var(--space-4);
 }
 
-.dot {
+.scroll-dots .dot {
     position: relative;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1.5px solid var(--accent);
-    background: transparent;
-    display: block;
-    opacity: 0.45;
-    transition: background 250ms ease, transform 260ms ease,
-                opacity 250ms ease, box-shadow 250ms ease;
+    width: 14px;
+    height: 1px;
+    background: var(--color-neutral-800);
+    transition: width 260ms var(--ease), background-color 200ms var(--ease);
 }
+.scroll-dots .dot:hover  { width: 22px; background: var(--color-neutral-500); }
+.scroll-dots .dot.active { width: 26px; background: var(--color-accent); }
 
-.dot.active {
-    background: var(--accent);
-    transform: scale(1.5);
-    opacity: 1;
-    box-shadow: 0 0 10px rgba(201, 168, 76, 0.55);
-}
-
-.dot:hover { opacity: 1; }
-
-/* Label tooltip that appears to the left of each dot */
-.dot::before {
+/* Label that slides in on hover */
+.scroll-dots .dot::after {
     content: attr(data-label);
     position: absolute;
-    right: calc(100% + 14px);
+    right: calc(100% + var(--space-3));
     top: 50%;
     transform: translateY(-50%);
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--color-neutral-600);
     white-space: nowrap;
     opacity: 0;
-    transition: opacity 200ms ease;
     pointer-events: none;
+    transition: opacity 180ms var(--ease);
 }
-.dot:hover::before { opacity: 1; }
+.scroll-dots .dot:hover::after { opacity: 1; }
 
-/* ── Responsive overrides ────────────────────────────────────────────────── */
+/* ═══ "Currently building" toast ═════════════════════════════════════════ */
 
-/* Tablet (601px – 900px) */
-@media (max-width: 900px) {
-    .scroll-dots        { display: none; }
-    .about-grid         { grid-template-columns: 1fr; gap: 24px; }
-    .section-inner--top { padding-top: calc(var(--header-h) + 16px); }
-    #about .section-inner { justify-content: flex-start; padding-top: calc(var(--header-h) + 24px); }
-
-    /* About stacks to one column here and can exceed the viewport — let it grow
-       and scroll so the résumé button isn't clipped at the bottom */
-    #about.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
-    #about .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
-
-    /* Reading stacks tall on phones too (shelves + footer) — same treatment */
-    #reading.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
-    #reading .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
-
-    /* Projects: a full card (image + bullets + tags) is taller than a short
-       phone viewport — let the section grow so cards are never clipped and a
-       hovered/focused card can't lift out of view */
-    #projects.snap-section   { height: auto; min-height: 100dvh; overflow: visible; }
-    #projects .section-inner { height: auto; padding-bottom: clamp(32px, 6vh, 56px); }
-
-    /* Hero: stack text above photo, tighten gap */
-    .hero               { grid-template-columns: 1fr; gap: 24px; }
-    .visual             { min-height: 0; order: -1; }
-    .profile-circle     { width: 200px; height: 200px; }
-}
-
-/* Mobile (≤600px) */
-@media (max-width: 600px) {
-    .section-inner      { gap: 16px; }
-    .section-inner--top { padding-top: calc(68px + 28px); }
-
-    /* Header: shrink nav text so it fits on one row */
-    .site-header        { gap: 12px; padding: var(--safe-top) 16px 0; }
-    /* Four links now — undo the legacy .nav wrap rules and shrink to fit */
-    .site-header .nav   { order: 0; width: auto; flex: 1; min-width: 0; justify-content: center;
-                          gap: 10px; font-size: 9px; letter-spacing: 0.04em; }
-    .logo, .theme-toggle { width: 38px; height: 38px; min-width: 38px; min-height: 38px; }
-
-    /* Hero */
-    .profile-circle     { width: 160px; height: 160px; }
-    .btn-row            { flex-wrap: wrap; gap: 10px; }
-    h1                  { font-size: clamp(26px, 7vw, 36px); }
-
-    /* Projects carousel: one card with an equal peek of the neighbour on phones.
-       Same peek-slot trick as desktop, just a smaller 36px slot (20px sliver +
-       16px gap) and a single card filling the content box. */
-    .project-list {
-        scroll-snap-type: x mandatory;   /* crisp 1-up swiping on phones */
-        padding: 6px 36px;
-        scroll-padding-left: 36px;
-    }
-    .project-list > li {
-        flex: 0 0 100%;
-        scroll-snap-stop: always;
-    }
-    .project-media { height: 120px; }
-
-    /* Tighter cards so one fits comfortably on a phone screen */
-    .project-body    { padding: 16px; }
-    .project .desc   { font-size: 13px; }
-    .project-bullets li { font-size: 12.5px; }
-
-    /* Heading row is crowded on phones (number + title + button + arrows) —
-       drop the decorative hairline to give the controls room, and center the
-       row vertically so the title and the button pills sit on one line */
-    .section-heading { align-items: center; }
-    .section-title::after { display: none; }
-    .see-all-btn { font-size: 11px; padding: 7px 12px; white-space: nowrap; }
-}
-
-
-/* ── Polish pass: type, hierarchy, motion, finish details ───────────────────── */
-
-/* Text selection + thin themed scrollbar */
-::selection { background: var(--accent); color: var(--bg); }
-html { scrollbar-width: thin; scrollbar-color: var(--line) transparent; }
-::-webkit-scrollbar { width: 9px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent); }
-
-/* Visible keyboard focus everywhere */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-/* Hero: gold gradient on the second line of the h1 */
-.h1-accent {
-    background: linear-gradient(100deg, var(--accent) 10%, var(--accent-2) 55%, var(--accent) 95%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-}
-
-/* Button hierarchy: one filled primary action, ghosts for the rest */
-.btn { transition: transform 140ms ease, background-color 200ms ease, border-color 200ms ease, color 200ms ease, box-shadow 200ms ease; }
-.btn:hover { transform: translateY(-2px); }
-.btn--primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-    font-weight: 600;
-}
-.btn--primary:hover {
-    background: var(--accent-2);
-    border-color: var(--accent-2);
-    color: var(--bg);
-    box-shadow: 0 8px 24px var(--accent-glow);
-}
-
-/* Section headings: hairline rule that runs out to the right of the title */
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex: 1;
-}
-.section-title::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, var(--line), transparent);
-}
-
-/* Header nav: animated underline + active-section highlight
-   (the .active class is kept in sync by the IntersectionObserver in script.js) */
-.nav a { position: relative; }
-.nav a::after {
-    content: "";
-    position: absolute;
-    left: 2px;
-    right: 2px;
-    bottom: 0;
-    height: 1.5px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 220ms ease;
-}
-.nav a:hover::after,
-.nav a.active::after { transform: scaleX(1); }
-.nav a.active { color: var(--accent); }
-
-/* Slowly rotating dashed ring framing the portrait */
-.visual { position: relative; }
-.visual::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 434px;
-    height: 434px;
-    translate: -50% -50%;
-    border-radius: 50%;
-    border: 1px dashed var(--accent);
-    opacity: 0.35;
-    pointer-events: none;
-    animation: ring-spin 60s linear infinite;
-}
-@keyframes ring-spin { to { transform: rotate(360deg); } }
-
-/* Skill chips respond to hover */
-.skill { transition: border-color 160ms ease, color 160ms ease, transform 160ms ease; }
-.skill:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-/* Scroll-reveal: .reveal is added by script.js (so content is never hidden
-   without JS); .revealed fades it in with a per-sibling stagger. */
-.reveal {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 600ms ease, transform 600ms ease;
-}
-.reveal.revealed {
-    opacity: 1;
-    transform: none;
-}
-
-/* ── Texture & editorial details ─────────────────────────────────────────────
-   Film grain over everything: kills the flat, too-clean gradient look. */
-body::after {
-    content: "";
+.work-toast {
     position: fixed;
-    inset: 0;
-    z-index: 5000;
-    pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    right: var(--page-x);
+    bottom: var(--space-8);
+    z-index: 450;
+    width: min(320px, calc(100vw - 2 * var(--page-x)));
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    background: rgba(13, 14, 22, 0.96);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    animation: toast-in 500ms var(--ease) 600ms both;
 }
-html[data-theme="light"] body::after { opacity: 0.035; }
-
-/* Oversized outlined numeral ghosted behind each section heading */
-.section-heading { position: relative; }
-.section-heading::before {
-    content: attr(data-num);
-    position: absolute;
-    left: -8px;
-    top: -0.5em;
-    z-index: -1;
-    font-family: 'Cinzel', Georgia, serif;
-    font-size: clamp(64px, 9vw, 116px);
-    font-weight: 700;
-    line-height: 1;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--line);
-    opacity: 0.55;
-    pointer-events: none;
-}
-/* Top-aligned sections (Projects, Reading) start just under the fixed header —
-   keep the numeral below it instead of half-hidden behind it */
-.section-inner--top .section-heading::before { top: -0.12em; }
-
-/* Skill chips sit a hair off-axis, like they were placed by hand;
-   they straighten when touched */
-.skill { transition: border-color 160ms ease, color 160ms ease, transform 160ms ease, rotate 160ms ease; }
-.skill:nth-child(2n)   { rotate: 0.9deg; }
-.skill:nth-child(3n+1) { rotate: -0.8deg; }
-.skill:hover           { rotate: 0deg; }
-
-/* Empty-shelf hint reads like a pencilled-in note, not a system label */
-.shelf-hint {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-style: italic;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    text-transform: none;
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Playful micro-interactions */
-.logo svg { transition: transform 600ms cubic-bezier(0.3, 0.7, 0.3, 1); }
-.logo:hover svg { transform: rotate(360deg); }
-.btn--primary span { transition: transform 200ms ease; }
-.btn--primary:hover span { transform: translateX(4px); }
-
-@media (max-width: 900px) {
-    .visual::before { width: 232px; height: 232px; }
+.work-toast.leaving {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 300ms var(--ease), transform 300ms var(--ease);
 }
-@media (max-width: 600px) {
-    .visual::before { width: 190px; height: 190px; }
-    .section-heading::before { font-size: 52px; }
-}
+.work-toast.dismissed { display: none; }
 
-/* ── Terminal for nerds ──────────────────────────────────────────────────────
-   Header button (top-left, next to the logo) opens a full-screen terminal
-   running a small virtual shell (ls/cd/cat/…) over the site's content. */
-.header-left {
+.work-toast-link {
     display: flex;
     align-items: center;
-    gap: 14px;
-    flex-shrink: 0;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    color: inherit;
 }
 
-.terminal-btn {
+.work-toast-logo {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    object-fit: cover;
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-sm);
+    filter: grayscale(0.2);
+}
+
+.work-toast-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.work-toast-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    height: 46px;                     /* match the logo button beside it */
-    border: 1px solid var(--line);
-    background: transparent;
-    color: var(--muted-2);
-    border-radius: 999px;
-    padding: 0 16px;
-    font-family: 'SF Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
-    font-size: 12px;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease;
+    gap: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-neutral-600);
 }
-.terminal-btn:hover { color: var(--accent); border-color: var(--accent); }
-.terminal-btn-glyph { color: var(--accent); font-weight: 700; }
+.work-toast-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-accent-400);
+    animation: pulse-dot 2.4s ease-in-out infinite;
+}
 
+.work-toast-title {
+    font-size: 14.5px;
+    font-weight: 500;
+    color: var(--color-text);
+}
+.work-toast-text {
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--color-neutral-500);
+}
+.work-toast-arrow { color: var(--color-accent-400); }
+
+.work-toast-close {
+    position: absolute;
+    top: var(--space-1);
+    right: var(--space-2);
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--color-neutral-700);
+    font-size: 15px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: color 160ms var(--ease);
+}
+.work-toast-close:hover { color: var(--color-neutral-300); }
+
+/* Countdown along the bottom edge — drains over the toast's 3s lifetime */
+.work-toast-progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 100%;
+    background: var(--color-accent-700);
+    transform-origin: left;
+    animation: toast-drain 3s linear 1100ms both;
+}
+@keyframes toast-drain {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+/* ═══ Terminal (ryanOS) ══════════════════════════════════════════════════ */
+
+/* Opens as a strip docked to the bottom of the page, inset from both sides.
+   The overlay itself stays full-bleed so a click outside still closes it
+   (script.js checks e.target === overlay) and so the visualViewport fitting
+   on phones has something to size. */
 .terminal-overlay {
     position: fixed;
     inset: 0;
-    z-index: 900;                     /* above header (500) and toast */
+    z-index: 900;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(12px, 4vw, 48px);
-    background: rgba(4, 5, 10, 0.72);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    align-items: flex-end;
+    padding: 0 var(--page-x) var(--space-8);
+    background: rgba(13, 14, 22, 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 .terminal-overlay[hidden] { display: none; }
 
-/* The window itself stays dark in both themes — it's a terminal */
 .terminal-window {
-    width: min(860px, 100%);
-    height: min(560px, 100%);
+    width: 100%;
     display: flex;
     flex-direction: column;
-    border-radius: 12px;
-    border: 1px solid #2d2555;
-    background: #0a0c14;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--color-accent-800);
+    border-radius: var(--radius-md);
+    background: rgba(13, 14, 22, 0.96);
+    box-shadow: var(--shadow-lg);
     overflow: hidden;
 }
 
 .terminal-titlebar {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    background: #11142200;
-    border-bottom: 1px solid #1f2340;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border-bottom: 1px solid var(--color-neutral-900);
 }
 .terminal-title {
     flex: 1;
-    text-align: center;
-    font-family: 'SF Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
-    font-size: 12px;
-    color: #9e8a68;
-    /* keep the title visually centered despite the close button on the right */
-    margin-left: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 .terminal-close {
+    padding: 0 var(--space-2);
     border: 0;
-    background: transparent;
-    color: #9e8a68;
-    font-size: 18px;
-    line-height: 1;
+    background: none;
+    color: var(--color-neutral-600);
+    font-size: 15px;
+    line-height: 1.4;
     cursor: pointer;
-    padding: 2px 6px;
+    transition: color 160ms var(--ease);
 }
-.terminal-close:hover { color: #e8d5b0; }
+.terminal-close:hover { color: var(--color-neutral-300); }
 
 .terminal-body {
     flex: 1;
+    /* Taller than the brief's 168px — enough room to actually read the output
+       of `ls`, `tree` or `cat` without scrolling. min-height gives it a real
+       terminal shape the moment it opens (the prompt pins to the bottom, so
+       it fills downward); max-height caps how far it grows with output. */
+    min-height: min(320px, 42vh);
+    max-height: min(460px, 54vh);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding: 16px 18px;
-    font-family: 'SF Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
-    font-size: 13px;
+    padding: var(--space-4) var(--space-6);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
     line-height: 1.6;
-    color: #e8d5b0;
+    color: var(--color-neutral-300);
     cursor: text;
 }
-.terminal-motd { margin: 0 0 12px; color: #9e8a68; }
-.terminal-motd-cmd { color: #c9a84c; }
-.terminal-error { color: #e06c55; }
-.terminal-featured { color: #c9a84c; font-weight: 700; }
-.terminal-entry-dir { color: #6ea8d8; font-weight: 600; }
-.terminal-link { color: #6ea8d8; text-decoration: underline; }
-.terminal-link:hover { color: #9cc7ea; }
-.terminal-grep-file { color: #9e8a68; margin-right: 8px; }
-.terminal-grep-match { color: #0a0c14; background: #c9a84c; border-radius: 2px; }
+
+.terminal-motd     { margin: 0 0 var(--space-3); color: var(--color-neutral-600); }
+.terminal-motd-cmd { color: var(--color-accent-400); }
+.terminal-error    { color: #d98a7e; }
+.terminal-featured { color: var(--color-accent-300); }
+.terminal-entry-dir{ color: var(--color-accent-400); }
+.terminal-link     { color: var(--color-accent-400); text-decoration: underline; }
+.terminal-link:hover { color: var(--color-accent-300); }
+.terminal-grep-file  { color: var(--color-neutral-600); margin-right: var(--space-3); }
+.terminal-grep-match { color: var(--color-bg); background: var(--color-accent-400); border-radius: 2px; }
+
 .terminal-history .terminal-line { margin: 0; }
 .terminal-line {
     display: block;
     word-break: break-all;
     white-space: pre-wrap;
 }
-/* Active prompt line sits pinned to the bottom-left of the window;
-   history stacks above it, like a real shell */
+/* Active prompt line pins to the bottom; history stacks above it */
 .terminal-body > .terminal-line { margin-top: auto; }
-.terminal-prompt { color: #c9a84c; margin-right: 8px; }
+.terminal-prompt { color: var(--color-accent-400); margin-right: var(--space-3); }
+.terminal-typed  { color: var(--color-neutral-300); }
+
 .terminal-cursor {
     display: inline-block;
-    width: 8px;
+    width: 7px;
     height: 15px;
     margin-left: 1px;
     vertical-align: text-bottom;
-    background: #c9a84c;
+    background: var(--color-accent);
     animation: terminal-blink 1.1s steps(1) infinite;
 }
 @keyframes terminal-blink { 50% { opacity: 0; } }
 
-/* Real keyboard input lands here; it's invisible and mirrored into
-   .terminal-typed so the block cursor can sit at the end. It must stay
-   ≥16px and on-screen: iOS zooms the whole page when focusing a smaller
-   input, and lurches the viewport toward off-screen ones. */
+/* Real keystrokes land here, mirrored into .terminal-typed so the block
+   cursor can sit at the end. Must stay ≥16px and on-screen: iOS zooms the
+   page when focusing a smaller input. */
 .terminal-hidden-input {
     position: absolute;
     left: 0;
@@ -1773,26 +1455,99 @@ html[data-theme="light"] body::after { opacity: 0.035; }
 
 body.terminal-open { overflow: hidden; }
 
-@media (max-width: 600px) {
-    .terminal-btn { height: 38px; padding: 0 12px; }   /* logo shrinks to 38px here */
-    .terminal-btn-label { display: none; }   /* just the >_ glyph on phones */
-    .header-left { gap: 8px; }
+/* ═══ Scroll reveal ══════════════════════════════════════════════════════
+   .reveal is added by script.js, so content is never hidden if JS is off. */
 
-    /* Phones: fill the visible area (JS keeps the overlay above the
-       on-screen keyboard via visualViewport) instead of a floating card */
-    .terminal-overlay { padding: 8px; }
-    .terminal-window { height: 100%; border-radius: 10px; }
-    .terminal-body { padding: 12px 12px; }
+.reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+}
+.reveal.revealed {
+    opacity: 1;
+    transform: none;
 }
 
-/* ── Respect "reduce motion" OS setting ──────────────────────────────────────
-   Disables the ambient background animations, hover lifts, and snap-scroll
-   easing for users who opt out of motion. */
+/* ═══ Responsive ═════════════════════════════════════════════════════════ */
+
+/* Tablet — the left gutter is too expensive below this, so the section
+   number and heading move inline above the content. */
+@media (max-width: 900px) {
+    :root { --page-y: 56px; }
+
+    .section-inner {
+        padding-left: var(--page-x);
+        padding-right: var(--page-x);
+    }
+    .section-inner > .section-heading {
+        position: static;
+        width: auto;
+        flex-direction: row;
+        align-items: baseline;
+        gap: var(--space-4);
+    }
+    .section-inner > .site-footer { margin-left: 0; }
+
+    .hero {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+        align-items: start;
+    }
+    .visual { margin-left: 0; }
+    .profile-circle { width: 280px; height: 340px; }
+
+    h1 { max-width: none; }
+
+    .about-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
+
+    .scroll-dots { display: none; }
+}
+
+/* Phone */
+@media (max-width: 600px) {
+    body { font-size: 16px; }
+
+    :root { --page-y: 44px; --header-h: calc(56px + var(--safe-top)); }
+
+    .site-header { gap: var(--space-3); }
+    .nav { gap: var(--space-4); }
+    .nav a { font-size: 13px; }
+    .terminal-btn-label { display: none; }   /* just the >_ glyph */
+
+    #hero .section-inner { padding-top: calc(var(--header-h) + 44px); }
+    h1 { letter-spacing: -0.035em; }
+    .sub { font-size: 17px; }
+    .profile-circle { width: 260px; height: 300px; }
+
+    .about-text, .reading-intro { font-size: 16px; }
+    .about-meta { grid-template-columns: 1fr; gap: var(--space-8); }
+
+    .project-list { gap: var(--space-8); }
+    .project-list > li { flex-basis: min(400px, 82vw); max-width: min(400px, 82vw); }
+
+    /* Shrink spines via the scale factor — each book's inline --book-w/--book-h
+       would override a plain .book re-declaration here. script.js reads this
+       to decide how many books fit per shelf row. */
+    .bookshelf   { --book-scale: 0.68; margin-top: 72px; }
+    .shelf-books { min-height: 120px; }
+
+    .work-toast { width: calc(100vw - 2 * var(--page-x)); }
+
+    /* Fill the visible area — script.js keeps the overlay above the on-screen
+       keyboard via visualViewport — instead of a floating strip */
+    .terminal-overlay { padding: var(--space-2); align-items: stretch; }
+    .terminal-window  { height: 100%; }
+    .terminal-body    { min-height: 0; max-height: none; padding: var(--space-3) var(--space-4); }
+}
+
+/* ═══ Reduced motion ═════════════════════════════════════════════════════ */
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.001ms !important;
     }
-    html, .scroll-container { scroll-behavior: auto !important; }
+    html, .project-list { scroll-behavior: auto !important; }
+    .reveal { opacity: 1; transform: none; }
 }

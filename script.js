@@ -1,18 +1,4 @@
 (function () {
-    const THEMES = ['dark', 'light'];
-
-    const ICONS = {
-        light: `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-        </svg>`,
-        dark: `<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>`,
-    };
-
-    const LABELS = { light: 'Light', dark: 'Dark' };
-
     // Respect the OS "reduce motion" setting for programmatic scrolling.
     function scrollBehavior() {
         return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -479,41 +465,9 @@
         });
     }
 
-    function getTheme() {
-        return localStorage.getItem('theme') || 'dark';
-    }
-
-    function applyTheme(theme) {
-        document.documentElement.dataset.theme = theme;
-        localStorage.setItem('theme', theme);
-
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.innerHTML = ICONS[theme];
-            btn.title = `Theme: ${LABELS[theme]}`;
-            btn.setAttribute('aria-label', `Switch theme (current: ${LABELS[theme]})`);
-        }
-
-        // iOS Safari paints the status-bar strip (behind the clock) with
-        // theme-color — pages can't draw there, so this is the only way to
-        // keep it matching the page background.
-        const themeColorMeta = document.querySelector('meta[name="theme-color"]');
-        if (themeColorMeta) themeColorMeta.content = theme === 'light' ? '#f7f8fc' : '#07080f';
-    }
-
     document.addEventListener('DOMContentLoaded', function () {
-        applyTheme(getTheme());
         initProjectCarousel();
         initBookshelf();
-
-        const btn = document.getElementById('themeToggle');
-        if (btn) {
-            btn.addEventListener('click', function () {
-                const current = getTheme();
-                const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
-                applyTheme(next);
-            });
-        }
 
         const yearEl = document.getElementById('year');
         if (yearEl) yearEl.textContent = new Date().getFullYear();
@@ -629,86 +583,6 @@
         // 3s countdown shown by the .work-toast-progress bar.
         if (workToast) setTimeout(dismissWorkToast, 1100 + 3000);
     });
-})();
-
-// ─── Interactive Particle Effects ─────────────────────────────────────────
-(function () {
-
-    // ── Spark Burst ──────────────────────────────────────────────────────────
-    var SPARK_COLORS = ['#c9a84c', '#e0c068', '#ffd060', '#a87830', '#ffe090', '#d4a850'];
-
-    function spawnSparks(x, y, count) {
-        for (var i = 0; i < count; i++) spawnSpark(x, y);
-    }
-
-    function spawnSpark(x, y) {
-        var el = document.createElement('div');
-        var size = 3 + Math.random() * 4;
-        var color = SPARK_COLORS[Math.floor(Math.random() * SPARK_COLORS.length)];
-
-        el.style.cssText =
-            'position:fixed;pointer-events:none;z-index:9999;border-radius:50%;' +
-            'left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px;' +
-            'width:' + size + 'px;height:' + size + 'px;' +
-            'background:' + color + ';' +
-            'box-shadow:0 0 ' + (size * 2.5) + 'px ' + color + ';';
-        document.body.appendChild(el);
-
-        var angle = Math.random() * Math.PI * 2;
-        var dist = 45 + Math.random() * 65;
-        var dx = Math.cos(angle) * dist;
-        var dy = Math.sin(angle) * dist - 18;
-        var dur = 360 + Math.random() * 260;
-
-        el.animate([
-            { transform: 'translate(0,0) scale(1)',                                      opacity: 1 },
-            { transform: 'translate(' + dx * 0.35 + 'px,' + dy * 0.35 + 'px) scale(1.3)', opacity: 0.85, offset: 0.25 },
-            { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(0)',               opacity: 0 }
-        ], { duration: dur, easing: 'ease-out', fill: 'forwards' }).onfinish = function () {
-            el.remove();
-        };
-    }
-
-    // ── Attach Spark Bursts to Interactive Elements ──────────────────────────
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.btn, .resume-btn').forEach(function (el) {
-            el.addEventListener('mouseenter', function () {
-                var r = el.getBoundingClientRect();
-                spawnSparks(r.left + r.width / 2, r.top + r.height / 2, 6);
-            });
-        });
-    });
-
-    // ── Ambient Floating Particles ───────────────────────────────────────────
-    function spawnEmber() {
-        var el = document.createElement('div');
-        var size = 1.5 + Math.random() * 2;
-        var x = Math.random() * window.innerWidth;
-
-        el.style.cssText =
-            'position:fixed;pointer-events:none;z-index:1;border-radius:50%;' +
-            'left:' + x + 'px;bottom:-8px;' +
-            'width:' + size + 'px;height:' + size + 'px;' +
-            'background:#c9a84c;' +
-            'box-shadow:0 0 ' + (size * 3) + 'px #c9a84c;';
-        document.body.appendChild(el);
-
-        var drift = (Math.random() - 0.5) * 90;
-        var rise = 180 + Math.random() * 260;
-        var dur = 4500 + Math.random() * 4000;
-
-        el.animate([
-            { transform: 'translate(0,0)',                                           opacity: 0   },
-            { transform: 'translate(' + drift * 0.2 + 'px,-' + rise * 0.15 + 'px)', opacity: 0.85, offset: 0.12 },
-            { transform: 'translate(' + drift + 'px,-' + rise + 'px)',               opacity: 0   }
-        ], { duration: dur, easing: 'ease-in-out', fill: 'forwards' }).onfinish = function () {
-            el.remove();
-        };
-    }
-
-    setInterval(spawnEmber, 3500);
-    for (var i = 0; i < 2; i++) setTimeout(spawnEmber, Math.random() * 3000);
-
 })();
 
 // ─── Terminal for nerds ─────────────────────────────────────────────────────
