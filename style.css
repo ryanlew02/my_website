@@ -130,8 +130,10 @@ body::before {
     inset: 0;
     z-index: 0;
     pointer-events: none;
-    /* Kept off the right-hand side: the portrait dissolves into flat ground
-       there, and the fade that does it is painted in --color-bg. */
+    /* Weighted to the left, behind the hero's type column. This used to be a
+       hard constraint: the portrait dissolved into the ground on the right via
+       a fade painted in --color-bg, which a glow behind it would have shown
+       through. The portrait is a framed plate now, so it is only composition. */
     background:
         radial-gradient(820px 540px at 24% -12%, var(--color-accent-900), transparent 70%),
         radial-gradient(600px 420px at -6% 26%, #1c1e30, transparent 72%);
@@ -474,9 +476,16 @@ a:active { color: var(--color-accent-400); }
     color: var(--color-accent);
 }
 
+/* Both columns sit on the same baseline, so the type block rises off the bottom
+   of the section and the links row lands level with the plate's status line.
+   That only works while the columns are the same height: whatever the plate is
+   taller by, the grid pushes down the type column, and the difference opens as
+   a hole between the section marker and the name. The plate is therefore sized
+   to the type column (383px) rather than the other way round — which is what
+   fixes the width and height below to 232 × 287 instead of anything rounder. */
 .hero {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1fr 232px;
     gap: var(--gutter-gap);
     align-items: end;
     margin-top: var(--space-8);
@@ -491,6 +500,13 @@ h1 {
     /* Two lines, flush left — the wrap point is the layout, not a <br> */
     max-width: 8ch;
     text-wrap: balance;
+    /* Inter parks ~10px of ascender space above the cap at this size, so the
+       margin set above the name always reads bigger than it is. Trimming to the
+       cap makes the spacing honest and lands the portrait's top edge on the cap
+       of "Ryan". Progressive — without support you get that leading back and
+       nothing else changes. */
+    text-box-trim: trim-start;
+    text-box-edge: cap alphabetic;
 }
 
 .sub {
@@ -541,46 +557,117 @@ h1 {
 }
 .copy-email.copied { color: var(--color-accent-300); }
 
-/* ── Portrait ──
+/* ── Portrait — the personnel-file plate ──
    The brief calls for mix-blend-mode: lighten so the photo sits in the page
-   rather than on it. That only works on a photo shot against a dark backdrop;
-   this headshot has a light-grey one, which blending would turn into a bright
-   slab. Same intent, different mechanism: desaturate and dim the image, then
-   vignette its edges into --color-bg so it dissolves into the ground. The
-   fade is painted in the background colour, which is why the hero glow above
-   is kept away from this corner. */
-/* Shrink-wraps the portrait so ::after lines up with it exactly. The image
-   below must keep an explicit px width for this: a percentage width inside a
-   shrink-to-fit box resolves against the image's intrinsic size (971px) and
-   blows the page out sideways on a phone. */
+   rather than on it. Blending it straight does not work: the headshot was shot
+   on a light-grey seamless, and `lighten` turns that backdrop into a bright
+   slab. Dimming the photo and vignetting all four edges into --color-bg was the
+   previous answer, but it never removed the backdrop so much as smeared it into
+   a halo around the head — and it left the face the brightest, most saturated
+   object on a page whose whole rule is that the accent is a line and a glow,
+   never a flood.
+   So stop hiding the backdrop and frame it instead. The duotone below maps the
+   photo's luminance between two palette colours: the plate's background is the
+   highlight endpoint and the image multiplies against it, which caps how bright
+   the backdrop can get (it can never exceed that endpoint, where `lighten` let
+   it run to white). A flat field behind the subject is what an ID photo is
+   supposed to look like, so the thing the old CSS fought is now the point.
+   Widths stay explicit in px: a percentage width inside a shrink-to-fit box
+   resolves against the image's intrinsic size (971px) and blows the page out
+   sideways on a phone. */
 .visual {
     position: relative;
-    width: max-content;
+    /* Paired with .hero's column width, and with the photo height below, so the
+       plate matches the type column's height — see the note on .hero. */
+    width: 232px;
     max-width: 100%;
     margin-left: auto;
-    line-height: 0;
 }
 
-.visual::after {
+.id-plate { margin: 0; }
+
+/* Same hairline and radius as a project screenshot, so the portrait reads as
+   part of the same family as the rest of the page's imagery. */
+.id-photo {
+    position: relative;
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    /* Duotone highlight endpoint — the brightest tone the photo can reach.
+       Deliberately a neutral and not an accent: at plate size the accent ramp
+       turns the backdrop into a saturated violet field, which is the flood the
+       page's whole rule forbids. The accent stays on the corner marks and the
+       status line, where it is a mark rather than a surface.
+       Moving this up or down the neutral ramp is the one dial for the plate's
+       overall brightness — 400 starts reading as a lit slab again, 700 loses
+       the face. */
+    background: var(--color-neutral-500);
+    /* Keeps the blends below inside the plate instead of letting them mix with
+       the page behind it. */
+    isolation: isolate;
+}
+
+.id-photo img {
+    display: block;
+    width: 100%;
+    height: 287px;
+    object-fit: cover;
+    object-position: center 14%;
+    /* Pushed slightly past `cover` so the subject fills the frame and there is
+       less seamless backdrop left to manage in the first place. */
+    transform: scale(1.12);
+    transform-origin: center 30%;
+    /* Extra contrast buys back the facial definition lost to the duotone's
+       deliberately narrow tonal range. */
+    filter: grayscale(1) contrast(1.12);
+    mix-blend-mode: multiply;
+}
+
+/* Shadow endpoint: lifts the blacks off pure black to the page's own ground,
+   so the darks read as ink on the same paper rather than holes in the plate. */
+.id-photo::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background:
-        linear-gradient(to bottom, transparent 30%, var(--color-bg) 94%),
-        linear-gradient(to top,    transparent 78%, var(--color-bg) 100%),
-        linear-gradient(to right,  var(--color-bg), transparent 34%),
-        linear-gradient(to left,   var(--color-bg), transparent 34%);
+    background: var(--color-bg);
+    mix-blend-mode: lighten;
 }
 
-.profile-circle {
-    display: block;
-    width: 340px;
-    height: 420px;
-    object-fit: cover;
-    object-position: center 16%;
-    filter: grayscale(0.72) contrast(1.06) brightness(0.74);
+/* Registration marks, two opposing corners — the asymmetry reads as a filing
+   mark rather than decoration. They sit under the lighten pass above, which
+   keeps them (they are lighter than --color-bg on every channel). */
+.id-photo::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        linear-gradient(var(--color-accent-300) 0 0) 0    0    / 11px 1px no-repeat,
+        linear-gradient(var(--color-accent-300) 0 0) 0    0    / 1px 11px no-repeat,
+        linear-gradient(var(--color-accent-300) 0 0) 100% 100% / 11px 1px no-repeat,
+        linear-gradient(var(--color-accent-300) 0 0) 100% 100% / 1px 11px no-repeat;
 }
+
+/* The file card under the photo — machine voice, same register as the section
+   numbers and the stack lines on the project cards. */
+.id-meta {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2) var(--space-4);
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+}
+.id-key {
+    text-transform: uppercase;
+    color: var(--color-neutral-700);
+}
+.id-val { color: var(--color-neutral-500); }
+.id-val--live { color: var(--color-accent-400); }
 
 /* ═══ 02 · About ═════════════════════════════════════════════════════════ */
 
@@ -730,18 +817,36 @@ h1 {
    position: relative is load-bearing: script.js compares each card's
    offsetLeft against this element's own scrollLeft, so the track has to be
    the offsetParent. scroll-padding-left is read by the same code as the
-   "peek" inset — with a flush-left track it is 0. */
+   "peek" inset, so the inline glow room below stays in sync with the
+   carousel's snap targets for free. */
 .project-list {
+    /* The hover frame is drawn on the card box, which is inset from the card's
+       content by --card-pad. The track is pulled left by that amount and the
+       gap tightened by twice it, so every card's *content* stays exactly where
+       it was — only the frame reaches into the gutter.
+       The padding is room for the hover glow, which is otherwise clipped: a
+       scroller clips at its padding box, and anything before the scroll origin
+       (the first card's left-hand glow) can't be reached by scrolling at all.
+       --glow-room-x doubles as the snap inset via scroll-padding-left, so
+       scrollLeft 0 rests with that room on screen instead of scrolling past it.
+       The negative margin keeps the track's footprint in the section unchanged
+       — it must stay under --page-x so the inline room never overflows the
+       page at the narrow end. */
+    --card-pad: 14px;
+    --glow-room: 26px;
+    --glow-room-x: 10px;
+
     position: relative;
     list-style: none;
-    margin: 0;
-    padding: 0;
+    margin: calc(-1 * var(--glow-room)) 0 calc(-1 * var(--glow-room))
+            calc(-1 * (var(--card-pad) + var(--glow-room-x)));
+    padding: var(--glow-room) var(--glow-room-x);
     display: flex;
-    gap: var(--gutter-gap);
+    gap: calc(var(--gutter-gap) - 2 * var(--card-pad));
     overflow-x: auto;
     overflow-y: hidden;
     scroll-snap-type: x proximity;
-    scroll-padding-left: 0;
+    scroll-padding-left: var(--glow-room-x);
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -751,22 +856,43 @@ h1 {
 
 .project-list > li {
     list-style: none;
-    flex: 0 0 400px;
-    max-width: 400px;
+    flex: 0 0 calc(400px + 2 * var(--card-pad));
+    max-width: calc(400px + 2 * var(--card-pad));
     display: flex;
     scroll-snap-align: start;
 }
 
-/* ── A card that isn't a card ──
-   No container, no fill, no border around the whole thing: an image, then
-   type. The only edge is the 1px line around the screenshot. */
+/* ── A card that isn't a card, until you point at it ──
+   At rest there is no container and no fill: an image, then type. The only
+   edge is the 1px line around the screenshot. On hover the whole project
+   picks up a hairline frame and an accent glow, so it reads as one object.
+   The frame is a box-shadow ring rather than a border so it costs no layout
+   — the rest state declares all three shadows transparent so the list
+   interpolates cleanly instead of snapping. */
 .project {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-width: 0;
+    padding: var(--card-pad);
+    border-radius: var(--radius-lg);
     color: var(--color-text);
+    background: transparent;
+    box-shadow: 0 0 0 1px transparent,
+                0 0 30px -8px transparent,
+                0 16px 36px -20px transparent;
+    transition: background-color 220ms var(--ease), box-shadow 220ms var(--ease),
+                transform 220ms var(--ease);
 }
+.project:hover,
+.project:focus-visible {
+    background: color-mix(in srgb, var(--color-accent-900) 55%, transparent);
+    box-shadow: 0 0 0 1px var(--color-accent-700),
+                0 0 30px -8px rgba(145, 132, 217, 0.45),
+                0 16px 36px -20px rgba(0, 0, 0, 0.85);
+    transform: translateY(-2px);
+}
+.project:focus-visible { outline: none; }
 
 .project-media {
     aspect-ratio: 16 / 9;
@@ -1506,7 +1632,6 @@ body.terminal-open { overflow: hidden; }
         align-items: start;
     }
     .visual { margin-left: 0; }
-    .profile-circle { width: 280px; height: 340px; }
 
     h1 { max-width: none; }
 
@@ -1529,13 +1654,19 @@ body.terminal-open { overflow: hidden; }
     #hero .section-inner { padding-top: calc(var(--header-h) + 44px); }
     h1 { letter-spacing: -0.035em; }
     .sub { font-size: 17px; }
-    .profile-circle { width: 260px; height: 300px; }
 
     .about-text, .reading-intro { font-size: 16px; }
     .about-meta { grid-template-columns: 1fr; gap: var(--space-8); }
 
-    .project-list { gap: var(--space-8); }
-    .project-list > li { flex-basis: min(400px, 82vw); max-width: min(400px, 82vw); }
+    /* Same trick as desktop: the card box is the content width plus the frame
+       inset, so the content still measures min(400px, 82vw). Both insets are
+       tightened here so their sum stays within --page-x (20px at this width)
+       and the track's negative margin can't push past the page edge. */
+    .project-list { --card-pad: 12px; --glow-room-x: 8px; gap: var(--space-8); }
+    .project-list > li {
+        flex-basis: calc(min(400px, 82vw) + 2 * var(--card-pad));
+        max-width: calc(min(400px, 82vw) + 2 * var(--card-pad));
+    }
 
     /* Shrink spines via the scale factor — each book's inline --book-w/--book-h
        would override a plain .book re-declaration here. script.js reads this
@@ -1547,6 +1678,19 @@ body.terminal-open { overflow: hidden; }
 
     /* Fill the visible area — script.js keeps the overlay above the on-screen
        keyboard via visualViewport — instead of a floating strip */
+    .terminal-overlay { padding: var(--space-2); align-items: stretch; }
+    .terminal-window  { height: 100%; }
+    .terminal-body    { min-height: 0; max-height: none; padding: var(--space-3) var(--space-4); }
+}
+
+/* Short viewports — phone landscape, which is too wide to hit the phone rule
+   above but far too short for the floating window. The body's min-height is
+   sized in vh, and the layout viewport does NOT shrink when the on-screen
+   keyboard opens, so the window kept its full height inside an overlay that
+   fitOverlay() had shrunk to the visible strip — pushing its own titlebar
+   (and the close button) off the top of the screen. Stretch to whatever
+   height the overlay actually has, exactly as phones do. */
+@media (max-height: 500px) {
     .terminal-overlay { padding: var(--space-2); align-items: stretch; }
     .terminal-window  { height: 100%; }
     .terminal-body    { min-height: 0; max-height: none; padding: var(--space-3) var(--space-4); }
