@@ -354,6 +354,16 @@
             width: 45,
             image: 'assets/books/lean-startup.jpg',
         },
+        {
+            title: 'The Confidence Gap',
+            author: 'Russ Harris',
+            learned: '1. You don’t need confidence before you act | confidence comes after repeatedly doing uncomfortable things, not before — waiting until you “feel ready” keeps you stuck, and acting while nervous is what builds the evidence that you can handle it.\n2. Success is living by your values | real success isn’t always feeling confident or hitting a specific outcome — it’s consistently choosing actions that align with the kind of person you want to be.',
+            color: '#2f8f8a',
+            height: 171,
+            width: 45,
+            image: 'assets/books/confidence-gap.jpg',
+            imagePos: '100% 50%',
+        },
     ];
 
     // Each \n-separated line is a takeaway; "main point | detail" renders the
