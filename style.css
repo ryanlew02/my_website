@@ -490,23 +490,21 @@ a:active { color: var(--color-accent-400); }
     color: var(--color-accent);
 }
 
-/* The columns hang from a shared top edge: the plate's top lands on the cap of
-   "Ryan" (h1's text-box-trim is what makes that land honestly), and the plate
-   runs longer than the type column, ending below the links row.
+/* The columns share a bottom edge: the links row sits level with the plate's
+   status line, and both columns finish on the same rule above the section
+   divider. The plate is the taller column at every width (its height is the
+   photo's square plus the caption), so it sets the row height and the type
+   column is pushed down to meet it — see .hero-copy.
 
-   It used to be the other way round — both columns bottom-aligned, so the links
-   row sat level with the plate's status line, and the plate was sized to match
-   the type column's height exactly. That is the better composition of the two,
-   but it caps the portrait at whatever height the type column happens to have,
-   and a photo big enough to hold its side of the hero is taller than that. With
-   the columns bottom-aligned, every pixel the plate gains is a pixel the grid
-   pushes the type column down by, and the difference opens as a hole between
-   the section marker and the name — at the current plate size that hole was
-   98px, which reads as a mistake rather than as air.
-   Top-aligned, the same extra height lands under the links instead, where a
-   longer picture column next to a shorter text column is just an editorial
-   layout. If the plate ever shrinks back to the type column's height, switch
-   this to `end` and take the bottom alignment back.
+   Top-aligning them instead — the plate's top edge landing on the cap of "Ryan"
+   — is the obvious alternative, and it was what this did: it keeps the name
+   tight under the section marker and lets the plate overhang below the links.
+   But it leaves the type column hanging in the middle of the section with a
+   run of dead space under the links, which reads as unfinished rather than as
+   air. Bottom-aligned, the extra height lands between the marker and the name,
+   where it reads as the deliberate margin above a title. The cost is that the
+   gap grows with the plate — if the portrait ever gets much taller, either cap
+   .id-photo or take the top alignment back.
 
    The plate column is a clamp rather than a fixed width: at 232px the type
    column outweighed it badly enough that the portrait read as an afterthought
@@ -519,8 +517,20 @@ a:active { color: var(--color-accent-400); }
     display: grid;
     grid-template-columns: minmax(0, 1fr) var(--plate-w);
     gap: var(--hero-gap);
-    align-items: start;
+    align-items: stretch;
     margin-top: clamp(20px, 2.4vw, 32px);
+}
+
+/* The type column fills the row and packs its content against the bottom, so
+   the name is positioned from the links row up rather than from the marker
+   down. Stretching the item is what gives justify-content something to work
+   against — with `align-items: start` the column would only be as tall as its
+   own content and this would do nothing. */
+.hero-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-width: 0;
 }
 
 h1 {
@@ -622,11 +632,13 @@ h1 {
     width: 100%;
     max-width: 100%;
     margin-left: auto;
-    /* Natural height: the plate sizes itself from the photo's aspect ratio plus
-       the caption, and the grid row takes its height from whichever column is
-       taller — the plate, at every width. It used to stretch to the row so the
-       two columns were exactly equal height; see the note on .hero for why that
-       had to go when the portrait grew. */
+    /* Natural height, hung from the row's bottom edge: the plate sizes itself
+       from the photo's aspect ratio plus the caption, and the row takes its
+       height from whichever column is taller — the plate, at every width the
+       two columns are live. `end` rather than `stretch` because .id-photo can
+       flex-grow: stretched, any row taller than the plate would pull the photo
+       off square. */
+    align-self: end;
     display: flex;
 }
 
