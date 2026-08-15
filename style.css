@@ -401,7 +401,10 @@ a:active { color: var(--color-accent-400); }
 
 /* ═══ Buttons ════════════════════════════════════════════════════════════ */
 
-/* Outlined, never filled. Hover fills with the darkest step of the ramp. */
+/* Outlined, never filled. Hover tints rather than fills: the border warms one
+   step, the ground picks up a barely-there wash, and the arrow steps in the
+   direction it points. No glow — at this size a shadow reads as a halo, and
+   the page's rule is that the accent is a line, never a flood. */
 .btn,
 .resume-btn {
     display: inline-flex;
@@ -417,29 +420,40 @@ a:active { color: var(--color-accent-400); }
     font-weight: 400;
     line-height: 1.2;
     cursor: pointer;
-    transition: border-color 160ms var(--ease), color 160ms var(--ease),
-                background-color 160ms var(--ease), box-shadow 200ms var(--ease);
+    transition: border-color 180ms var(--ease), color 180ms var(--ease),
+                background-color 180ms var(--ease);
 }
 .btn:hover {
     border-color: var(--color-neutral-600);
-    color: var(--color-neutral-300);
+    background: color-mix(in srgb, var(--color-neutral-100) 4%, transparent);
+    color: var(--color-neutral-200);
 }
 .btn:active { color: var(--color-neutral-400); }
+
+/* The arrow is the only moving part: 2px, in the direction it points. */
+.btn-arrow {
+    display: inline-block;
+    line-height: 1;
+    transition: transform 180ms var(--ease);
+}
+.btn:hover .btn-arrow             { transform: translateX(2px); }
+.btn:hover .btn-arrow--down       { transform: translateY(2px); }
+.btn:active .btn-arrow            { transform: none; }
 
 /* Accent-outlined. The résumé link is the primary action of its section, so
    it carries the same weight as "See my works" in the hero. */
 .btn--primary,
 .resume-btn {
-    border-color: var(--color-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
     color: var(--color-accent-300);
 }
 .btn--primary:hover,
 .resume-btn:hover {
-    background: var(--color-accent-900);
+    /* A tint at ~6% of the accent, not the 900 step — the filled pill read as
+       a button from a different, louder system. */
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
     border-color: var(--color-accent);
     color: var(--color-accent-200);
-    /* the accent as a glow, not a flood */
-    box-shadow: 0 0 0 1px var(--color-accent-800), 0 4px 18px rgba(145, 132, 217, 0.16);
 }
 .btn--primary:active,
 .resume-btn:active { color: var(--color-accent-400); }
@@ -476,19 +490,37 @@ a:active { color: var(--color-accent-400); }
     color: var(--color-accent);
 }
 
-/* Both columns sit on the same baseline, so the type block rises off the bottom
-   of the section and the links row lands level with the plate's status line.
-   That only works while the columns are the same height: whatever the plate is
-   taller by, the grid pushes down the type column, and the difference opens as
-   a hole between the section marker and the name. The plate is therefore sized
-   to the type column (383px) rather than the other way round — which is what
-   fixes the width and height below to 232 × 287 instead of anything rounder. */
+/* The columns hang from a shared top edge: the plate's top lands on the cap of
+   "Ryan" (h1's text-box-trim is what makes that land honestly), and the plate
+   runs longer than the type column, ending below the links row.
+
+   It used to be the other way round — both columns bottom-aligned, so the links
+   row sat level with the plate's status line, and the plate was sized to match
+   the type column's height exactly. That is the better composition of the two,
+   but it caps the portrait at whatever height the type column happens to have,
+   and a photo big enough to hold its side of the hero is taller than that. With
+   the columns bottom-aligned, every pixel the plate gains is a pixel the grid
+   pushes the type column down by, and the difference opens as a hole between
+   the section marker and the name — at the current plate size that hole was
+   98px, which reads as a mistake rather than as air.
+   Top-aligned, the same extra height lands under the links instead, where a
+   longer picture column next to a shorter text column is just an editorial
+   layout. If the plate ever shrinks back to the type column's height, switch
+   this to `end` and take the bottom alignment back.
+
+   The plate column is a clamp rather than a fixed width: at 232px the type
+   column outweighed it badly enough that the portrait read as an afterthought
+   pinned to the right edge. Growing it with the viewport keeps the two columns
+   in proportion without ever letting the photo become the loudest thing here. */
 .hero {
+    --plate-w: clamp(248px, 24vw, 344px);
+    --hero-gap: clamp(40px, 5vw, 72px);
+
     display: grid;
-    grid-template-columns: 1fr 232px;
-    gap: var(--gutter-gap);
-    align-items: end;
-    margin-top: var(--space-8);
+    grid-template-columns: minmax(0, 1fr) var(--plate-w);
+    gap: var(--hero-gap);
+    align-items: start;
+    margin-top: clamp(20px, 2.4vw, 32px);
 }
 
 h1 {
@@ -509,12 +541,16 @@ h1 {
     text-box-edge: cap alphabetic;
 }
 
+/* The rhythm under the name is deliberately uneven: a large step down to the
+   sentence (it belongs to the name), then two equal, smaller steps to the
+   buttons and the links. Three equal gaps read as a list of four things; this
+   reads as a name with its tail. */
 .sub {
-    margin-top: var(--space-8);
-    max-width: 520px;
-    font-size: 20px;
+    margin-top: clamp(20px, 2.2vw, 30px);
+    max-width: 46ch;
+    font-size: clamp(17px, 1.35vw, 20px);
     font-weight: 400;
-    line-height: 1.5;
+    line-height: 1.55;
     color: var(--color-neutral-400);
     text-wrap: pretty;
 }
@@ -523,7 +559,7 @@ h1 {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-4);
-    margin-top: 28px;
+    margin-top: clamp(24px, 2.6vw, 34px);
 }
 
 /* Social row — mono, quiet, no separators drawn by CSS (the "/" is markup) */
@@ -532,7 +568,7 @@ h1 {
     flex-wrap: wrap;
     align-items: baseline;
     gap: var(--space-4);
-    margin-top: 28px;
+    margin-top: clamp(24px, 2.6vw, 34px);
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.04em;
@@ -572,26 +608,68 @@ h1 {
    the backdrop can get (it can never exceed that endpoint, where `lighten` let
    it run to white). A flat field behind the subject is what an ID photo is
    supposed to look like, so the thing the old CSS fought is now the point.
-   Widths stay explicit in px: a percentage width inside a shrink-to-fit box
-   resolves against the image's intrinsic size (971px) and blows the page out
-   sideways on a phone. */
+   On top of the duotone sits .id-frame: a vignette, a grounding gradient at the
+   bottom edge, grain, and an inset rule anchored by four registration marks.
+   That overlay is what stops the plate reading as a headshot dropped on the
+   page — the duotone alone matched the palette but still stopped at four hard
+   edges.
+   The width used to be an explicit 232px, because a percentage width inside a
+   shrink-to-fit box resolves against the image's intrinsic size (975px) and
+   blows the page out sideways on a phone. 100% is safe now only because the
+   grid column above it (--plate-w) is what's definite; keep it that way. */
 .visual {
     position: relative;
-    /* Paired with .hero's column width, and with the photo height below, so the
-       plate matches the type column's height — see the note on .hero. */
-    width: 232px;
+    width: 100%;
     max-width: 100%;
     margin-left: auto;
+    /* Natural height: the plate sizes itself from the photo's aspect ratio plus
+       the caption, and the grid row takes its height from whichever column is
+       taller — the plate, at every width. It used to stretch to the row so the
+       two columns were exactly equal height; see the note on .hero for why that
+       had to go when the portrait grew. */
+    display: flex;
 }
 
-.id-plate { margin: 0; }
+/* A hairline in the gutter between the columns. The negative space between the
+   name and the plate is the widest gap on the page; without a rule it reads as
+   a hole rather than a margin, and the plate reads as floated off to the right.
+   Same treatment as the section dividers: fades out at both ends. */
+.visual::before {
+    content: "";
+    position: absolute;
+    top: 4%;
+    bottom: 4%;
+    left: calc(-1 * var(--hero-gap) / 2);
+    width: 1px;
+    background: linear-gradient(to bottom,
+        transparent, var(--color-divider) 18%,
+        var(--color-divider) 82%, transparent);
+    opacity: 0.55;
+    pointer-events: none;
+}
 
-/* Same hairline and radius as a project screenshot, so the portrait reads as
-   part of the same family as the rest of the page's imagery. */
+.id-plate {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 0;
+}
+
+/* Same hairline as a project screenshot, so the portrait reads as part of the
+   same family as the rest of the page's imagery — but one radius step tighter.
+   At 8px the plate rounded off into a photo card; 4px keeps it a plate. */
 .id-photo {
     position: relative;
+    /* Square. This, times --plate-w, is what sets the hero's height now — the
+       plate is the taller of the two columns at every width, so the photo's
+       aspect ratio drives the section rather than the other way round.
+       Square rather than portrait on purpose: the crop below is already pushed
+       past `cover` onto the face, and a 4:5 box at this width would run the
+       plate a long way past the links row. */
+    flex: 1 0 auto;
+    aspect-ratio: 1 / 1;
     border: 1px solid var(--color-neutral-800);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     overflow: hidden;
     /* Duotone highlight endpoint — the brightest tone the photo can reach.
        Deliberately a neutral and not an accent: at plate size the accent ramp
@@ -599,27 +677,41 @@ h1 {
        page's whole rule forbids. The accent stays on the corner marks and the
        status line, where it is a mark rather than a surface.
        Moving this up or down the neutral ramp is the one dial for the plate's
-       overall brightness — 400 starts reading as a lit slab again, 700 loses
-       the face. */
-    background: var(--color-neutral-500);
+       overall brightness, and 300 is as far up it as this goes. The old note
+       here said 400 read as a lit slab — that was true while nothing was
+       grounding the photo's edges. The vignette and the bottom gradient on
+       .id-frame do that job now, so the plate can hold a step the flat version
+       could not. It stays under the name (#e9e9ed), which is what keeps the
+       type the loudest thing in the hero.
+       The vignette is what buys this brightness: softening it lets the corners
+       come up with the endpoint and the plate goes back to reading as a
+       rectangle pasted on the page. Raise them together or not at all. */
+    background: var(--color-neutral-300);
     /* Keeps the blends below inside the plate instead of letting them mix with
        the page behind it. */
     isolation: isolate;
 }
 
+/* Absolute rather than in flow: .id-photo's height comes from the flex stretch
+   above, and a percentage height on an in-flow image inside a flex item whose
+   own height is being resolved is exactly the case browsers disagree on. */
 .id-photo img {
     display: block;
+    position: absolute;
+    inset: 0;
     width: 100%;
-    height: 287px;
+    height: 100%;
     object-fit: cover;
-    object-position: center 14%;
+    object-position: center 16%;
     /* Pushed slightly past `cover` so the subject fills the frame and there is
        less seamless backdrop left to manage in the first place. */
-    transform: scale(1.12);
-    transform-origin: center 30%;
+    transform: scale(1.1);
+    transform-origin: center 32%;
     /* Extra contrast buys back the facial definition lost to the duotone's
-       deliberately narrow tonal range. */
-    filter: grayscale(1) contrast(1.12);
+       deliberately narrow tonal range. Raised alongside the brighter endpoint
+       above: lifting the highlight without this flattens the face, because a
+       brighter endpoint compresses the multiply's tonal range from the top. */
+    filter: grayscale(1) contrast(1.3);
     mix-blend-mode: multiply;
 }
 
@@ -634,40 +726,142 @@ h1 {
     mix-blend-mode: lighten;
 }
 
-/* Registration marks, two opposing corners — the asymmetry reads as a filing
-   mark rather than decoration. They sit under the lighten pass above, which
-   keeps them (they are lighter than --color-bg on every channel). */
-.id-photo::before {
-    content: "";
+/* ── The frame overlay ──
+   Everything painted on top of the duotone. z-index lifts it over the lighten
+   pass above (which is a later sibling, so it would otherwise win the paint
+   order and wash all of this out).
+   Its own background is the grounding pass: a vignette that pulls the corners
+   toward the page's ground, plus a gradient up from the bottom edge so the
+   plate settles into the caption instead of stopping at a hard line. Both are
+   mixed from --color-bg, so the photo dissolves toward the page's own colour
+   rather than toward black. The centre stays clear — the face is never
+   darkened. */
+.id-frame {
     position: absolute;
-    inset: 6px;
-    z-index: 1;
+    inset: 0;
+    z-index: 2;
     pointer-events: none;
+    border-radius: inherit;
     background:
-        linear-gradient(var(--color-accent-300) 0 0) 0    0    / 11px 1px no-repeat,
-        linear-gradient(var(--color-accent-300) 0 0) 0    0    / 1px 11px no-repeat,
-        linear-gradient(var(--color-accent-300) 0 0) 100% 100% / 11px 1px no-repeat,
-        linear-gradient(var(--color-accent-300) 0 0) 100% 100% / 1px 11px no-repeat;
+        linear-gradient(to top,
+            color-mix(in srgb, var(--color-bg) 72%, transparent) 0%,
+            transparent 34%),
+        radial-gradient(118% 88% at 50% 34%,
+            transparent 52%,
+            color-mix(in srgb, var(--color-bg) 55%, transparent) 100%);
 }
 
-/* The file card under the photo — machine voice, same register as the section
-   numbers and the stack lines on the project cards. */
+/* Grain. A single 120px tile of desaturated fractal noise, tiled and blended at
+   ~5% — enough to break the duotone's flat gradients into something that reads
+   as printed rather than rendered, and invisible as texture at normal viewing
+   distance. */
+.id-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0.055;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+}
+
+/* Inner rule + registration marks, drawn on one box so they cannot drift out of
+   register with each other. The rule is a hairline set in from the frame; the
+   four marks land exactly on its corners, so they read as anchoring a frame
+   rather than as four accents floating near the edges. All four corners now —
+   the old two-corner asymmetry was meant as a filing mark but scanned as an
+   unfinished border. */
+.id-frame::after {
+    content: "";
+    position: absolute;
+    inset: 9px;
+    border: 1px solid color-mix(in srgb, var(--color-neutral-100) 6%, transparent);
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    --mark: color-mix(in srgb, var(--color-accent-300) 72%, transparent);
+    background-image:
+        linear-gradient(var(--mark) 0 0), linear-gradient(var(--mark) 0 0),
+        linear-gradient(var(--mark) 0 0), linear-gradient(var(--mark) 0 0),
+        linear-gradient(var(--mark) 0 0), linear-gradient(var(--mark) 0 0),
+        linear-gradient(var(--mark) 0 0), linear-gradient(var(--mark) 0 0);
+    background-size:
+        10px 1px, 1px 10px,   /* top-left    */
+        10px 1px, 1px 10px,   /* top-right   */
+        10px 1px, 1px 10px,   /* bottom-left */
+        10px 1px, 1px 10px;   /* bottom-right */
+    background-position:
+        0    0,    0    0,
+        100% 0,    100% 0,
+        0    100%, 0    100%,
+        100% 100%, 100% 100%;
+}
+
+/* ── The file card under the photo ──
+   Machine voice, same register as the section numbers and the stack lines on
+   the project cards. Laid out as ruled rows rather than a two-column list: the
+   values run from 4 to 20 characters, and in a plain grid that difference read
+   as a ragged right edge with nothing holding it. A rule per row gives every
+   value the same measure to sit in, so the ragged ends stop being the thing you
+   notice. The key column is fixed in ch of the mono face, which is what keeps
+   the two columns square. */
 .id-meta {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: var(--space-2) var(--space-4);
-    margin-top: var(--space-4);
+    /* 7ch of key ("SUBJECT" is the longest) + its tracking + the gutter. Set in
+       ch of the mono face so it tracks the font size through the breakpoints
+       instead of needing a second value on phones. */
+    grid-template-columns: 10.5ch minmax(0, 1fr);
+    align-items: baseline;
+    margin: 14px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--color-divider);
     font-family: var(--font-mono);
-    font-size: 11px;
-    line-height: 1.5;
-    letter-spacing: 0.06em;
+    font-size: 10.5px;
+    line-height: 1.45;
 }
+
+.id-key,
+.id-val {
+    padding: 5px 0;
+    /* Fainter than the block's own top rule: the rows are structure, the top
+       edge is the join between photo and caption. */
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 7%, transparent);
+}
+/* The last row closes on whitespace, so the plate breathes at the bottom
+   instead of ending in a box. */
+.id-meta > :nth-last-child(-n + 2) { border-bottom: 0; padding-bottom: 0; }
+
 .id-key {
     text-transform: uppercase;
+    letter-spacing: 0.11em;
     color: var(--color-neutral-700);
 }
-.id-val { color: var(--color-neutral-500); }
-.id-val--live { color: var(--color-accent-400); }
+.id-val {
+    margin: 0;                       /* <dd> */
+    letter-spacing: 0.015em;         /* values are read, not scanned — looser tracking hurts */
+    color: var(--color-neutral-300); /* the value is the content; the key is the label */
+    overflow-wrap: anywhere;
+}
+
+/* The one live field. Same dot as the availability line in About, so "status"
+   means the same thing in both places. inline-flex, not flex: as a grid item a
+   block flex container hands the row its dot's baseline instead of its text's,
+   and the word sits a pixel or two off the key beside it. */
+.id-val--live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-accent-300);
+}
+.id-val--live::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--color-accent-400);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
 
 /* ═══ 02 · About ═════════════════════════════════════════════════════════ */
 
@@ -1311,27 +1505,39 @@ h1 {
 
 /* ═══ Side navigation dots ═══════════════════════════════════════════════ */
 
+/* Four ticks read as decoration unless they are obviously an index: same
+   length, evenly spaced, one of them marked. Only the active tick changes
+   length now — the old three-way 14/22/26px scale meant the group never had a
+   settled shape, which is what made the marks look scattered. */
 .scroll-dots {
     position: fixed;
-    right: 22px;
+    right: clamp(18px, 1.9vw, 26px);
     top: 50%;
     transform: translateY(-50%);
     z-index: 400;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: var(--space-4);
+    gap: 14px;
 }
 
 .scroll-dots .dot {
     position: relative;
-    width: 14px;
+    width: 12px;
     height: 1px;
     background: var(--color-neutral-800);
     transition: width 260ms var(--ease), background-color 200ms var(--ease);
 }
-.scroll-dots .dot:hover  { width: 22px; background: var(--color-neutral-500); }
-.scroll-dots .dot.active { width: 26px; background: var(--color-accent); }
+.scroll-dots .dot:hover  { background: var(--color-neutral-500); }
+.scroll-dots .dot.active { width: 24px; background: var(--color-accent); }
+
+/* The 1px hit target is a mouse-only affordance; pad it out without moving the
+   mark itself. */
+.scroll-dots .dot::before {
+    content: "";
+    position: absolute;
+    inset: -7px -4px;
+}
 
 /* Label that slides in on hover */
 .scroll-dots .dot::after {
@@ -1626,18 +1832,50 @@ body.terminal-open { overflow: hidden; }
     }
     .section-inner > .site-footer { margin-left: 0; }
 
+    /* The hero does NOT collapse here — that happens at 760px below. A tablet
+       still has room for both columns, and stacking this early wasted the whole
+       right half of the page. Only the proportions tighten. */
     .hero {
-        grid-template-columns: 1fr;
-        gap: var(--space-8);
-        align-items: start;
+        --plate-w: clamp(200px, 26vw, 264px);
+        --hero-gap: clamp(28px, 4vw, 44px);
     }
-    .visual { margin-left: 0; }
 
     h1 { max-width: none; }
 
     .about-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-8); }
 
     .scroll-dots { display: none; }
+}
+
+/* Where the hero's two columns stop fitting. Below this the type column no
+   longer leaves the plate enough height to stay roughly square, and the photo
+   starts cropping to a letterbox. 820px keeps iPad portrait (834) on the
+   two-column composition, which is the last width where it still reads. */
+@media (max-width: 820px) {
+    .hero {
+        grid-template-columns: minmax(0, 1fr);
+        --hero-gap: clamp(28px, 5vw, 40px);
+        align-items: start;
+    }
+
+    /* Stacked, the plate trails the type block: a full-bleed photo above the
+       name would fight the name for the top of the page. Kept small and
+       left-aligned under the links, so the column still reads as one flush-left
+       stack rather than two centred blocks. */
+    .visual {
+        align-self: start;
+        width: min(320px, 66%);
+        margin-left: 0;
+    }
+    .visual::before { display: none; }   /* no gutter to rule */
+
+    /* The row no longer has a type column to grow into, so the photo carries
+       its own proportion — portrait rather than the square it holds beside the
+       type, since nothing here is asking it to fill a column height. */
+    .id-photo {
+        flex: none;
+        aspect-ratio: 4 / 5;
+    }
 }
 
 /* Phone */
@@ -1654,6 +1892,9 @@ body.terminal-open { overflow: hidden; }
     #hero .section-inner { padding-top: calc(var(--header-h) + 44px); }
     h1 { letter-spacing: -0.035em; }
     .sub { font-size: 17px; }
+
+    .visual  { width: min(280px, 78%); }
+    .id-meta { font-size: 10px; }
 
     .about-text, .reading-intro { font-size: 16px; }
     .about-meta { grid-template-columns: 1fr; gap: var(--space-8); }
@@ -1706,4 +1947,11 @@ body.terminal-open { overflow: hidden; }
     }
     html, .project-list { scroll-behavior: auto !important; }
     .reveal { opacity: 1; transform: none; }
+
+    /* Zeroing transition-duration above still lets a hover transform snap into
+       place instantly, which is the motion, just without the tween. The hover
+       states below have to drop the movement itself and keep the colour
+       change, which carries the same information. */
+    .btn:hover .btn-arrow,
+    .btn:hover .btn-arrow--down { transform: none; }
 }
