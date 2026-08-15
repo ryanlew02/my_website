@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=fd53bbc4" />
+        <link rel="stylesheet" href="style.css?v=f6a27aa6" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -92,11 +92,11 @@
                             <div class="btn-row">
                                 <a class="btn btn--primary" href="#projects">
                                     See my works
-                                    <span aria-hidden="true">→</span>
+                                    <span class="btn-arrow" aria-hidden="true">→</span>
                                 </a>
                                 <a class="btn" href="#about">
                                     About me
-                                    <span aria-hidden="true">↓</span>
+                                    <span class="btn-arrow btn-arrow--down" aria-hidden="true">↓</span>
                                 </a>
                             </div>
 
@@ -117,17 +117,25 @@
                         <div class="visual">
                             <figure class="id-plate">
                                 <div class="id-photo">
-                                    <img src="assets/myPhoto.jpeg" alt="Ryan Lewandowski" />
+                                    <img src="assets/myPhoto.jpeg" alt="Ryan Lewandowski"
+                                         width="975" height="1082" decoding="async" fetchpriority="high" />
+                                    <!-- Painted above the photo's blend passes: inner rule,
+                                         vignette, grain and the registration marks -->
+                                    <span class="id-frame" aria-hidden="true"></span>
                                 </div>
-                                <figcaption class="id-meta">
-                                    <span class="id-key">Subject</span>
-                                    <span class="id-val">Lewandowski, R.</span>
-                                    <span class="id-key">Field</span>
-                                    <span class="id-val">Software engineering</span>
-                                    <span class="id-key">Affil</span>
-                                    <span class="id-val">SNHU</span>
-                                    <span class="id-key">Status</span>
-                                    <span class="id-val id-val--live">Building</span>
+                                <figcaption>
+                                    <!-- A description list, so the key/value pairs are
+                                         announced as pairs rather than eight loose spans -->
+                                    <dl class="id-meta">
+                                        <dt class="id-key">Subject</dt>
+                                        <dd class="id-val">Lewandowski, R.</dd>
+                                        <dt class="id-key">Field</dt>
+                                        <dd class="id-val">Software engineering</dd>
+                                        <dt class="id-key">Affil</dt>
+                                        <dd class="id-val">SNHU</dd>
+                                        <dt class="id-key">Status</dt>
+                                        <dd class="id-val id-val--live">Building</dd>
+                                    </dl>
                                 </figcaption>
                             </figure>
                         </div>
