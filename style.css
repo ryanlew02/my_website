@@ -1846,7 +1846,8 @@ body.terminal-open { overflow: hidden; }
     /* Stacked, the plate trails the type block: a full-bleed photo above the
        name would fight the name for the top of the page. Kept small and
        left-aligned under the links, so the column still reads as one flush-left
-       stack rather than two centred blocks. */
+       stack rather than two centred blocks. (On a phone it centres instead —
+       see the 600px block.) */
     .visual {
         align-self: start;
         width: min(320px, 66%);
@@ -1870,7 +1871,11 @@ body.terminal-open { overflow: hidden; }
     h1 { letter-spacing: -0.035em; }
     .sub { font-size: 17px; }
 
-    .visual  { width: min(280px, 78%); }
+    /* Centred rather than flush-left as it is on a tablet. At this width the
+       plate is nearly the full column, so hanging it off the left edge leaves a
+       sliver of margin on one side that reads as a mistake rather than as the
+       stack's alignment. Centred it sits under the type as its own block. */
+    .visual  { width: min(280px, 78%); margin-inline: auto; }
 
     .about-text, .reading-intro { font-size: 16px; }
     .about-meta { grid-template-columns: 1fr; gap: var(--space-8); }

@@ -1419,6 +1419,37 @@
     var lum = decode(data.lum);
     var dep = decode(data.depth);
 
+    // ── Repairing the silhouette's depth ────────────────────────────────────
+    // A cell on the outline straddles the subject and the seamless behind it,
+    // so the depth baked for it is the average of the two and lands most of the
+    // way back at the backdrop. Head-on that is invisible. Turned, that one bad
+    // cell swings a long way out — and the wrap slice built from it starts back
+    // there too, so the whole side of the head arrives detached from the face.
+    // That is what threw a spike off the ear when the head turned far enough to
+    // show it. Pull any outline cell back to within EDGE_STEP of the nearest
+    // neighbour that has depth of its own. Three passes: the contamination runs
+    // two cells deep where the outline is shallow to the pixel grid.
+    var EDGE_STEP = 45;   // of 255, well clear of the ~35 a real edge falls off
+    (function repairOutline() {
+        var pass, r, c, idx, best;
+        for (pass = 0; pass < 3; pass++) {
+            for (r = 0; r < ROWS; r++) {
+                for (c = 0; c < COLS; c++) {
+                    idx = r * COLS + c;
+                    if (!lum[idx]) continue;
+                    if (c > 0 && lum[idx - 1] && c < COLS - 1 && lum[idx + 1] &&
+                        r > 0 && lum[idx - COLS] && r < ROWS - 1 && lum[idx + COLS]) continue;
+                    best = 0;
+                    if (c > 0 && lum[idx - 1] && dep[idx - 1] > best) best = dep[idx - 1];
+                    if (c < COLS - 1 && lum[idx + 1] && dep[idx + 1] > best) best = dep[idx + 1];
+                    if (r > 0 && lum[idx - COLS] && dep[idx - COLS] > best) best = dep[idx - COLS];
+                    if (r < ROWS - 1 && lum[idx + COLS] && dep[idx + COLS] > best) best = dep[idx + COLS];
+                    if (best - dep[idx] > EDGE_STEP) dep[idx] = best - EDGE_STEP;
+                }
+            }
+        }
+    })();
+
     function zAt(c, r) {
         if (c < 0 || c >= COLS || r < 0 || r >= ROWS) return NaN;
         var idx = r * COLS + c;
@@ -1443,6 +1474,22 @@
     //
     // None of it is measured. It is a plausible head, wearing the tone carried
     // out from the last cells the photo did see, fading as it goes.
+    // Depth to hang a slice off, read a few cells in from the outline rather
+    // than at it. Even repaired, the last cell of a row is the least trustworthy
+    // one there is, and it is also the first the backface cull drops once the
+    // head turns — so a slice pinned to it starts behind the last cell still
+    // being drawn and opens a gap. The nearest of the first few cells in is a
+    // depth the face actually reaches, and the slice meets the face there.
+    var WRAP_EDGE = 3;
+    function edgeZ(c0, dir, r) {
+        var best = NaN, t, zz;
+        for (t = 0; t < WRAP_EDGE; t++) {
+            zz = zAt(c0 + dir * t, r);
+            if (zz === zz && !(zz <= best)) best = zz;
+        }
+        return best;
+    }
+
     function buildWrap() {
         var w = data.wrap;
         if (!w) return null;
@@ -1469,7 +1516,7 @@
             var xc = (xL + xR) / 2, a = (xR - xL) / 2;
             if (a < 2 * DX) continue;
 
-            var zEdge = Math.min(zAt(cL, r), zAt(cR, r)), zFront = 0, zz;
+            var zEdge = Math.min(edgeZ(cL, 1, r), edgeZ(cR, -1, r)), zFront = 0, zz;
             for (c = cL; c <= cR; c++) {
                 zz = zAt(c, r);
                 if (zz === zz && zz > zFront) zFront = zz;
