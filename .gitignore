@@ -49,3 +49,7 @@ yarn-error.*
 # secrets kept out of the repo
 .status-token
 .wrangler/
+# portrait-ascii pipeline: the depth model (94MB) and its venv are fetched
+# locally when the photo changes; only the generated data file is committed.
+tools/portrait-ascii/depth_model.onnx
+tools/portrait-ascii/.venv/

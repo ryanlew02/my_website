@@ -684,6 +684,11 @@ h1 {
     border: 1px solid var(--color-neutral-800);
     border-radius: var(--radius-sm);
     overflow: hidden;
+    /* The ASCII portrait sizes its type off this box: 96 cells across the
+       plate's width. Container units keep that exact at every breakpoint with
+       no resize handler. Safe to contain — the box's own size comes from the
+       aspect ratio above, never from its contents. */
+    container-type: size;
     /* Duotone highlight endpoint — the brightest tone the photo can reach.
        Deliberately a neutral and not an accent: at plate size the accent ramp
        turns the backdrop into a saturated violet field, which is the flood the
@@ -808,6 +813,39 @@ h1 {
         100% 0,    100% 0,
         0    100%, 0    100%,
         100% 100%, 100% 100%;
+}
+
+/* ── The ASCII portrait ──
+   script.js adds .is-ascii once it has rendered the first frame, so the photo
+   is what shows with JS off or the data file missing. Everything the duotone
+   needed goes with it: the light highlight endpoint the photo multiplied
+   against would read as a lit slab behind glyphs, and the lighten pass has no
+   photo left to lift. The frame overlay stays — the vignette, grain and
+   registration marks are what keep this a plate rather than a text dump. */
+.id-photo.is-ascii {
+    background: color-mix(in srgb, var(--color-neutral-900) 55%, var(--color-bg));
+}
+.id-photo.is-ascii img,
+.id-photo.is-ascii::after { display: none; }
+
+.ascii-portrait {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    margin: 0;
+    /* 96 cells across the plate, in a face that advances 0.6em per cell:
+       96 x 0.6 = 57.6em to the width. line-height 1 then lands 77 rows within
+       0.3% of the 3:4 box, which is why the grid needs no vertical fudge. */
+    font-family: var(--font-mono);
+    font-size: calc(100cqw / 57.6);
+    line-height: 1;
+    letter-spacing: 0;
+    white-space: pre;
+    color: var(--color-neutral-300);
+    /* The glyphs are an image, not text: dragging a selection across the face
+       would select half a portrait's worth of punctuation. */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 /* ═══ 02 · About ═════════════════════════════════════════════════════════ */
