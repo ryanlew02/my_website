@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=96d7d37f" />
+        <link rel="stylesheet" href="style.css?v=cdead179" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -113,7 +113,11 @@
 
                         <!-- The portrait is a formal studio headshot, so it is
                              framed as a personnel-file plate rather than
-                             dissolved into the page. See "Portrait" in style.css -->
+                             dissolved into the page. See "Portrait" in style.css.
+
+                             script.js replaces the photo with an ASCII rendering
+                             that turns to follow the pointer — the <img> is what
+                             shows until (and unless) that takes over. -->
                         <div class="visual">
                             <figure class="id-plate">
                                 <div class="id-photo">
@@ -311,6 +315,9 @@
             </div>
         </div>
 
-        <script src="script.js?v=4de949c4"></script>
+        <!-- The hero portrait's character grid + depth map (generated; see
+             tools/portrait-ascii/). Must load before script.js reads it. -->
+        <script src="assets/portrait-ascii.js?v=3318b5c9"></script>
+        <script src="script.js?v=6ccadf4b"></script>
     </body>
 </html>
