@@ -1867,15 +1867,60 @@ body.terminal-open { overflow: hidden; }
     .nav a { font-size: 13px; }
     .terminal-btn-label { display: none; }   /* just the >_ glyph */
 
-    #hero .section-inner { padding-top: calc(var(--header-h) + 44px); }
+    /* The hero owns exactly one screen, so the plate has a bottom edge to land
+       on. Stacked under the type it used to size itself from the column width
+       alone, which made the section taller than the viewport (872px inside an
+       852px screen): the plate's bottom edge never came into view at the same
+       time as its top, so it read as a slab hanging in the middle of the scroll
+       rather than as the foot of the composition. svh and not vh — vh is the
+       tall-bars height on iOS, which would put the bottom edge back under
+       Safari's toolbar and undo the whole point of this. */
+    #hero .section-inner {
+        /* Capped, because the slack this creates is spent above the name (see
+           .hero below) and a 6.7" screen has more of it than that gap can
+           absorb — at a full 932px the marker sat 205px clear of "Ryan", which
+           stops reading as margin and starts reading as a hole. 820 keeps the
+           gap near the ~95px the desktop hero runs; past it the section simply
+           lets the next one show under the fold, which is a scroll cue rather
+           than a void. */
+        min-height: min(100svh, 820px);
+        padding-top: calc(var(--header-h) + 32px);
+    }
     h1 { letter-spacing: -0.035em; }
     .sub { font-size: 17px; }
+
+    /* The whole type-plus-plate block is pushed to the foot of that screen by an
+       auto margin, so the plate finishes on the section's bottom edge and the
+       leftover height opens above the name. Same disposal of slack as the
+       desktop hero, where the taller plate column pushes the type down and the
+       gap lands between the section marker and "Ryan" — it reads as the margin
+       above a title. Handing the slack to a grid row under the links instead
+       just moves the floating: on a 6.7" phone that opened a 213px hole between
+       the links and the plate. padding-top keeps a floor under the gap for the
+       screens where there is no slack left to distribute. */
+    #hero .hero {
+        margin-top: auto;
+        padding-top: clamp(20px, 2.4vw, 32px);
+    }
 
     /* Centred rather than flush-left as it is on a tablet. At this width the
        plate is nearly the full column, so hanging it off the left edge leaves a
        sliver of margin on one side that reads as a mistake rather than as the
-       stack's alignment. Centred it sits under the type as its own block. */
-    .visual  { width: min(280px, 78%); margin-inline: auto; }
+       stack's alignment. Centred it sits under the type as its own block.
+
+       The width is driven by leftover height, not by the column: at 3:4 every
+       10px of width costs 13px of height, and the old 280px plate stood 367px
+       tall — on its own more than half the screen, which is what pushed its
+       bottom edge past the fold. The subtrahend is everything above and below
+       it in the section (header, marker, type block, page padding) rounded
+       down, so the middle term is roughly the height actually going spare. The
+       cap is the size the plate wants on a big phone; the floor is where it
+       stops reading as a portrait and starts reading as a thumbnail. */
+    .visual {
+        width: clamp(150px, calc((100svh - 500px) * 0.75), 210px);
+        max-width: 60%;
+        margin-inline: auto;
+    }
 
     .about-text, .reading-intro { font-size: 16px; }
     .about-meta { grid-template-columns: 1fr; gap: var(--space-8); }
