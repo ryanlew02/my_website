@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=821cbd08" />
+        <link rel="stylesheet" href="style.css?v=0d49a73c" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -55,6 +55,15 @@
                     <a href="#projects"       data-section="projects">Projects</a>
                     <a href="#reading"        data-section="reading">Reading</a>
                 </nav>
+
+                <!-- Leaves the site, so it is a pill beside the terminal rather than a
+                     nav item: the nav is section anchors only. -->
+                <a class="blog-btn" href="https://medium.com/@ryanlewan-sim"
+                   target="_blank" rel="noopener noreferrer" title="Read the blog">
+                    <span class="blog-tag">new</span>
+                    Blog
+                    <span class="blog-btn-arrow" aria-hidden="true">↗</span>
+                </a>
 
                 <button class="terminal-btn" id="terminalBtn" type="button" title="Open terminal">
                     <span class="terminal-btn-glyph" aria-hidden="true">&gt;_</span>
@@ -108,6 +117,10 @@
                                 <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                                 <span>/</span>
                                 <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                                <!-- Phone only — stands in for the header pill, which has no room
+                                     to sit beside the nav at that width. See ".blog-link". -->
+                                <span class="blog-sep">/</span>
+                                <a class="blog-link" href="https://medium.com/@ryanlewan-sim" target="_blank" rel="noopener noreferrer">Blog <span class="blog-tag">new</span></a>
                             </div>
                         </div>
 
@@ -266,6 +279,8 @@
                             <a href="https://www.linkedin.com/in/ryan-lewandowski-120546164/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                             <span>/</span>
                             <a href="https://leetcode.com/u/ryanlew02/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                            <span class="blog-sep">/</span>
+                            <a class="blog-link" href="https://medium.com/@ryanlewan-sim" target="_blank" rel="noopener noreferrer">Blog <span class="blog-tag">new</span></a>
                         </div>
                     </footer>
                 </div>
@@ -318,6 +333,6 @@
         <!-- The hero portrait's character grid + depth map (generated; see
              tools/portrait-ascii/). Must load before script.js reads it. -->
         <script src="assets/portrait-ascii.js?v=3318b5c9"></script>
-        <script src="script.js?v=b8f75725"></script>
+        <script src="script.js?v=64b6aac9"></script>
     </body>
 </html>
