@@ -707,7 +707,7 @@
                             '- Dark / light themes via CSS custom properties + localStorage\n' +
                             '- Ambient animations with the Web Animations API\n' +
                             '- This shell: an in-memory file system, tab completion, and\n' +
-                            '  live status + strava commands backed by Cloudflare Workers',
+                            '  a live status command backed by a Cloudflare Worker',
                         'tech-stack.txt':
                             'HTML\nCSS\nJavaScript (vanilla)\nCloudflare Workers',
                         'links.txt':
@@ -789,9 +789,7 @@
                         'running.txt':
                             'Running — the other kind of debugging.\n' +
                             'When the code stops making sense, the problem usually\n' +
-                            'works itself out by mile two.\n' +
-                            '\n' +
-                            "Run 'strava' to see this month's mileage, live.",
+                            'works itself out by mile two.',
                     },
                 },
             },
@@ -815,11 +813,6 @@
         var href = link && link.getAttribute('href');
         return href && href.split('?')[0] === url ? href : url;
     }
-
-    // Cloudflare Worker that proxies Strava for the `strava` command — it
-    // holds the API credentials and returns only a mileage number. Deploy
-    // strava-worker/ and paste the URL it prints, plus '/miles'.
-    var STRAVA_MILES_URL = 'https://strava-miles.ryanlewan.workers.dev/miles';
 
     // Cloudflare Worker behind the `status` command — the phone pushes a
     // status string via iOS Shortcuts automations, this reads the latest.
@@ -973,25 +966,7 @@
             });
         }
 
-        // ── Strava ────────────────────────────────────────────────────────
-        var stravaCache = {};     // fetched totals, keyed by 'month' / 'year'
-
-        function stravaConfigured() {
-            return STRAVA_MILES_URL.indexOf('YOUR_') !== 0;
-        }
-
-        // The worker (strava-worker/) does the Strava API work and returns
-        // { miles: 24.6, range: "month" }.
-        function stravaRunMiles(scope) {
-            return fetch(STRAVA_MILES_URL + '?range=' + scope)
-                .then(function (res) {
-                    if (res.status === 429) throw new Error('easy there — too many requests, try again in a minute');
-                    if (!res.ok) throw new Error('mileage service returned HTTP ' + res.status);
-                    return res.json();
-                })
-                .then(function (data) { return data.miles; });
-        }
-
+        // ── Status ────────────────────────────────────────────────────────
         // "as of 14m ago" — rough age of a status update timestamp.
         function sinceAgo(ts) {
             var mins = Math.floor((Date.now() - ts) / 60000);
@@ -1005,8 +980,7 @@
         var COMMANDS = {
             help: function () {
                 print(
-                    'status                what Ryan is up to right now\n' +
-                    "strava [--year]       Ryan's running miles this month (or year)",
+                    'status                what Ryan is up to right now',
                     'terminal-featured'
                 );
                 print(
@@ -1156,32 +1130,6 @@
                     });
                 });
                 if (!found && files.length) print('grep: no matches for "' + pattern + '"');
-            },
-            strava: function (args) {
-                var yearMode = false;
-                for (var i = 0; i < args.length; i++) {
-                    if (args[i] === '--year' || args[i] === '-y') yearMode = true;
-                    else { print('usage: strava [--year | -y]', 'terminal-error'); return; }
-                }
-                if (!stravaConfigured()) {
-                    print('strava: not hooked up yet — check back soon.', 'terminal-error');
-                    return;
-                }
-                var scope = yearMode ? 'year' : 'month';
-                var cached = stravaCache[scope];
-                if (cached && Date.now() - cached.at < 5 * 60 * 1000) {
-                    print('Ryan has run ' + cached.miles + ' miles this ' + scope);
-                    return;
-                }
-                print('Pulling runs from Strava…');
-                stravaRunMiles(scope).then(function (miles) {
-                    stravaCache[scope] = { miles: miles, at: Date.now() };
-                    print('Ryan has run ' + miles + ' miles this ' + scope);
-                    body.scrollTop = body.scrollHeight;
-                }).catch(function (err) {
-                    print('strava: ' + err.message, 'terminal-error');
-                    body.scrollTop = body.scrollHeight;
-                });
             },
             status: function () {
                 print('Pinging Ryan’s phone…');

@@ -289,6 +289,69 @@ a:active { color: var(--color-accent-400); }
 }
 .terminal-btn-glyph { color: var(--color-accent-400); }
 
+/* ── "Blog" pill ──
+   Same geometry as the terminal pill it sits beside, so the two read as one
+   pair of actions rather than two systems. The accent is spent on the "new"
+   tag instead of the border — an accent-outlined pill next to the terminal's
+   would make the header's right end louder than the page it sits over. */
+.blog-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-4);
+    border: 1px solid var(--color-neutral-800);
+    border-radius: var(--radius-md);
+    color: var(--color-neutral-500);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+    transition: border-color 160ms var(--ease), color 160ms var(--ease),
+                background-color 160ms var(--ease);
+}
+.blog-btn:hover {
+    border-color: var(--color-accent-700);
+    background: var(--color-accent-900);
+    color: var(--color-accent-300);
+}
+
+/* The one thing the pill has to say: there is something here that wasn't
+   here before. Outlined, not filled — the page's rule for the accent. */
+.blog-tag {
+    flex-shrink: 0;
+    padding: 1px var(--space-1);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 55%, transparent);
+    border-radius: var(--radius-sm);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent-300);
+    transition: border-color 160ms var(--ease), color 160ms var(--ease);
+}
+.blog-btn:hover .blog-tag {
+    border-color: var(--color-accent);
+    color: var(--color-accent-200);
+}
+
+/* The phone stand-in, off wherever the pill above is on. It lives in the
+   social rows rather than the header because a fifth item does not fit beside
+   a four-item nav and the terminal pill at that width — the header would
+   overflow the viewport by ~100px. Swapped at 600px; see the phone block. */
+.blog-sep,
+.blog-link { display: none; }
+
+/* Leaves the page, so the arrow steps out of the corner it points to */
+.blog-btn-arrow {
+    display: inline-block;
+    color: var(--color-neutral-600);
+    transition: transform 160ms var(--ease), color 160ms var(--ease);
+}
+.blog-btn:hover .blog-btn-arrow {
+    transform: translate(1px, -1px);
+    color: var(--color-accent-400);
+}
+
 /* ═══ Page shell ═════════════════════════════════════════════════════════ */
 
 .scroll-container {
@@ -1866,6 +1929,17 @@ body.terminal-open { overflow: hidden; }
     .nav { gap: var(--space-4); }
     .nav a { font-size: 13px; }
     .terminal-btn-label { display: none; }   /* just the >_ glyph */
+
+    /* No room for the blog pill up top at this width — it moves into the
+       social rows, where the line already wraps and the hero has the slack.
+       Still on the first screen, so it is not buried by the swap. */
+    .blog-btn  { display: none; }
+    .blog-sep  { display: inline; }
+    .blog-link {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--space-2);
+    }
 
     /* The hero owns exactly one screen, so the plate has a bottom edge to land
        on. Stacked under the type it used to size itself from the column width
