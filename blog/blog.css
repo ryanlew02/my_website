@@ -1,0 +1,383 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Blog — layered on top of ../style.css
+
+   Only what this page adds: the design tokens, base, header, links and footer
+   all come from the site stylesheet, so the blog inherits the theme rather
+   than restating it. Nothing here redefines a color — if a value isn't a
+   var(--…) from ../style.css, it shouldn't be in this file.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The home page keeps a wide left gutter for the absolutely-positioned section
+   number; this page has no gutter to fill, so the column starts at the page
+   edge and the masthead reads flush-left like the hero does.
+
+   min-height, because an empty blog is a short page: without it the footer
+   would sit halfway up an otherwise blank screen. */
+.blog-inner {
+    min-height: 100svh;
+    padding: calc(var(--header-h) + 46px) var(--page-x) var(--page-y);
+}
+
+/* The list, not the footer, absorbs the leftover height — the footer keeps the
+   78px margin it has everywhere else instead of floating away from the content. */
+.blog-inner > .post-list { flex: 1 0 auto; }
+
+/* Undo the home page's pull into the gutter — there isn't one here. */
+.blog-inner > .site-footer { margin-left: 0; }
+
+/* ═══ Masthead ═══════════════════════════════════════════════════════════ */
+
+.blog-masthead {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: clamp(20px, 2.4vw, 32px);
+}
+
+/* A sentence, not a word, so it is set smaller than the home page's name and
+   allowed to break over three lines — the wrap is the layout, as it is there.
+   The measure does the breaking; there is no <br> in the markup. */
+.blog-title {
+    max-width: 17ch;
+    font-size: clamp(32px, 4.6vw, 58px);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+    color: var(--color-text);
+    text-wrap: balance;
+    /* Trims Inter's ascender space so the margin above reads as set. */
+    text-box-trim: trim-start;
+    text-box-edge: cap alphabetic;
+}
+
+.blog-lede {
+    margin-top: clamp(18px, 2vw, 26px);
+    max-width: 52ch;
+    font-size: clamp(16px, 1.3vw, 19px);
+    line-height: 1.6;
+    color: var(--color-neutral-400);
+    text-wrap: pretty;
+}
+
+/* ═══ The Medium pill ════════════════════════════════════════════════════
+   Geometry comes from .medium-btn in ../style.css, next to the header pills
+   it matches. Only the arrow and the phone label are this page's business.
+
+   No brand mark on it: Medium's is three filled shapes that collapse into a
+   smudge at text size, and the one icon this site does use (the résumé
+   button) is stroked line art. The word and the arrow carry it. */
+/* Accent-outlined, where the header pills it borrows its shape from are
+   neutral. On the home page the accent belongs to the "new" tag and the
+   border stays quiet; here the pill is the page's only action, so the border
+   carries it — the same weight, and the same 70%/12% mix, that .btn--primary
+   uses for the primary action on the home page. */
+.medium-btn {
+    border-color: color-mix(in srgb, var(--color-accent) 70%, transparent);
+    color: var(--color-accent-300);
+}
+.medium-btn:hover {
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    color: var(--color-accent-200);
+}
+
+.medium-btn-arrow {
+    display: inline-block;
+    color: var(--color-accent-400);
+    transition: transform 160ms var(--ease), color 160ms var(--ease);
+}
+/* Leaves the site, so it steps out of the corner it points to */
+.medium-btn:hover .medium-btn-arrow {
+    transform: translate(1px, -1px);
+    color: var(--color-accent-200);
+}
+
+/* ═══ The list ═══════════════════════════════════════════════════════════ */
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: clamp(40px, 5vw, 64px);
+}
+
+/* Posts are separated by the site's signature hairline — drawn between rows
+   only, and faded at the right end so it stops rather than hits the edge. */
+.post + .post {
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(to right,
+        var(--color-divider), var(--color-divider) 62%, transparent) 1;
+}
+
+.post {
+    display: block;
+    padding: var(--space-8) 0;
+    color: inherit;
+}
+
+/* Mono line above the title: date, then anything else the entry carries. */
+.post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-neutral-600);
+}
+.post-date { color: var(--color-accent); }
+/* Separators are drawn, not typed, so the copy stays as authored */
+.post-meta > * + *::before {
+    content: "· ";
+    color: var(--color-neutral-700);
+}
+
+.post-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin-top: var(--space-3);
+    font-size: clamp(20px, 1.9vw, 25px);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.25;
+    color: var(--color-neutral-300);
+    transition: color 180ms var(--ease);
+}
+.post:hover .post-title { color: var(--color-text); }
+
+/* The only moving part, same as the buttons on the home page */
+.post-arrow {
+    color: var(--color-accent-400);
+    transition: transform 180ms var(--ease);
+}
+.post:hover .post-arrow { transform: translateX(3px); }
+
+.post-excerpt {
+    margin-top: var(--space-3);
+    max-width: 62ch;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--color-neutral-500);
+    text-wrap: pretty;
+}
+
+.post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+}
+.post-tag {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
+    transition: border-color 180ms var(--ease), color 180ms var(--ease);
+}
+.post:hover .post-tag {
+    border-color: var(--color-neutral-800);
+    color: var(--color-neutral-500);
+}
+
+/* ═══ A post page ════════════════════════════════════════════════════════
+   Everything below is for blog/<slug>/index.html, written as plain HTML in
+   the template's <article>. Bare tags are styled, so a post never needs a
+   class on anything. */
+
+.post-heading {
+    max-width: 22ch;
+    margin-top: clamp(14px, 1.6vw, 20px);
+    font-size: clamp(30px, 3.6vw, 46px);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+    color: var(--color-text);
+    text-wrap: balance;
+    text-box-trim: trim-start;
+    text-box-edge: cap alphabetic;
+}
+
+/* A measure, not a column width — long-form copy is unreadable at full page
+   width, and 68ch is about 12 words a line. */
+.post-article {
+    max-width: 68ch;
+    margin-top: clamp(26px, 3vw, 38px);
+    font-size: 16.5px;
+    line-height: 1.75;
+    color: var(--color-neutral-400);
+}
+
+.post-article > * + *        { margin-top: var(--space-6); }
+.post-article > * + h2       { margin-top: clamp(34px, 4vw, 48px); }
+.post-article > * + h3       { margin-top: clamp(26px, 3vw, 34px); }
+
+.post-article h2 {
+    font-size: clamp(20px, 2vw, 25px);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--color-text);
+}
+.post-article h3 {
+    font-size: clamp(17px, 1.5vw, 19px);
+    font-weight: 500;
+    color: var(--color-neutral-200);
+}
+
+/* Underlined rather than colored: at body size a colored run of text reads as
+   a highlight, and the accent on this site is a line. */
+.post-article a {
+    color: var(--color-accent-300);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    text-underline-offset: 3px;
+    transition: color 160ms var(--ease), text-decoration-color 160ms var(--ease);
+}
+.post-article a:hover {
+    color: var(--color-accent-200);
+    text-decoration-color: var(--color-accent);
+}
+
+.post-article strong { color: var(--color-neutral-200); font-weight: 600; }
+.post-article em     { color: var(--color-neutral-300); }
+
+.post-article ul,
+.post-article ol {
+    margin-left: 0;
+    padding-left: var(--space-8);
+}
+.post-article li + li { margin-top: var(--space-2); }
+.post-article li::marker { color: var(--color-accent-600); }
+
+/* The site's hairline, turned on its side. */
+.post-article blockquote {
+    margin-left: 0;
+    padding-left: var(--space-6);
+    border-left: 1px solid var(--color-accent-700);
+    color: var(--color-neutral-300);
+    font-style: normal;
+}
+
+.post-article code {
+    padding: 1px var(--space-2);
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-sm);
+    background: color-mix(in srgb, var(--color-neutral-100) 4%, transparent);
+    font-family: var(--font-mono);
+    font-size: 0.87em;
+    color: var(--color-neutral-300);
+}
+/* Blocks scroll rather than widen the page — the one thing allowed past the
+   measure, and only inside its own box. */
+.post-article pre {
+    overflow-x: auto;
+    margin: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    line-height: 1.6;
+}
+.post-article pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 13px;
+    color: var(--color-neutral-300);
+}
+
+.post-article img {
+    display: block;
+    border: 1px solid var(--color-neutral-900);
+    border-radius: var(--radius-md);
+}
+.post-article figcaption {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--color-neutral-600);
+}
+
+.post-article hr {
+    height: 0;
+    margin: clamp(30px, 3.4vw, 42px) 0;
+    border: 0;
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(to right,
+        var(--color-divider), var(--color-divider) 62%, transparent) 1;
+}
+
+/* Back to the list — the only navigation a post needs below the fold. */
+.post-back {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    gap: var(--space-3);
+    margin-top: clamp(40px, 5vw, 60px);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
+    transition: color 180ms var(--ease);
+}
+.post-back:hover { color: var(--color-accent-300); }
+.post-back span {
+    display: inline-block;
+    transition: transform 180ms var(--ease);
+}
+.post-back:hover span { transform: translateX(-2px); }
+
+/* ═══ Empty state ════════════════════════════════════════════════════════ */
+
+/* Sits in the markup rather than being written in by blog.js, so the page
+   still says something with JavaScript off. The dot is the same live signal
+   used by "Open to opportunities" on the home page. */
+.post-empty {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-8) 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.04em;
+    color: var(--color-neutral-600);
+}
+.post-empty-dot {
+    width: 5px;
+    height: 5px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--color-accent-400);
+    box-shadow: 0 0 8px var(--color-accent-500);
+    animation: pulse-dot 2.4s ease-in-out infinite;   /* defined in ../style.css */
+}
+
+/* ═══ Responsive ═════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+    /* ../style.css resets .section-inner's side padding here; the top padding
+       is this page's own, so it has to be restated. */
+    .blog-inner { padding-top: calc(var(--header-h) + 36px); }
+}
+
+@media (max-width: 600px) {
+    .blog-inner { padding-top: calc(var(--header-h) + 28px); }
+
+    /* Measured: logo + a four-item nav + this pill comes to ~341px of header
+       content, which overflows any phone narrower than 390px. The pill is the
+       page's one action so it keeps its full label; the three deep links into
+       the home page's sections give way instead — they are two taps from
+       "Home", and dropping them leaves room down to a 320px screen. */
+    .nav-deep     { display: none; }
+    .header-right { gap: var(--space-4); }
+
+    .blog-lede  { font-size: 16px; }
+    .post       { padding: var(--space-6) 0; }
+    .post-excerpt { font-size: 15px; }
+    .post-article { font-size: 16px; }
+}

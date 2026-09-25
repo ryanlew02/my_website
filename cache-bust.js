@@ -19,13 +19,28 @@ const crypto = require("crypto");
 
 const root = __dirname;
 
-// HTML files to process.
+// HTML files to process. Blog posts are discovered rather than listed, so
+// writing one never means editing this file — see blog/README.md.
 const htmlFiles = [
   "index.html",
   "divergeos/index.html",
   "innercity/index.html",
   "halflight/index.html",
+  "blog/index.html",
+  ...blogPosts(),
 ];
+
+// Every blog/<slug>/index.html. The leading-underscore files (_template.html)
+// are stencils, not pages, and are skipped.
+function blogPosts() {
+  const dir = path.join(root, "blog");
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !e.name.startsWith("_") && !e.name.startsWith("."))
+    .map((e) => path.join("blog", e.name, "index.html"))
+    .filter((rel) => fs.existsSync(path.join(root, rel)));
+}
 
 // Matches href/src of local .css, .js or .pdf assets, capturing an existing ?v=... if present.
 const assetRe = /(href|src)=("|')([^"'?>]+\.(?:css|js|pdf))(?:\?v=[^"']*)?\2/g;

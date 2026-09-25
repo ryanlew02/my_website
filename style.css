@@ -289,12 +289,17 @@ a:active { color: var(--color-accent-400); }
 }
 .terminal-btn-glyph { color: var(--color-accent-400); }
 
-/* ── "Blog" pill ──
-   Same geometry as the terminal pill it sits beside, so the two read as one
-   pair of actions rather than two systems. The accent is spent on the "new"
-   tag instead of the border — an accent-outlined pill next to the terminal's
-   would make the header's right end louder than the page it sits over. */
-.blog-btn {
+/* ── Header pills — "Blog" here, "Read on Medium" on the blog page ──
+   Same geometry as the terminal pill they sit beside, so they read as one set
+   of actions rather than three systems. The accent is spent on the "new" tag
+   instead of the border — an accent-outlined pill next to the terminal's would
+   make the header's right end louder than the page it sits over.
+
+   .medium-btn is the blog page's; it lives here rather than in blog.css
+   because the header is shared furniture and a second copy of this geometry
+   would drift the first time one of them is touched. */
+.blog-btn,
+.medium-btn {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
@@ -309,7 +314,8 @@ a:active { color: var(--color-accent-400); }
     transition: border-color 160ms var(--ease), color 160ms var(--ease),
                 background-color 160ms var(--ease);
 }
-.blog-btn:hover {
+.blog-btn:hover,
+.medium-btn:hover {
     border-color: var(--color-accent-700);
     background: var(--color-accent-900);
     color: var(--color-accent-300);
@@ -1606,121 +1612,6 @@ h1 {
 }
 .scroll-dots .dot:hover::after { opacity: 1; }
 
-/* ═══ "Currently building" toast ═════════════════════════════════════════ */
-
-.work-toast {
-    position: fixed;
-    right: var(--page-x);
-    bottom: var(--space-8);
-    z-index: 450;
-    width: min(320px, calc(100vw - 2 * var(--page-x)));
-    border: 1px solid var(--color-neutral-800);
-    border-radius: var(--radius-md);
-    background: rgba(13, 14, 22, 0.96);
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    overflow: hidden;
-    animation: toast-in 500ms var(--ease) 600ms both;
-}
-@keyframes toast-in {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.work-toast.leaving {
-    opacity: 0;
-    transform: translateY(12px);
-    transition: opacity 300ms var(--ease), transform 300ms var(--ease);
-}
-.work-toast.dismissed { display: none; }
-
-.work-toast-link {
-    display: flex;
-    align-items: center;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    color: inherit;
-}
-
-.work-toast-logo {
-    width: 42px;
-    height: 42px;
-    flex-shrink: 0;
-    object-fit: cover;
-    border: 1px solid var(--color-neutral-900);
-    border-radius: var(--radius-sm);
-    filter: grayscale(0.2);
-}
-
-.work-toast-body {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    min-width: 0;
-}
-
-.work-toast-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-neutral-600);
-}
-.work-toast-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--color-accent-400);
-    animation: pulse-dot 2.4s ease-in-out infinite;
-}
-
-.work-toast-title {
-    font-size: 14.5px;
-    font-weight: 500;
-    color: var(--color-text);
-}
-.work-toast-text {
-    font-size: 12.5px;
-    line-height: 1.4;
-    color: var(--color-neutral-500);
-}
-.work-toast-arrow { color: var(--color-accent-400); }
-
-.work-toast-close {
-    position: absolute;
-    top: var(--space-1);
-    right: var(--space-2);
-    padding: 0 var(--space-2);
-    border: 0;
-    background: none;
-    color: var(--color-neutral-700);
-    font-size: 15px;
-    line-height: 1.4;
-    cursor: pointer;
-    transition: color 160ms var(--ease);
-}
-.work-toast-close:hover { color: var(--color-neutral-300); }
-
-/* Countdown along the bottom edge — drains over the toast's 3s lifetime */
-.work-toast-progress {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 1px;
-    width: 100%;
-    background: var(--color-accent-700);
-    transform-origin: left;
-    animation: toast-drain 3s linear 1100ms both;
-}
-@keyframes toast-drain {
-    from { transform: scaleX(1); }
-    to   { transform: scaleX(0); }
-}
-
 /* ═══ Terminal (ryanOS) ══════════════════════════════════════════════════ */
 
 /* Opens as a strip docked to the bottom of the page, inset from both sides.
@@ -2014,8 +1905,6 @@ body.terminal-open { overflow: hidden; }
        to decide how many books fit per shelf row. */
     .bookshelf   { --book-scale: 0.68; margin-top: 72px; padding-right: 0; }
     .shelf-books { min-height: 120px; }
-
-    .work-toast { width: calc(100vw - 2 * var(--page-x)); }
 
     /* Fill the visible area — script.js keeps the overlay above the on-screen
        keyboard via visualViewport — instead of a floating strip */

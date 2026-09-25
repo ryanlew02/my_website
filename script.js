@@ -570,28 +570,6 @@
                 }
             });
         });
-
-        // ── "Currently working on" notification ────────────────────────────────
-        var workToast = document.getElementById('workToast');
-        var workToastClose = document.getElementById('workToastClose');
-
-        function dismissWorkToast() {
-            if (!workToast || workToast.classList.contains('leaving')) return;
-            workToast.classList.add('leaving');
-            // Remove from the page once the fade-out finishes
-            setTimeout(function () { workToast.classList.add('dismissed'); }, 300);
-        }
-
-        if (workToastClose) {
-            workToastClose.addEventListener('click', function (e) {
-                e.preventDefault();
-                dismissWorkToast();
-            });
-        }
-
-        // Auto-dismiss: 1.1s fly-in (600ms delay + 500ms animation), then the
-        // 3s countdown shown by the .work-toast-progress bar.
-        if (workToast) setTimeout(dismissWorkToast, 1100 + 3000);
     });
 })();
 
