@@ -1,7 +1,7 @@
 /* Blog — post list, and the small shared behaviours this page needs.
  *
- * Deliberately standalone: the home page's script.js is 90KB of carousel,
- * bookshelf, ASCII portrait and terminal, none of which exists here. The only
+ * Deliberately standalone: the home page's script.js is mostly carousel and
+ * terminal, neither of which exists here. The only
  * things worth borrowing were the year stamp, the copy-email button and the
  * scroll reveal, so they are re-implemented below rather than pulled in.
  */
