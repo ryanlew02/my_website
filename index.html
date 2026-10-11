@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=6082b546" />
+        <link rel="stylesheet" href="style.css?v=9fd54731" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -53,7 +53,6 @@
                     <a href="#hero"           data-section="hero">Home</a>
                     <a href="#about"          data-section="about">About</a>
                     <a href="#projects"       data-section="projects">Projects</a>
-                    <a href="#reading"        data-section="reading">Reading</a>
                 </nav>
 
                 <!-- Leaves the site, so it is a pill beside the terminal rather than a
@@ -94,7 +93,7 @@
                             <h1>Ryan Lewandowski</h1>
 
                             <p class="sub">
-                                I like problems I don't know how to solve yet, and I learn the tools to solve them as I go.
+                                I like computers, physics, and machine learning. Mostly where they meet: building simulations to see how things collide.
                             </p>
 
                             <div class="btn-row">
@@ -125,11 +124,7 @@
 
                         <!-- The portrait is a formal studio headshot, so it is
                              framed as a personnel-file plate rather than
-                             dissolved into the page. See "Portrait" in style.css.
-
-                             script.js replaces the photo with an ASCII rendering
-                             that turns to follow the pointer — the <img> is what
-                             shows until (and unless) that takes over. -->
+                             dissolved into the page. See "Portrait" in style.css -->
                         <div class="visual">
                             <figure class="id-plate">
                                 <div class="id-photo">
@@ -219,7 +214,7 @@
 
             <!-- ── 03 · Projects ───────────────────────────── -->
             <section class="snap-section" id="projects">
-                <div class="section-inner section-inner--top">
+                <div class="section-inner">
                     <div class="section-heading" data-num="03">
                         <span class="section-number">03</span>
                         <h2 class="section-title">Projects</h2>
@@ -239,34 +234,6 @@
                         See all projects
                         <span aria-hidden="true">↗</span>
                     </a>
-                </div>
-            </section>
-
-            <!-- ── 04 · Hobbies / Reading ──────────────────── -->
-            <section class="snap-section" id="reading">
-                <div class="section-inner section-inner--top">
-                    <div class="section-heading" data-num="04">
-                        <span class="section-number">04</span>
-                        <h2 class="section-title">Reading</h2>
-                    </div>
-
-                    <p class="reading-intro">
-                        Every book on this shelf rewired something: how I think, how I build, or what I chase.
-                        <span class="reading-cta">Pull one off the shelf to see exactly what I took.</span>
-                    </p>
-
-                    <!-- Books are rendered from the BOOKS array in script.js. Each book
-                         becomes a spine on a shelf that lifts off on hover and reveals a
-                         "what I learned" card — the shelf hint below disappears once the
-                         first book is added. -->
-                    <div class="bookshelf" id="bookshelf" aria-label="Bookshelf of favorite books">
-                        <div class="shelf">
-                            <div class="shelf-books">
-                                <p class="shelf-hint">First books arriving soon</p>
-                            </div>
-                            <div class="shelf-board"></div>
-                        </div>
-                    </div>
 
                     <footer class="site-footer">
                         <div class="footer-copy">© <span id="year"></span> Ryan Lewandowski</div>
@@ -292,7 +259,6 @@
             <a class="dot active" href="#hero"           data-label="Home"           aria-label="Go to Home"></a>
             <a class="dot"        href="#about"          data-label="About"          aria-label="Go to About"></a>
             <a class="dot"        href="#projects"       data-label="Projects"       aria-label="Go to Projects"></a>
-            <a class="dot"        href="#reading"        data-label="Reading"        aria-label="Go to Reading"></a>
         </nav>
 
         <!-- Terminal — opened by the "terminal" header button. Runs a
@@ -315,9 +281,6 @@
             </div>
         </div>
 
-        <!-- The hero portrait's character grid + depth map (generated; see
-             tools/portrait-ascii/). Must load before script.js reads it. -->
-        <script src="assets/portrait-ascii.js?v=3318b5c9"></script>
-        <script src="script.js?v=73020903"></script>
+        <script src="script.js?v=4201db14"></script>
     </body>
 </html>
