@@ -39,13 +39,13 @@
    The measure does the breaking; there is no <br> in the markup. */
 .blog-title {
     max-width: 17ch;
-    font-size: clamp(32px, 4.6vw, 58px);
-    font-weight: 500;
+    font-size: clamp(34px, 5vw, 64px);
+    font-weight: 400;
     line-height: 1.02;
-    letter-spacing: -0.035em;
+    letter-spacing: -0.025em;
     color: var(--color-text);
     text-wrap: balance;
-    /* Trims Inter's ascender space so the margin above reads as set. */
+    /* Trims the face's ascender space so the margin above reads as set. */
     text-box-trim: trim-start;
     text-box-edge: cap alphabetic;
 }
@@ -138,8 +138,9 @@
     align-items: baseline;
     gap: var(--space-3);
     margin-top: var(--space-3);
-    font-size: clamp(20px, 1.9vw, 25px);
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: clamp(22px, 2.1vw, 28px);
+    font-weight: 400;
     letter-spacing: -0.015em;
     line-height: 1.25;
     color: var(--color-neutral-300);
@@ -192,10 +193,11 @@
 .post-heading {
     max-width: 22ch;
     margin-top: clamp(14px, 1.6vw, 20px);
-    font-size: clamp(30px, 3.6vw, 46px);
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.9vw, 50px);
+    font-weight: 400;
     line-height: 1.08;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     color: var(--color-text);
     text-wrap: balance;
     text-box-trim: trim-start;

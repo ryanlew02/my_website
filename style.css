@@ -66,8 +66,13 @@
     --shadow-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0, 0, 0, 0.65);
 
     /* ── type ── */
-    --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    /* Three voices. The serif is the display face: the name, section titles
+       and project titles, and nothing smaller than ~20px. The sans carries
+       everything that is read. Mono is kept for things that are literally
+       code or the terminal — it is no longer the label face. */
+    --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+    --font-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
     /* ── layout ── */
     --maxw: 1400px;
@@ -441,21 +446,21 @@ a:active { color: var(--color-accent-400); }
 }
 
 .section-title {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    line-height: 1.2;
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
     color: var(--color-text);
 }
 
-/* Shared label above a sub-block: mono, uppercase, quiet */
+/* Shared label above a sub-block: the body face a size down, sentence case.
+   Quiet by colour and size rather than by caps and tracking. */
 .section-sub-heading {
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--color-neutral-600);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-neutral-500);
     margin: 0 0 var(--space-3);
 }
 
@@ -534,27 +539,20 @@ a:active { color: var(--color-accent-400); }
     gap: 0;
 }
 
-/* Mono kicker line above the name */
+/* Kicker line above a page title (project and blog pages) */
 .meta {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
     align-items: baseline;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 13px;
     font-weight: 400;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
     color: var(--color-neutral-600);
 }
 /* Separators are drawn, not typed, so the copy stays as authored */
 .meta span + span::before {
     content: "· ";
     color: var(--color-neutral-700);
-}
-#hero .meta::before {
-    content: "01 /";
-    color: var(--color-accent);
 }
 
 /* The columns share a bottom edge: the links row sits level with the plate's
@@ -601,15 +599,16 @@ a:active { color: var(--color-accent-400); }
 }
 
 h1 {
-    font-size: clamp(48px, 8.2vw, 104px);
-    font-weight: 500;
-    line-height: 0.92;
-    letter-spacing: -0.045em;
+    font-family: var(--font-display);
+    font-size: clamp(54px, 9.4vw, 128px);
+    font-weight: 400;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
     color: var(--color-text);
     /* Two lines, flush left — the wrap point is the layout, not a <br> */
     max-width: 8ch;
     text-wrap: balance;
-    /* Inter parks ~10px of ascender space above the cap at this size, so the
+    /* The face parks ascender space above the cap at this size, so the
        margin set above the name always reads bigger than it is. Trimming to the
        cap makes the spacing honest and lands the portrait's top edge on the cap
        of "Ryan". Progressive — without support you get that leading back and
@@ -646,9 +645,7 @@ h1 {
     align-items: baseline;
     gap: var(--space-4);
     margin-top: clamp(24px, 2.6vw, 34px);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.04em;
+    font-size: 13.5px;
 }
 .links a,
 .links button { color: var(--color-neutral-600); }
@@ -915,10 +912,7 @@ h1 {
 .edu-gpa {
     display: inline-block;
     margin-top: var(--space-2);
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    font-weight: 700;      /* loaded alongside 400/500 in the font link */
-    letter-spacing: 0.04em;
+    font-weight: 500;
     color: var(--color-accent-300);
 }
 .about-education br + span { display: inline-block; }
@@ -1149,9 +1143,11 @@ h1 {
 }
 
 .project strong {
-    font-size: 18px;
-    font-weight: 500;
-    letter-spacing: -0.005em;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     color: var(--color-text);
 }
 
@@ -1270,9 +1266,7 @@ h1 {
     border: 0;
     border-radius: 0;
     background: none;
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.04em;
+    font-size: 13.5px;
     color: var(--color-neutral-500);
 }
 .see-all-btn:hover {
@@ -1290,9 +1284,7 @@ h1 {
     justify-content: space-between;
     gap: var(--space-6);
     padding-top: var(--space-8);
-    font-family: var(--font-mono);
-    font-size: 11.5px;
-    letter-spacing: 0.04em;
+    font-size: 13px;
     color: var(--color-neutral-600);
 }
 
@@ -1354,10 +1346,7 @@ h1 {
     right: calc(100% + var(--space-3));
     top: 50%;
     transform: translateY(-50%);
-    font-family: var(--font-mono);
-    font-size: 10.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 12px;
     color: var(--color-neutral-600);
     white-space: nowrap;
     opacity: 0;
