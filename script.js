@@ -6,8 +6,28 @@
     }
 
     // ── Project data ──────────────────────────────────────────────────────────
-    // Add a new project by appending an object here. `image` is optional —
-    // cards without it render as text-only. `external: true` opens in a new tab.
+    // Add a new project by appending an object here. `image` (or `video`, a
+    // muted looping clip) is optional — cards without either render as
+    // text-only. `external: true` opens in a new tab.
+    // HANDWRITTEN_PROJECTS feeds the "Handwritten Projects" section; PROJECTS
+    // feeds "AI Assisted Projects".
+    const HANDWRITTEN_PROJECTS = [
+        {
+            title: '2D Particle Gravity Sim',
+            href: 'https://github.com/ryanlew02/2D_particle_gravity_sim',
+            external: true,
+            video: { src: 'assets/particle_sim_demo.mp4', poster: 'assets/particle_sim_poster.jpg', label: 'Particles orbiting and colliding in the gravity simulation' },
+            desc: 'A real-time 2D gravitational physics simulation built from scratch in C++ and OpenGL. Particles of varying mass, density, and velocity pull on each other under Newtonian gravity and collide as they orbit.',
+            bullets: [
+                'Pairwise Newtonian gravity integrated on a fixed physics timestep',
+                'Particle collision detection and response',
+                'Mass derived from density and area, so size and weight stay consistent',
+                'Hardware-accelerated rendering with clean separation of physics, rendering, and app logic'
+            ],
+            tags: ['C++', 'OpenGL', 'GLFW', 'GLAD', 'CMake']
+        }
+    ];
+
     const PROJECTS = [
         {
             title: 'HalfLight',
@@ -49,30 +69,6 @@
                 'Supports both "build" habits and "quit" habits with streak tracking'
             ],
             tags: ['React Native', 'Expo', 'TypeScript', 'SQLite']
-        },
-        {
-            title: 'League of Legends Discord Bot',
-            href: 'https://github.com/ryanlew02/lol-inted-bot',
-            external: true,
-            desc: "A Discord bot that pulls live match data from Riot Games' API, parses player performance, and delivers a humorous verdict directly to the server.",
-            bullets: [
-                'Integrates with Riot Games API to fetch real-time match history',
-                'Analyzes KDA, damage output, vision score, and objective participation',
-                'Generates and posts performance verdicts to Discord channels'
-            ],
-            tags: ['Python', 'Riot Games API', 'Discord.py']
-        },
-        {
-            title: 'This Portfolio',
-            href: 'https://github.com/ryanlew02/my_website',
-            external: true,
-            desc: 'Built from scratch with zero dependencies: no frameworks, no libraries. Pure HTML, CSS, and vanilla JavaScript.',
-            bullets: [
-                'Fully responsive layout using CSS Grid and fluid <code>clamp()</code> typography',
-                'Dark / light theme system with CSS custom properties and localStorage',
-                'Subtle particle effects and ambient animations via the Web Animations API'
-            ],
-            tags: ['HTML', 'CSS', 'JavaScript']
         }
     ];
 
@@ -86,7 +82,9 @@
         var ext = p.external ? ' target="_blank" rel="noopener noreferrer"' : '';
         var status = p.status ? '<span class="project-status">' + escapeHTML(p.status) + '</span>' : '';
         var pos = p.image && p.image.pos ? ' style="--media-pos:' + p.image.pos + '"' : '';
-        var media = p.image
+        var media = p.video
+            ? '<div class="project-media"><video src="' + p.video.src + '"' + (p.video.poster ? ' poster="' + p.video.poster + '"' : '') + ' aria-label="' + escapeHTML(p.video.label) + '" muted loop playsinline preload="none"></video></div>'
+            : p.image
             ? '<div class="project-media"><img src="' + p.image.src + '" alt="' + escapeHTML(p.image.alt) + '" loading="lazy"' + pos + '></div>'
             : '';
         var bullets = p.bullets.map(function (b) { return '<li>' + b + '</li>'; }).join('');
@@ -108,16 +106,45 @@
             '</li>';
     }
 
-    function initProjectCarousel() {
-        var track = document.getElementById('projectTrack');
-        if (!track) return;
-        track.innerHTML = PROJECTS.map(projectCardHTML).join('');
+    // Card videos only play while on screen, which saves battery and data on
+    // phones. The poster shows until then, and stays if autoplay is refused
+    // (iOS Low Power Mode) or the viewer prefers reduced motion.
+    function initCardVideos(root) {
+        var videos = Array.prototype.slice.call(root.querySelectorAll('video'));
+        if (!videos.length) return;
+        videos.forEach(function (v) { v.muted = true; });   // iOS needs the property, not just the attribute
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (!('IntersectionObserver' in window)) {
+            videos.forEach(function (v) { v.play().catch(function () {}); });
+            return;
+        }
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (e.isIntersecting) e.target.play().catch(function () {});
+                else e.target.pause();
+            });
+        }, { threshold: 0.25 });
+        videos.forEach(function (v) { io.observe(v); });
+    }
 
-        var prev = document.querySelector('.carousel-prev');
-        var next = document.querySelector('.carousel-next');
-        var dotsWrap = document.getElementById('projectDots');
+    // `section` is the carousel's .snap-section; its track, arrows and dots are
+    // looked up inside it so several carousels can share the page.
+    function initProjectCarousel(section, projects) {
+        var track = section && section.querySelector('.project-list');
+        if (!track) return;
+        var prev = section.querySelector('.carousel-prev');
+        var next = section.querySelector('.carousel-next');
+        var dotsWrap = section.querySelector('.carousel-dots');
+
+        if (!projects.length) {
+            track.outerHTML = '<p class="project-empty">Coming soon.</p>';
+            [prev && prev.parentNode, dotsWrap].forEach(function (el) { if (el) el.style.display = 'none'; });
+            return;
+        }
+        track.innerHTML = projects.map(projectCardHTML).join('');
+
         var cards = Array.prototype.slice.call(track.children);
-        if (!cards.length) return;
+        initCardVideos(track);
 
         if (dotsWrap) {
             dotsWrap.innerHTML = cards.map(function (_, i) {
@@ -163,6 +190,10 @@
             dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
             if (prev) prev.disabled = current <= 0;
             if (next) next.disabled = current >= maxIndex();
+            // Nothing to page through (e.g. a single project): hide arrows + dots
+            var single = maxIndex() === 0;
+            if (prev) prev.parentNode.hidden = single;
+            if (dotsWrap) dotsWrap.hidden = single;
         }
 
         if (prev) prev.addEventListener('click', function () { go(current - 1); });
@@ -215,7 +246,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        initProjectCarousel();
+        initProjectCarousel(document.getElementById('handwritten'), HANDWRITTEN_PROJECTS);
+        initProjectCarousel(document.getElementById('projects'), PROJECTS);
 
         const yearEl = document.getElementById('year');
         if (yearEl) yearEl.textContent = new Date().getFullYear();

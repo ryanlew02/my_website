@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300..600&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=b417536b" />
+        <link rel="stylesheet" href="style.css?v=33342c35" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -52,7 +52,8 @@
                 <nav class="nav">
                     <a href="#hero"           data-section="hero">Home</a>
                     <a href="#about"          data-section="about">About</a>
-                    <a href="#projects"       data-section="projects">Projects</a>
+                    <a href="#handwritten"    data-section="handwritten">Projects</a>
+                    <a href="#projects"       data-section="projects">AI Projects</a>
                 </nav>
 
                 <!-- Leaves the site, so it is a pill beside the terminal rather than a
@@ -92,7 +93,7 @@
                             </p>
 
                             <div class="btn-row">
-                                <a class="btn btn--primary" href="#projects">
+                                <a class="btn btn--primary" href="#handwritten">
                                     See my works
                                     <span class="btn-arrow" aria-hidden="true">→</span>
                                 </a>
@@ -206,11 +207,30 @@
                 </div>
             </section>
 
-            <!-- ── 03 · Projects ───────────────────────────── -->
+            <!-- ── 03 · Handwritten Projects ───────────────── -->
+            <section class="snap-section" id="handwritten">
+                <div class="section-inner">
+                    <div class="section-heading">
+                        <h2 class="section-title">Handwritten Projects</h2>
+                    </div>
+
+                    <!-- Sits opposite the heading, at the far right of the page -->
+                    <div class="carousel-controls">
+                        <button class="carousel-arrow carousel-prev" type="button" aria-label="Previous project">‹</button>
+                        <button class="carousel-arrow carousel-next" type="button" aria-label="Next project">›</button>
+                    </div>
+
+                    <!-- Cards are rendered from the HANDWRITTEN_PROJECTS array in script.js -->
+                    <ul class="project-list" tabindex="0" aria-label="Handwritten projects carousel"></ul>
+                    <div class="carousel-dots" aria-hidden="true"></div>
+                </div>
+            </section>
+
+            <!-- ── 04 · AI Assisted Projects ──────────────── -->
             <section class="snap-section" id="projects">
                 <div class="section-inner">
                     <div class="section-heading">
-                        <h2 class="section-title">Projects</h2>
+                        <h2 class="section-title">AI Assisted Projects</h2>
                     </div>
 
                     <!-- Sits opposite the heading, at the far right of the page -->
@@ -220,8 +240,8 @@
                     </div>
 
                     <!-- Cards are rendered from the PROJECTS array in script.js -->
-                    <ul class="project-list" id="projectTrack" tabindex="0" aria-label="Projects carousel"></ul>
-                    <div class="carousel-dots" id="projectDots" aria-hidden="true"></div>
+                    <ul class="project-list" tabindex="0" aria-label="AI assisted projects carousel"></ul>
+                    <div class="carousel-dots" aria-hidden="true"></div>
 
                     <a class="btn see-all-btn" href="https://github.com/ryanlew02" target="_blank" rel="noopener noreferrer">
                         See all projects
@@ -251,7 +271,8 @@
         <nav class="scroll-dots" aria-label="Section navigation">
             <a class="dot active" href="#hero"           data-label="Home"           aria-label="Go to Home"></a>
             <a class="dot"        href="#about"          data-label="About"          aria-label="Go to About"></a>
-            <a class="dot"        href="#projects"       data-label="Projects"       aria-label="Go to Projects"></a>
+            <a class="dot"        href="#handwritten"    data-label="Projects"       aria-label="Go to Handwritten Projects"></a>
+            <a class="dot"        href="#projects"       data-label="AI Projects"    aria-label="Go to AI Assisted Projects"></a>
         </nav>
 
         <!-- Terminal — opened by the "terminal" header button. Runs a
@@ -274,6 +295,6 @@
             </div>
         </div>
 
-        <script src="script.js?v=4201db14"></script>
+        <script src="script.js?v=cac823fb"></script>
     </body>
 </html>

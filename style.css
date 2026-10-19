@@ -1107,7 +1107,8 @@ h1 {
     background: var(--color-surface);
     transition: border-color 200ms var(--ease);
 }
-.project-media img {
+.project-media img,
+.project-media video {
     display: block;
     width: 100%;
     height: 100%;
@@ -1117,7 +1118,8 @@ h1 {
     transition: filter 260ms var(--ease), transform 420ms var(--ease);
 }
 .project:hover .project-media          { border-color: var(--color-accent-800); }
-.project:hover .project-media img      { filter: none; transform: scale(1.015); }
+.project:hover .project-media img,
+.project:hover .project-media video    { filter: none; transform: scale(1.015); }
 
 .project-body {
     display: flex;
@@ -1258,6 +1260,18 @@ h1 {
 }
 .carousel-dot:hover  { background: var(--color-neutral-600); }
 .carousel-dot.active { width: 30px; background: var(--color-accent); }
+
+/* Set by script.js when there is nothing to page through */
+.carousel-controls[hidden],
+.carousel-dots[hidden] { display: none; }
+
+/* Shown in place of the track when a section has no projects yet */
+.project-empty {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    color: var(--color-neutral-500);
+}
 
 /* "See all projects ↗" — a mono link under the track, not a button */
 .see-all-btn {
@@ -1648,6 +1662,14 @@ body.terminal-open { overflow: hidden; }
     .terminal-overlay { padding: var(--space-2); align-items: stretch; }
     .terminal-window  { height: 100%; }
     .terminal-body    { min-height: 0; max-height: none; padding: var(--space-3) var(--space-4); }
+}
+
+/* Smallest phones (320px): four nav links plus the logo and terminal button
+   don't fit at the phone sizes above, so everything packs a little tighter. */
+@media (max-width: 359px) {
+    .site-header { gap: var(--space-2); }
+    .nav { gap: var(--space-2); }
+    .nav a { font-size: 12px; }
 }
 
 /* Short viewports — phone landscape, which is too wide to hit the phone rule
