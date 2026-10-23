@@ -6,6 +6,7 @@ import SearchBox from '../components/SearchBox.astro';
 import TermChips from '../components/TermChips.astro';
 import Icon from '../components/Icon.astro';
 import { getPosts, collectTerms, tagsOf, categoryOf } from '../lib/posts';
+import { slugify } from '../lib/text';
 import { formatDate, isoDate, readingTime } from '../lib/text';
 import { SITE, absolute } from '../lib/site';
 
@@ -14,6 +15,13 @@ const featured = posts.find((p) => p.data.featured) ?? posts[0];
 const rest = posts.filter((p) => p !== featured);
 const categories = collectTerms(posts, categoryOf);
 const tags = collectTerms(posts, tagsOf);
+
+// "Posts by tag": every tag with its newest few posts.
+const PER_TAG = 5;
+const byTag = tags.map((t) => ({
+    ...t,
+    posts: posts.filter((p) => p.data.tags.some((name) => slugify(name) === t.slug)).slice(0, PER_TAG),
+}));
 
 const jsonLd = {
     '@context': 'https://schema.org',
@@ -26,10 +34,16 @@ const jsonLd = {
 ---
 <Base title={SITE.title} canonical="/blog/" jsonLd={jsonLd} current="blog">
     <div class="wrap">
-        <header class="masthead">
-            <div class="kicker"><span>Writing</span><span>Notes</span><span>{new Date().getFullYear()}</span></div>
-            <h1 class="page-title" style="margin-top: 16px">The Journey To Coding A Realistic Simulation</h1>
-            <p class="lede">Graphics, simulation, C++ and machine learning, written as I go. No AI writing. Raw thoughts, not polished.</p>
+        <header class="masthead masthead--index">
+            <div>
+                <div class="kicker"><span>Writing</span><span>Notes</span><span>{new Date().getFullYear()}</span></div>
+                <h1 class="page-title" style="margin-top: 16px">The Journey To Coding A Realistic Simulation</h1>
+                <p class="lede">Graphics, simulation, C++ and machine learning, written as I go. No AI writing. Raw thoughts, not polished.</p>
+            </div>
+            <div class="masthead-tools">
+                <SearchBox />
+                <a class="stat" href="/blog/rss.xml"><Icon name="rss" size={13} /> RSS feed</a>
+            </div>
         </header>
 
         <div class="index-grid">
@@ -69,12 +83,29 @@ const jsonLd = {
                 )}
             </div>
 
-            <aside class="index-side" aria-label="Browse">
-                <SearchBox />
-                <div class="chips-block"><TermChips terms={categories} base="category" label="Categories" /></div>
-                <div class="chips-block"><TermChips terms={tags} base="tags" label="Tags" /></div>
-                <a class="stat" href="/blog/rss.xml"><Icon name="rss" size={13} /> RSS feed</a>
-            </aside>
+            {posts.length > 0 && (
+                <aside class="index-side" aria-label="Browse">
+                    <TermChips terms={categories} base="category" label="Categories" />
+                    {byTag.length > 0 && (
+                        <section aria-labelledby="by-tag-label">
+                            <div class="section-label" id="by-tag-label">Posts by tag</div>
+                            <div class="tag-groups">
+                                {byTag.map((t) => (
+                                    <div class="tag-group">
+                                        <a class="chip" href={`/blog/tags/${t.slug}/`}>{t.name}<span class="count">{t.count}</span></a>
+                                        <ul>
+                                            {t.posts.map((p) => <li><a href={`/blog/${p.id}/`}>{p.data.title}</a></li>)}
+                                        </ul>
+                                        {t.count > t.posts.length && (
+                                            <a class="tag-group-more" href={`/blog/tags/${t.slug}/`}>All {t.count} posts →</a>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </aside>
+            )}
         </div>
     </div>
     <script>
