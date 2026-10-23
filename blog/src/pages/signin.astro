@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { supabaseConfigured } from '../lib/supabase';
+// Off until custom SMTP is set up in Supabase: the built-in mailer only sends
+// to your own project team's addresses, so public magic links would fail.
+const emailLogin = import.meta.env.PUBLIC_ENABLE_EMAIL_LOGIN === 'true';
+---
+<Base title="Sign in" description="Sign in to comment and like posts." noindex current="account">
+    <div class="wrap narrow">
+        <header class="masthead" style="padding-bottom: 24px">
+            <h1 class="page-title">Sign in</h1>
+            <p class="lede">To comment, reply and like posts. Reading never needs an account.</p>
+        </header>
+
+        {!supabaseConfigured && <p class="notice">Accounts aren’t configured on this build.</p>}
+
+        {supabaseConfigured && (
+            <div class="panel" data-signin>
+                <div data-signin-error role="alert"></div>
+                <div class="provider-btns">
+                    <button class="btn provider-btn" type="button" data-provider="github"><Icon name="github" size={18} /> Continue with GitHub</button>
+                    <button class="btn provider-btn" type="button" data-provider="google"><Icon name="google" size={18} /> Continue with Google</button>
+                </div>
+                {emailLogin && <div class="divider-or">or</div>}
+                {emailLogin && <form class="stack" data-email-form novalidate>
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="254" placeholder="you@example.com" />
+                        <span class="hint">We’ll email you a one-time sign-in link. No password.</span>
+                    </div>
+                    <button class="btn btn--primary" type="submit"><Icon name="mail" size={15} /> Email me a link</button>
+                </form>}
+                <p class="muted" style="margin-top: 20px">Your email is never shown publicly. You choose a display name and username after signing in.</p>
+            </div>
+        )}
+    </div>
+    <script>
+        import '../scripts/signin';
+    </script>
+</Base>

@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Toc from '../components/Toc.astro';
+import Comments from '../components/Comments.astro';
+import Icon from '../components/Icon.astro';
+import { getPosts, relatedPosts, isPublished, type Post } from '../lib/posts';
+import { formatDate, isoDate, readingTime, slugify } from '../lib/text';
+import { SITE, absolute } from '../lib/site';
+import 'katex/dist/katex.min.css';
+
+export async function getStaticPaths() {
+    const posts = await getPosts();
+    return posts.map((post) => ({ params: { slug: post.id }, props: { post, posts } }));
+}
+
+interface Props { post: Post; posts: Post[] }
+const { post, posts } = Astro.props;
+const { Content, headings } = await render(post);
+const d = post.data;
+const minutes = readingTime(post.body ?? '');
+const related = relatedPosts(post, posts);
+const showUpdated = d.updated && isoDate(d.updated) !== isoDate(d.date);
+const coverUrl = d.cover ? d.cover.src : undefined;
+const url = absolute(`/blog/${post.id}/`);
+
+const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: d.title,
+    description: d.description,
+    datePublished: d.date.toISOString(),
+    dateModified: (d.updated ?? d.date).toISOString(),
+    author: { '@type': 'Person', name: SITE.author, url: SITE.origin },
+    publisher: { '@type': 'Person', name: SITE.author },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    url,
+    image: absolute(coverUrl ?? SITE.ogImage),
+    keywords: d.tags.join(', '),
+    articleSection: d.category,
+    wordCount: (post.body ?? '').split(/\s+/).length,
+};
+---
+<Base
+    title={d.title}
+    description={d.description}
+    canonical={`/blog/${post.id}/`}
+    type="article"
+    image={coverUrl}
+    imageAlt={d.coverAlt}
+    jsonLd={jsonLd}
+    publishedTime={d.date.toISOString()}
+    modifiedTime={d.updated?.toISOString()}
+    tags={d.tags}
+    noindex={!isPublished(d)}
+>
+    <article class="wrap" data-post={post.id}>
+        <header class="article-head">
+            {!isPublished(d) && (
+                <p class="notice notice--draft" style="margin-bottom: 20px">
+                    {d.draft ? 'Draft' : `Scheduled for ${formatDate(d.date)}`} — visible only in local dev. It will not be in a production build.
+                </p>
+            )}
+            <div class="kicker">
+                <a href={`/blog/category/${slugify(d.category)}/`}>{d.category}</a>
+                <span>{minutes} min read</span>
+            </div>
+            <h1 class="page-title">{d.title}</h1>
+            <p class="lede">{d.description}</p>
+            <div class="article-meta">
+                <span>By <a href="/">{SITE.author}</a></span>
+                <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
+                {showUpdated && <span>Updated <time datetime={d.updated!.toISOString()}>{formatDate(d.updated!)}</time></span>}
+            </div>
+        </header>
+
+        {d.cover && (
+            <figure class="article-cover">
+                <Image src={d.cover} alt={d.coverAlt ?? ''} widths={[720, 1080, 1440]} sizes="(max-width: 1180px) 100vw, 1100px" loading="eager" fetchpriority="high" />
+            </figure>
+        )}
+
+        <div class="article-layout">
+            <div class="article-body">
+                <div class="prose">
+                    <Content />
+                </div>
+
+                {d.tags.length > 0 && (
+                    <div class="article-tags chips" aria-label="Tags">
+                        {d.tags.map((t) => <a class="chip" href={`/blog/tags/${slugify(t)}/`}>{t}</a>)}
+                    </div>
+                )}
+
+                <div class="post-actions" data-post-actions data-slug={post.id}>
+                    <button class="btn like-btn" type="button" data-like aria-pressed="false" hidden>
+                        <Icon name="heart" size={15} /><span data-like-label>Like</span><span data-like-count></span>
+                    </button>
+                    <a class="btn" href="#comments"><Icon name="comment" size={15} /> Discuss</a>
+                    <span class="spacer"></span>
+                    <button class="btn btn--ghost" type="button" data-share data-url={url} data-title={d.title}>
+                        <Icon name="link" size={15} /> <span>Copy link</span>
+                    </button>
+                </div>
+
+                <Comments slug={post.id} />
+
+                {related.length > 0 && (
+                    <section class="related" aria-labelledby="related-title">
+                        <div class="section-label" id="related-title">Related</div>
+                        <div class="related-list">
+                            {related.map((r) => (
+                                <a class="related-item" href={`/blog/${r.id}/`}>
+                                    <strong>{r.data.title}</strong>
+                                    <span>{formatDate(r.data.date)} · {r.data.category}</span>
+                                </a>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                <p style="margin-top: 48px"><a class="stat" href="/blog/"><Icon name="arrow-left" size={13} /> All posts</a></p>
+            </div>
+
+            <Toc headings={headings} />
+        </div>
+    </article>
+
+    <script>
+        import '../scripts/post';
+    </script>
+</Base>

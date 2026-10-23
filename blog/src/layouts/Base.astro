@@ -1,0 +1,88 @@
+---
+import '../styles/blog.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE, absolute } from '../lib/site';
+import { THEME_INIT } from '../lib/theme-init.mjs';
+
+interface Props {
+    title: string;
+    description?: string;
+    /** Path for the canonical URL; defaults to the current page. */
+    canonical?: string;
+    image?: string;
+    imageAlt?: string;
+    type?: 'website' | 'article' | 'profile';
+    /** Account, admin and auth pages: never indexed. */
+    noindex?: boolean;
+    jsonLd?: Record<string, unknown>;
+    publishedTime?: string;
+    modifiedTime?: string;
+    tags?: string[];
+    current?: 'blog' | 'search' | 'account' | 'admin';
+}
+
+const {
+    title, description = SITE.description, canonical, image = SITE.ogImage, imageAlt = SITE.author,
+    type = 'website', noindex = false, jsonLd, publishedTime, modifiedTime, tags = [], current,
+} = Astro.props;
+
+const fullTitle = title === SITE.title ? title : `${title} · ${SITE.author}`;
+const canonicalUrl = absolute(canonical ?? Astro.url.pathname);
+const imageUrl = absolute(image);
+// JSON-LD is data, not script, but it sits in a <script> tag: escape "<" so a
+// title can never close the tag early.
+const ld = jsonLd ? JSON.stringify(jsonLd).replace(/</g, '\\u003c') : null;
+---
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content={SITE.author} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonicalUrl} />}
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#161826" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f6f9" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/blog/rss.xml" />
+    <link rel="sitemap" href="/blog/sitemap-index.xml" />
+
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:alt" content={imageAlt} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
+    {tags.map((t) => <meta property="article:tag" content={t} />)}
+    <meta name="twitter:card" content={image === SITE.ogImage ? 'summary' : 'summary_large_image'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300..600&display=swap" />
+
+    <!-- Applies a saved theme before first paint, so there is no flash. -->
+    <script is:inline set:html={THEME_INIT} />
+    {ld && <script type="application/ld+json" is:inline set:html={ld} />}
+    <slot name="head" />
+</head>
+<body>
+    <a class="skip-link" href="#content">Skip to content</a>
+    <Header current={current} />
+    <main id="content" tabindex="-1">
+        <slot />
+    </main>
+    <Footer />
+    <script>
+        import '../scripts/chrome';
+    </script>
+</body>
+</html>

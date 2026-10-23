@@ -1,0 +1,83 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PostRow from '../components/PostRow.astro';
+import SearchBox from '../components/SearchBox.astro';
+import TermChips from '../components/TermChips.astro';
+import Icon from '../components/Icon.astro';
+import { getPosts, collectTerms, tagsOf, categoryOf } from '../lib/posts';
+import { formatDate, isoDate, readingTime } from '../lib/text';
+import { SITE, absolute } from '../lib/site';
+
+const posts = await getPosts();
+const featured = posts.find((p) => p.data.featured) ?? posts[0];
+const rest = posts.filter((p) => p !== featured);
+const categories = collectTerms(posts, categoryOf);
+const tags = collectTerms(posts, tagsOf);
+
+const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: SITE.title,
+    url: absolute('/blog/'),
+    description: SITE.description,
+    author: { '@type': 'Person', name: SITE.author, url: SITE.origin },
+};
+---
+<Base title={SITE.title} canonical="/blog/" jsonLd={jsonLd} current="blog">
+    <div class="wrap">
+        <header class="masthead">
+            <div class="kicker"><span>Writing</span><span>Notes</span><span>{new Date().getFullYear()}</span></div>
+            <h1 class="page-title" style="margin-top: 16px">The Journey To Coding A Realistic Simulation</h1>
+            <p class="lede">Graphics, simulation, C++ and machine learning, written as I go. No AI writing. Raw thoughts, not polished.</p>
+        </header>
+
+        <div class="index-grid">
+            <div>
+                {!featured && (
+                    <p class="empty-state"><span class="dot" aria-hidden="true"></span>First posts arriving soon.</p>
+                )}
+
+                {featured && (
+                    <section aria-labelledby="latest-label">
+                        <div class="section-label" id="latest-label">{featured.data.featured ? 'Featured' : 'Latest'}</div>
+                        <a class="featured" href={`/blog/${featured.id}/`} data-post-slug={featured.id}>
+                            {featured.data.cover && (
+                                <div class="featured-cover">
+                                    <Image src={featured.data.cover} alt={featured.data.coverAlt ?? ''} widths={[640, 960, 1280]} sizes="(max-width: 860px) 100vw, 760px" loading="eager" />
+                                </div>
+                            )}
+                            <div class="kicker">
+                                <time datetime={isoDate(featured.data.date)} class="accent">{formatDate(featured.data.date)}</time>
+                                <span>{featured.data.category}</span>
+                                <span>{readingTime(featured.body ?? '')} min read</span>
+                                {featured.data.draft && <span>Draft</span>}
+                            </div>
+                            <h2 class="featured-title">{featured.data.title}</h2>
+                            <p class="featured-desc">{featured.data.description}</p>
+                        </a>
+                    </section>
+                )}
+
+                {rest.length > 0 && (
+                    <section aria-labelledby="recent-label" style="margin-top: 32px">
+                        <div class="section-label" id="recent-label">Recent</div>
+                        <div class="post-list">
+                            {rest.map((post) => <PostRow post={post} />)}
+                        </div>
+                    </section>
+                )}
+            </div>
+
+            <aside class="index-side" aria-label="Browse">
+                <SearchBox />
+                <div class="chips-block"><TermChips terms={categories} base="category" label="Categories" /></div>
+                <div class="chips-block"><TermChips terms={tags} base="tags" label="Tags" /></div>
+                <a class="stat" href="/blog/rss.xml"><Icon name="rss" size={13} /> RSS feed</a>
+            </aside>
+        </div>
+    </div>
+    <script>
+        import '../scripts/post-stats';
+    </script>
+</Base>

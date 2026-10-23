@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<!-- Public profiles live at /blog/user/?u=<username>: the site is static, so a
+     per-user path would need a server. Profiles are noindex for the same
+     reason the content is user-written. -->
+<Base title="Profile" noindex>
+    <div class="wrap narrow" style="padding-top: 48px">
+        <div data-profile-page><p class="muted">Loading…</p></div>
+    </div>
+    <script>
+        import '../scripts/profile';
+    </script>
+</Base>

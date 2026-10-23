@@ -1,0 +1,17 @@
+---
+import TermPage from '../../components/TermPage.astro';
+import { getPosts, collectTerms, categoryOf, type Post, type Term } from '../../lib/posts';
+import { slugify } from '../../lib/text';
+
+export async function getStaticPaths() {
+    const posts = await getPosts();
+    const all = collectTerms(posts, categoryOf);
+    return all.map((term) => ({
+        params: { category: term.slug },
+        props: { term, all, posts: posts.filter((p) => slugify(p.data.category) === term.slug) },
+    }));
+}
+interface Props { term: Term; all: Term[]; posts: Post[] }
+const { term, all, posts } = Astro.props;
+---
+<TermPage kind="Category" base="category" term={term} all={all} posts={posts} />

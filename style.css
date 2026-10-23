@@ -293,17 +293,12 @@ a:active { color: var(--color-accent-400); }
    than the header's own gap, which is spaced for the nav's bare text links. */
 .blog-btn + .terminal-btn { margin-left: calc(var(--space-3) - var(--space-8)); }
 
-/* ── Header pills — "Blog" here, "Read on Medium" on the blog page ──
-   Same geometry as the terminal pill they sit beside, so they read as one set
-   of actions rather than three systems. The accent is spent on the "new" tag
+/* ── Header pill — "Blog" ──
+   Same geometry as the terminal pill it sits beside, so they read as one set
+   of actions rather than two systems. The accent is spent on the "new" tag
    instead of the border — an accent-outlined pill next to the terminal's would
-   make the header's right end louder than the page it sits over.
-
-   .medium-btn is the blog page's; it lives here rather than in blog.css
-   because the header is shared furniture and a second copy of this geometry
-   would drift the first time one of them is touched. */
-.blog-btn,
-.medium-btn {
+   make the header's right end louder than the page it sits over. */
+.blog-btn {
     display: inline-flex;
     align-items: center;
     gap: var(--space-3);
@@ -318,8 +313,7 @@ a:active { color: var(--color-accent-400); }
     transition: border-color 160ms var(--ease), color 160ms var(--ease),
                 background-color 160ms var(--ease);
 }
-.blog-btn:hover,
-.medium-btn:hover {
+.blog-btn:hover {
     border-color: var(--color-accent-700);
     background: var(--color-accent-900);
     color: var(--color-accent-300);
