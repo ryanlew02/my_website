@@ -143,3 +143,18 @@ test('index has search + RSS at the top and a posts-by-tag section', async ({ pa
     await expect(sim.locator('li a')).toHaveText(['Fixture: a fluid simulation in C++', 'Fixture: neural networks from scratch']);
     await expect(page.locator('.tag-groups')).not.toContainText('Secret'); // draft-only tag
 });
+
+test('share menu opens and closes; GitHub button only on posts that set it', async ({ page }) => {
+    await page.goto('/blog/fixture-fluid-simulation/');
+    await expect(page.locator('.site-header a[aria-label="GitHub"]')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View on GitHub' })).toHaveAttribute('href', 'https://github.com/ryanlew02/my_website');
+    const menu = page.locator('#share-menu');
+    await page.getByRole('button', { name: 'Share' }).click();
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole('menuitem', { name: 'LinkedIn' })).toHaveAttribute('href', /linkedin\.com.*fixture-fluid-simulation/);
+    await page.keyboard.press('Escape');
+    await expect(menu).toBeHidden();
+
+    await page.goto('/blog/fixture-neural-nets/');
+    await expect(page.getByRole('link', { name: 'View on GitHub' })).toHaveCount(0);
+});

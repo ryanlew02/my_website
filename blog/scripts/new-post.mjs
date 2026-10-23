@@ -32,6 +32,7 @@ tags: [${tags.map(yaml).join(', ')}]
 draft: true
 # cover: ./images/${slug}-cover.jpg   # optional, relative to this file
 # coverAlt: "What the cover shows"
+# github: https://github.com/ryanlew02/some-repo   # optional, adds a "View on GitHub" button
 ---
 
 Opening paragraph.

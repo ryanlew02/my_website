@@ -24,6 +24,14 @@ const related = relatedPosts(post, posts);
 const showUpdated = d.updated && isoDate(d.updated) !== isoDate(d.date);
 const coverUrl = d.cover ? d.cover.src : undefined;
 const url = absolute(`/blog/${post.id}/`);
+const enc = encodeURIComponent;
+const shareLinks = [
+    { label: 'X / Twitter', href: `https://twitter.com/intent/tweet?url=${enc(url)}&text=${enc(d.title)}` },
+    { label: 'LinkedIn', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(url)}` },
+    { label: 'Reddit', href: `https://www.reddit.com/submit?url=${enc(url)}&title=${enc(d.title)}` },
+    { label: 'Bluesky', href: `https://bsky.app/intent/compose?text=${enc(`${d.title} ${url}`)}` },
+    { label: 'Email', href: `mailto:?subject=${enc(d.title)}&body=${enc(url)}` },
+];
 
 const jsonLd = {
     '@context': 'https://schema.org',
@@ -72,6 +80,7 @@ const jsonLd = {
                 <span>By <a href="/">{SITE.author}</a></span>
                 <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
                 {showUpdated && <span>Updated <time datetime={d.updated!.toISOString()}>{formatDate(d.updated!)}</time></span>}
+                {d.github && <a class="meta-github" href={d.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={14} /> Code on GitHub</a>}
             </div>
         </header>
 
@@ -98,10 +107,22 @@ const jsonLd = {
                         <Icon name="heart" size={15} /><span data-like-label>Like</span><span data-like-count></span>
                     </button>
                     <a class="btn" href="#comments"><Icon name="comment" size={15} /> Discuss</a>
+                    {d.github && (
+                        <a class="btn" href={d.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={15} /> View on GitHub</a>
+                    )}
                     <span class="spacer"></span>
-                    <button class="btn btn--ghost" type="button" data-share data-url={url} data-title={d.title}>
-                        <Icon name="link" size={15} /> <span>Copy link</span>
-                    </button>
+                    <div class="share">
+                        <button class="btn" type="button" data-share data-url={url} data-title={d.title}
+                            aria-haspopup="menu" aria-expanded="false" aria-controls="share-menu">
+                            <Icon name="share" size={15} /> Share
+                        </button>
+                        <div class="share-menu" id="share-menu" role="menu" hidden>
+                            <button type="button" role="menuitem" data-copy-link><Icon name="link" size={14} /> Copy link</button>
+                            {shareLinks.map((s) => (
+                                <a role="menuitem" href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 <Comments slug={post.id} />

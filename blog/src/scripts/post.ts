@@ -1,4 +1,4 @@
-// Article page behavior: like button, copy-link, view count, TOC highlight,
+// Article page behavior: like button, share menu, view count, TOC highlight,
 // and the discussion below the post.
 import { supabase } from '../lib/supabase';
 import { getMe } from '../lib/session';
@@ -16,20 +16,40 @@ const sb = supabase();
 // reopened in the admin dashboard still showing "closed"). Reload instead.
 addEventListener('pageshow', (e) => { if (e.persisted) location.reload(); });
 
-// ── Copy link / native share ──────────────────────────────────────────────
+// ── Share: native share sheet on phones, otherwise a menu ─────────────────
 const share = document.querySelector<HTMLButtonElement>('[data-share]');
-share?.addEventListener('click', async () => {
+const shareMenu = document.getElementById('share-menu');
+if (share && shareMenu) {
     const url = share.dataset.url!;
-    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
-        try { await navigator.share({ url, title: share.dataset.title }); return; } catch { /* cancelled */ }
-    }
-    try {
-        await navigator.clipboard.writeText(url);
-        toast('Link copied');
-    } catch {
-        prompt('Copy this link:', url);
-    }
-});
+    const setOpen = (open: boolean) => {
+        shareMenu.hidden = !open;
+        share.setAttribute('aria-expanded', String(open));
+        if (open) shareMenu.querySelector<HTMLElement>('a, button')?.focus();
+    };
+    share.addEventListener('click', async () => {
+        if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+            try { await navigator.share({ url, title: share.dataset.title }); return; }
+            catch (e) { if ((e as Error).name === 'AbortError') return; }
+        }
+        setOpen(shareMenu.hidden !== false);
+    });
+    shareMenu.querySelector('[data-copy-link]')?.addEventListener('click', async () => {
+        setOpen(false);
+        try {
+            await navigator.clipboard.writeText(url);
+            toast('Link copied');
+        } catch {
+            prompt('Copy this link:', url);
+        }
+    });
+    shareMenu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('click', (e) => {
+        if (!shareMenu.hidden && !(e.target as Element).closest('.share')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !shareMenu.hidden) { setOpen(false); share.focus(); }
+    });
+}
 
 // ── View count: at most once per browser per day ──────────────────────────
 if (sb && slug) {
