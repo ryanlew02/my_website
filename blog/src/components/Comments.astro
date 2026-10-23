@@ -1,0 +1,23 @@
+---
+import { supabaseConfigured } from '../lib/supabase';
+// Whether a post's comments are open is set in the admin dashboard
+// (posts.comments_locked), so it can change without a rebuild.
+interface Props { slug: string }
+const { slug } = Astro.props;
+---
+<section class="comments" id="comments" aria-labelledby="comments-title" data-comments data-slug={slug}>
+    <div class="comments-head">
+        <h2 id="comments-title">Discussion</h2>
+        <span class="comments-count" data-comments-count></span>
+    </div>
+    {!supabaseConfigured && <p class="notice">Comments aren’t configured on this build.</p>}
+    {supabaseConfigured && (
+        <>
+            <div data-composer-slot><p class="muted">Loading discussion…</p></div>
+            <div data-comments-status role="status" aria-live="polite"></div>
+            <ol class="comment-list" data-comment-list></ol>
+            <div class="load-more" data-load-more hidden><button class="btn" type="button">Load more comments</button></div>
+            <noscript><p class="notice">Comments need JavaScript.</p></noscript>
+        </>
+    )}
+</section>

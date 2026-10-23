@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+interface Props { current?: string }
+const { current } = Astro.props;
+const next = encodeURIComponent(Astro.url.pathname);
+---
+<header class="site-header">
+    <div class="wrap">
+        <a class="brand" href="/blog/" aria-label="Notes — blog home">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 3a9 9 0 1 0 9 9h-6a3 3 0 1 1-3-3V3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="brand-name">Notes <span>/ Ryan Lewandowski</span></span>
+        </a>
+
+        <div class="header-right">
+            <nav class="nav" aria-label="Main">
+                <a href="/blog/" aria-current={current === 'blog' ? 'page' : undefined}>Blog</a>
+                <a class="nav-deep" href="/blog/search/" aria-current={current === 'search' ? 'page' : undefined}>Search</a>
+                <a href="/">Home</a>
+                <a class="nav-deep" href="/#projects">Projects</a>
+            </nav>
+
+            <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch theme">
+                <Icon name="moon" class="icon-moon" />
+                <Icon name="sun" class="icon-sun" />
+            </button>
+
+            <!-- Replaced by the account menu once a session is found (scripts/chrome.ts). -->
+            <div class="account" data-account>
+                <a class="btn btn--sm" href={`/blog/signin/?next=${next}`} data-signin-link>Sign in</a>
+            </div>
+        </div>
+    </div>
+</header>

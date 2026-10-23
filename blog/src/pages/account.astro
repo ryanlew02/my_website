@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Account" noindex current="account">
+    <div class="wrap narrow">
+        <header class="masthead" style="padding-bottom: 24px">
+            <h1 class="page-title">Account</h1>
+        </header>
+        <div data-account-page><p class="muted">Loading…</p></div>
+    </div>
+    <script>
+        import '../scripts/account';
+    </script>
+</Base>

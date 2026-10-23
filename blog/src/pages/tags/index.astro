@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import TermChips from '../../components/TermChips.astro';
+import { getPosts, collectTerms, tagsOf, categoryOf } from '../../lib/posts';
+const posts = await getPosts();
+---
+<Base title="Tags" description="Every tag and category on the blog." canonical="/blog/tags/" current="blog">
+    <div class="wrap">
+        <header class="masthead" style="padding-bottom: 24px"><h1 class="page-title">Browse</h1></header>
+        <div class="stack" style="gap: 40px">
+            <TermChips terms={collectTerms(posts, categoryOf)} base="category" label="Categories" />
+            <TermChips terms={collectTerms(posts, tagsOf)} base="tags" label="Tags" />
+        </div>
+    </div>
+</Base>

@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /blog/admin/
+Disallow: /blog/account/
+Disallow: /blog/auth/
+
+Sitemap: https://ryanlewan.com/blog/sitemap-index.xml

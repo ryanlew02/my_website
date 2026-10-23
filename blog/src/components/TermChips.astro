@@ -1,0 +1,17 @@
+---
+import type { Term } from '../lib/posts';
+interface Props { terms: Term[]; base: 'tags' | 'category'; current?: string; label: string }
+const { terms, base, current, label } = Astro.props;
+---
+{terms.length > 0 && (
+    <nav aria-label={label}>
+        <div class="section-label">{label}</div>
+        <div class="chips">
+            {terms.map((t) => (
+                <a class="chip" href={`/blog/${base}/${t.slug}/`} aria-current={current === t.slug ? 'page' : undefined}>
+                    {t.name}<span class="count">{t.count}</span>
+                </a>
+            ))}
+        </div>
+    </nav>
+)}

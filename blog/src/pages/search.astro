@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import SearchBox from '../components/SearchBox.astro';
+import TermChips from '../components/TermChips.astro';
+import { getPosts, collectTerms, tagsOf, categoryOf } from '../lib/posts';
+
+const posts = await getPosts();
+const categories = collectTerms(posts, categoryOf);
+const tags = collectTerms(posts, tagsOf);
+---
+<Base title="Search" description="Search every post on graphics, simulation, C++ and machine learning." current="search" noindex>
+    <div class="wrap">
+        <header class="masthead" style="padding-bottom: 24px">
+            <h1 class="page-title">Search</h1>
+        </header>
+        <div class="index-grid">
+            <div>
+                <SearchBox autofocus />
+                <div class="toolbar" style="margin-top: 16px">
+                    <div class="field">
+                        <label for="f-category" class="visually-hidden">Category</label>
+                        <select id="f-category" data-filter="category">
+                            <option value="">All categories</option>
+                            {categories.map((c) => <option value={c.slug}>{c.name}</option>)}
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="f-tag" class="visually-hidden">Tag</label>
+                        <select id="f-tag" data-filter="tag">
+                            <option value="">All tags</option>
+                            {tags.map((t) => <option value={t.slug}>{t.name}</option>)}
+                        </select>
+                    </div>
+                </div>
+                <p class="muted" data-search-summary role="status" aria-live="polite"></p>
+                <div class="post-list" data-search-results></div>
+                <noscript><p class="notice">Search needs JavaScript. Browse by <a href="/blog/">all posts</a> instead.</p></noscript>
+            </div>
+            <aside class="index-side" aria-label="Browse">
+                <div class="chips-block"><TermChips terms={categories} base="category" label="Categories" /></div>
+                <div class="chips-block"><TermChips terms={tags} base="tags" label="Tags" /></div>
+            </aside>
+        </div>
+    </div>
+    <script>
+        import '../scripts/search';
+    </script>
+</Base>

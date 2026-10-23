@@ -1,0 +1,10 @@
+---
+import Icon from './Icon.astro';
+interface Props { value?: string; autofocus?: boolean }
+const { value = '', autofocus = false } = Astro.props;
+---
+<form class="search-box" action="/blog/search/" method="get" role="search">
+    <label class="visually-hidden" for="q">Search posts</label>
+    <Icon name="search" />
+    <input id="q" name="q" type="search" placeholder="Search posts…" value={value} autocomplete="off" autofocus={autofocus} maxlength="100" />
+</form>
