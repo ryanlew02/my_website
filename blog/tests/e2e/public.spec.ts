@@ -134,3 +134,12 @@ test('@mobile index fits the screen', async ({ page }) => {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
 });
+
+test('index has search + RSS at the top and a posts-by-tag section', async ({ page }) => {
+    await page.goto('/blog/');
+    await expect(page.locator('.masthead .search-box input')).toBeVisible();
+    await expect(page.locator('.masthead a[href="/blog/rss.xml"]')).toBeVisible();
+    const sim = page.locator('.tag-group', { has: page.locator('a.chip[href="/blog/tags/simulation/"]') });
+    await expect(sim.locator('li a')).toHaveText(['Fixture: a fluid simulation in C++', 'Fixture: neural networks from scratch']);
+    await expect(page.locator('.tag-groups')).not.toContainText('Secret'); // draft-only tag
+});
