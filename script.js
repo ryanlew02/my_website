@@ -263,35 +263,68 @@
                     var target = document.getElementById(id);
                     if (target) {
                         e.preventDefault();
+                        if (target.classList.contains('snap-section')) lockActive(id);
                         target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
                     }
                 });
             });
 
-            // IntersectionObserver keeps the dots and header nav in sync with
-            // the visible section
+            // Keep the dots and header nav in sync with the section sitting
+            // just under the fixed header. (A visibility threshold misfires when
+            // a section is shorter than the viewport: the next one also counts
+            // as "visible" and steals the highlight.)
             var dots     = document.querySelectorAll('.dot');
             var navLinks = document.querySelectorAll('.nav a[data-section]');
             var sections = document.querySelectorAll('.snap-section');
-            if (sections.length) {
-                var io = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            var id = entry.target.id;
-                            dots.forEach(function (dot) {
-                                dot.classList.toggle(
-                                    'active',
-                                    dot.getAttribute('href') === '#' + id
-                                );
-                            });
-                            navLinks.forEach(function (link) {
-                                link.classList.toggle('active', link.dataset.section === id);
-                            });
-                        }
-                    });
-                }, { root: null, threshold: 0.5 });
-                sections.forEach(function (s) { io.observe(s); });
+            var header   = document.querySelector('.site-header');
+            var lockedId = null, lockTimer = null, ticking = false;
+
+            function setActive(id) {
+                dots.forEach(function (dot) {
+                    dot.classList.toggle('active', dot.getAttribute('href') === '#' + id);
+                });
+                navLinks.forEach(function (link) {
+                    link.classList.toggle('active', link.dataset.section === id);
+                });
             }
+
+            function updateActive() {
+                ticking = false;
+                if (lockedId || !sections.length) return;
+                var line = (header ? header.offsetHeight : 0) + 10;
+                var current = sections[0].id;
+                sections.forEach(function (s) {
+                    if (s.getBoundingClientRect().top <= line) current = s.id;
+                });
+                // A short final section can never reach the top, so treat the
+                // bottom of the page as "on the last section".
+                var doc = document.documentElement;
+                if (window.innerHeight + window.scrollY >= doc.scrollHeight - 2) {
+                    current = sections[sections.length - 1].id;
+                }
+                setActive(current);
+            }
+
+            // After a nav click, show the clicked section right away and hold
+            // it until the smooth scroll settles.
+            function unlock() { lockedId = null; }
+            function lockActive(id) {
+                lockedId = id;
+                setActive(id);
+                clearTimeout(lockTimer);
+                lockTimer = setTimeout(unlock, 150);
+            }
+
+            window.addEventListener('scroll', function () {
+                if (lockedId) {
+                    clearTimeout(lockTimer);
+                    lockTimer = setTimeout(unlock, 150);
+                    return;
+                }
+                if (!ticking) { ticking = true; requestAnimationFrame(updateActive); }
+            }, { passive: true });
+            window.addEventListener('resize', updateActive);
+            updateActive();
 
             // Scroll-reveal: fade section content up as it enters the viewport,
             // staggered by its position within the section. The .reveal class is

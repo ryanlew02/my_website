@@ -52,6 +52,7 @@ draft: true                 # flip to false to publish
 featured: false             # pin to the top of the index
 cover: ./images/cover.jpg   # optional, relative to the .md file
 coverAlt: "What the cover shows"
+github: https://github.com/ryanlew02/some-repo   # optional, adds a "View on GitHub" button
 ---
 ```
 

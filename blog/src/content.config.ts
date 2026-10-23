@@ -36,6 +36,8 @@ const posts = defineCollection({
             featured: z.boolean().default(false),
             cover: image().optional(),
             coverAlt: z.string().max(200).optional(),
+            /** Optional repo link, shown as a "View on GitHub" button on the post. */
+            github: z.url().startsWith('https://github.com/').optional(),
         }),
 });
 

@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import { SITE } from '../lib/site';
 interface Props { current?: string }
 const { current } = Astro.props;
 const next = encodeURIComponent(Astro.url.pathname);
@@ -20,6 +21,10 @@ const next = encodeURIComponent(Astro.url.pathname);
                 <a href="/">Home</a>
                 <a class="nav-deep" href="/#handwritten">Projects</a>
             </nav>
+
+            <a class="icon-btn" href={SITE.links.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+                <Icon name="github" />
+            </a>
 
             <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme" title="Switch theme">
                 <Icon name="moon" class="icon-moon" />

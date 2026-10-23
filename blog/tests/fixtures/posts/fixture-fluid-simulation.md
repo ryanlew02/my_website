@@ -6,6 +6,7 @@ updated: 2026-02-01
 category: Graphics
 tags: [C++, OpenGL, Simulation]
 featured: true
+github: https://github.com/ryanlew02/my_website
 ---
 
 Opening paragraph with `inline code` and a [link](https://example.com).

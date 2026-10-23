@@ -808,6 +808,38 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
 .like-btn[aria-pressed="true"] svg { fill: currentColor; }
 .post-actions .spacer { flex: 1; }
 
+/* Share menu: opens upward-right from the Share button */
+.share { position: relative; }
+.share-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    z-index: 50;
+    min-width: 180px;
+    padding: var(--space-2);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-pop);
+}
+.share-menu[hidden] { display: none; }
+.share-menu a, .share-menu button {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: none;
+    color: var(--text-2);
+    font: 400 14px/1.4 var(--font-sans);
+    text-align: left;
+    cursor: pointer;
+}
+.share-menu a:hover, .share-menu button:hover { background: var(--accent-soft); color: var(--accent-hover); }
+
+.meta-github { display: inline-flex; align-items: center; gap: 6px; }
+
 .related { margin-top: var(--space-7); }
 .related-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-5); }
 .related-item { display: grid; gap: var(--space-2); color: inherit; }
