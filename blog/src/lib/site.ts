@@ -4,7 +4,7 @@ export const SITE = {
     title: 'Ryan Lewandowski — Notes',
     shortTitle: 'Notes',
     author: 'Ryan Lewandowski',
-    description: 'Engineering notes on graphics, simulation, C++ and machine learning — the journey to coding a realistic simulation. No AI writing.',
+    description: 'Engineering notes on graphics, simulation, C++ and machine learning — the journey to coding a simulation. No AI writing.',
     ogImage: '/assets/myPhoto.jpeg',
     links: {
         github: 'https://github.com/ryanlew02',

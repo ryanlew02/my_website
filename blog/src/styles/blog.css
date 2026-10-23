@@ -609,23 +609,6 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
 .stat { display: inline-flex; align-items: center; gap: 5px; font: 400 12.5px var(--font-mono); color: var(--text-4); }
 .stat[hidden] { display: none; }
 
-.empty-state {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    padding: var(--space-6) 0;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--text-4);
-}
-.empty-state .dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--accent-text);
-    box-shadow: 0 0 8px var(--accent);
-    animation: pulse 2.4s ease-in-out infinite;
-}
-@keyframes pulse { 50% { opacity: 0.35; } }
-
 /* ═══ Article ════════════════════════════════════════════════════════════ */
 
 .article-head { padding: clamp(36px, 6vw, 72px) 0 var(--space-6); }

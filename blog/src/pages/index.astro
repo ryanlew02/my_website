@@ -37,8 +37,8 @@ const jsonLd = {
         <header class="masthead masthead--index">
             <div>
                 <div class="kicker"><span>Writing</span><span>Notes</span><span>{new Date().getFullYear()}</span></div>
-                <h1 class="page-title" style="margin-top: 16px">The Journey To Coding A Realistic Simulation</h1>
-                <p class="lede">Graphics, simulation, C++ and machine learning, written as I go. No AI writing. Raw thoughts, not polished.</p>
+                <h1 class="page-title" style="margin-top: 16px">The Journey To Coding A Simulation</h1>
+                <p class="lede">nAI (non-ai) writing. Raw thoughts, not polished.</p>
             </div>
             <div class="masthead-tools">
                 <SearchBox />
@@ -48,10 +48,6 @@ const jsonLd = {
 
         <div class="index-grid">
             <div>
-                {!featured && (
-                    <p class="empty-state"><span class="dot" aria-hidden="true"></span>First posts arriving soon.</p>
-                )}
-
                 {featured && (
                     <section aria-labelledby="latest-label">
                         <div class="section-label" id="latest-label">{featured.data.featured ? 'Featured' : 'Latest'}</div>
