@@ -424,7 +424,6 @@
                             'Postgres (RLS)\nDeno Edge Functions\nClaude API\n' +
                             'StoreKit 2\nAPNs\nWidgetKit',
                         'links.txt':
-                            'site      https://halflightdream.com\n' +
                             'write-up  https://ryanlewan.com/halflight/',
                     },
                     'lol-discord-bot': {
