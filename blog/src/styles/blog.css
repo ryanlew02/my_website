@@ -521,6 +521,24 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
 }
 .index-side { position: sticky; top: calc(var(--header-h) + 24px); display: grid; gap: var(--space-6); }
 
+/* Index masthead: intro on the left, search + RSS top right */
+.masthead--index {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+}
+.masthead-tools { display: grid; gap: var(--space-3); justify-items: end; }
+.masthead-tools .search-box { width: 100%; }
+
+/* Posts by tag */
+.tag-groups { display: grid; gap: var(--space-5); }
+.tag-group ul { list-style: none; margin: var(--space-2) 0 0; padding: 0 0 0 var(--space-3); border-left: 1px solid var(--line); display: grid; gap: 6px; }
+.tag-group li a { display: block; color: var(--text-2); font-size: 14.5px; line-height: 1.4; }
+.tag-group li a:hover { color: var(--accent-hover); }
+.tag-group-more { display: inline-block; margin: 6px 0 0 var(--space-3); font: 400 12.5px var(--font-mono); color: var(--text-4); }
+.tag-group-more:hover { color: var(--accent-hover); }
+
 .search-box { position: relative; }
 .search-box input {
     width: 100%;
@@ -1035,9 +1053,9 @@ dialog.confirm .dialog-actions { display: flex; justify-content: flex-end; gap: 
 
 @media (max-width: 860px) {
     .index-grid { grid-template-columns: minmax(0, 1fr); }
-    .index-side { position: static; order: -1; }
-    .index-side .chips-block { display: none; }
-    .index-side .chips-block.mobile-show { display: block; }
+    .index-side { position: static; }
+    .masthead--index { grid-template-columns: minmax(0, 1fr); }
+    .masthead-tools { justify-items: start; }
 }
 
 @media (max-width: 640px) {
