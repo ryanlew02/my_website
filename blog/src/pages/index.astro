@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import PostRow from '../components/PostRow.astro';
 import SearchBox from '../components/SearchBox.astro';
@@ -52,11 +51,6 @@ const jsonLd = {
                     <section aria-labelledby="latest-label">
                         <div class="section-label" id="latest-label">{featured.data.featured ? 'Featured' : 'Latest'}</div>
                         <a class="featured" href={`/blog/${featured.id}/`} data-post-slug={featured.id}>
-                            {featured.data.cover && (
-                                <div class="featured-cover">
-                                    <Image src={featured.data.cover} alt={featured.data.coverAlt ?? ''} widths={[640, 960, 1280]} sizes="(max-width: 860px) 100vw, 760px" loading="eager" />
-                                </div>
-                            )}
                             <div class="kicker">
                                 <time datetime={isoDate(featured.data.date)} class="accent">{formatDate(featured.data.date)}</time>
                                 <span>{featured.data.category}</span>

@@ -208,7 +208,7 @@ main { flex: 1 0 auto; padding-top: var(--header-h); }
     z-index: 500;
     height: var(--header-h);
     padding-top: var(--safe-top);
-    background: color-mix(in srgb, var(--bg) 84%, transparent);
+    background: color-mix(in srgb, var(--bg) 97%, transparent);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
@@ -554,24 +554,27 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
 .search-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
 .search-box svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-4); pointer-events: none; }
 
-/* Featured: the newest post, given room — type does the work, not a card. */
-.featured {
+/* Post cards: plain rectangles; the whole card lights up on hover. */
+.featured,
+.post-row {
     display: grid;
-    gap: var(--space-4);
-    padding-bottom: var(--space-6);
-    margin-bottom: var(--space-3);
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-6);
     color: inherit;
-}
-.featured-cover {
-    aspect-ratio: 16 / 8;
-    overflow: hidden;
-    border: 1px solid var(--line);
+    background: var(--bg-raised);
+    border: 1px solid var(--line-2);
     border-radius: var(--radius-lg);
-    background: var(--surface);
+    transition: background 200ms var(--ease), border-color 200ms var(--ease), box-shadow 200ms var(--ease);
 }
-.featured-cover img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 400ms var(--ease); }
-.featured:hover .featured-cover img { transform: scale(1.015); }
+.featured { gap: var(--space-3); padding: var(--space-6); margin-bottom: var(--space-3); }
+.featured:hover,
+.post-row:hover {
+    color: inherit;
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 0 28px color-mix(in srgb, var(--accent) 35%, transparent);
+}
 .featured-title {
     font-family: var(--font-display);
     font-weight: 400;
@@ -585,15 +588,7 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
 .featured:hover .featured-title { color: var(--accent-hover); }
 .featured-desc { max-width: 62ch; color: var(--text-3); font-size: 16.5px; text-wrap: pretty; }
 
-.post-list { display: flex; flex-direction: column; }
-.post-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-2);
-    padding: var(--space-5) 0;
-    color: inherit;
-}
-.post-row + .post-row { border-top: 1px solid var(--line); }
+.post-list { display: flex; flex-direction: column; gap: var(--space-4); }
 .post-row-title {
     font-family: var(--font-display);
     font-weight: 400;
@@ -624,7 +619,7 @@ a.chip:hover, .chip[aria-current="page"] { color: var(--accent-hover); border-co
     color: var(--text-4);
 }
 .article-meta time { color: var(--text-3); }
-.article-cover { margin: 0 0 var(--space-6); }
+.article-cover { max-width: 360px; margin: 0 auto var(--space-6); }
 .article-cover img { display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--radius-lg); }
 
 .article-layout {

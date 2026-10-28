@@ -34,8 +34,7 @@ function run() {
             el('time', { datetime: d.date, class: 'accent' }, dateFmt.format(new Date(d.date))),
             el('span', {}, d.category)),
         el('h3', { class: 'post-row-title' }, d.title),
-        el('p', { class: 'post-row-desc' }, q ? snippet(d, q) : d.description),
-        d.tags.length ? el('div', { class: 'post-row-foot' }, ...d.tags.slice(0, 4).map((t) => el('span', { class: 'chip' }, t))) : null)));
+        el('p', { class: 'post-row-desc' }, q ? snippet(d, q) : d.description))));
 }
 
 let timer: ReturnType<typeof setTimeout>;

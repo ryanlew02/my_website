@@ -1,5 +1,5 @@
 ---
-title: "0x01 - 2D Gravity Simulation from Scratch"
+title: "0x00 - 2D Gravity Simulation from Scratch"
 description: "Building a simple gravity simulation from scratch in OpenGL"
 date: 2026-10-23
 category: Project
@@ -10,6 +10,8 @@ github: https://github.com/ryanlew02/2D_particle_gravity_sim
 cover: ../images/2d_gravity_sim_cover.png
 coverAlt: "Particles orbiting 'sun' particle"
 ---
+
+# 2D Gravity Simulation from Scratch
 
 I have **always** been interested in how humans came to be. Was it the big bang? Is there some sort of God? Are we in a simulation? All impossible questions (for now). The goal of these projects is to better myself at taking *real life* things and putting them inside a computer. To make strides towards one day putting consciousness *inside* the computer.
 
