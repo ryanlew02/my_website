@@ -1,7 +1,6 @@
 ---
 import type { Post } from '../lib/posts';
-import { formatDate, isoDate, readingTime, slugify } from '../lib/text';
-import Icon from './Icon.astro';
+import { formatDate, isoDate, readingTime } from '../lib/text';
 
 interface Props { post: Post }
 const { post } = Astro.props;
@@ -16,9 +15,4 @@ const { title, description, date, category, draft } = post.data;
     </div>
     <h3 class="post-row-title">{title}</h3>
     <p class="post-row-desc">{description}</p>
-    <div class="post-row-foot">
-        {post.data.tags.slice(0, 4).map((t) => <span class="chip" data-tag={slugify(t)}>{t}</span>)}
-        <span class="stat" data-stat="comments" hidden><Icon name="comment" size={13} /><span></span></span>
-        <span class="stat" data-stat="likes" hidden><Icon name="heart" size={13} /><span></span></span>
-    </div>
 </a>
