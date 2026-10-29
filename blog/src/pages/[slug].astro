@@ -64,33 +64,33 @@ const jsonLd = {
     noindex={!isPublished(d)}
 >
     <article class="wrap" data-post={post.id}>
-        <header class="article-head">
-            {!isPublished(d) && (
-                <p class="notice notice--draft" style="margin-bottom: 20px">
-                    {d.draft ? 'Draft' : `Scheduled for ${formatDate(d.date)}`} — visible only in local dev. It will not be in a production build.
-                </p>
-            )}
-            <div class="kicker">
-                <a href={`/blog/category/${slugify(d.category)}/`}>{d.category}</a>
-                <span>{minutes} min read</span>
-            </div>
-            <h1 class="page-title">{d.title}</h1>
-            <p class="lede">{d.description}</p>
-            <div class="article-meta">
-                <span>By <a href="/">{SITE.author}</a></span>
-                <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
-                {showUpdated && <span>Updated <time datetime={d.updated!.toISOString()}>{formatDate(d.updated!)}</time></span>}
-                {d.github && <a class="meta-github" href={d.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={14} /> Code on GitHub</a>}
-            </div>
-        </header>
-
-        {d.cover && (
-            <figure class="article-cover">
-                <Image src={d.cover} alt={d.coverAlt ?? ''} widths={[720, 1080, 1440]} sizes="(max-width: 400px) 100vw, 360px" loading="eager" fetchpriority="high" />
-            </figure>
-        )}
-
         <div class="article-layout">
+            <header class="article-head">
+                {!isPublished(d) && (
+                    <p class="notice notice--draft" style="margin-bottom: 20px">
+                        {d.draft ? 'Draft' : `Scheduled for ${formatDate(d.date)}`} — visible only in local dev. It will not be in a production build.
+                    </p>
+                )}
+                <div class="kicker">
+                    <a href={`/blog/category/${slugify(d.category)}/`}>{d.category}</a>
+                    <span>{minutes} min read</span>
+                </div>
+                <h1 class="page-title">{d.title}</h1>
+                <p class="lede">{d.description}</p>
+                <div class="article-meta">
+                    <span>By <a href="/">{SITE.author}</a></span>
+                    <span>Published <time datetime={d.date.toISOString()}>{formatDate(d.date)}</time></span>
+                    {showUpdated && <span>Updated <time datetime={d.updated!.toISOString()}>{formatDate(d.updated!)}</time></span>}
+                    {d.github && <a class="meta-github" href={d.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={14} /> Code on GitHub</a>}
+                </div>
+            </header>
+
+            {d.cover && (
+                <figure class="article-cover">
+                    <Image src={d.cover} alt={d.coverAlt ?? ''} widths={[720, 1080, 1440]} sizes="(max-width: 800px) 100vw, 760px" loading="eager" fetchpriority="high" />
+                </figure>
+            )}
+
             <div class="article-body">
                 <div class="prose">
                     <Content />
