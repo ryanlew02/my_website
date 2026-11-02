@@ -4,15 +4,18 @@ import { formatDate, isoDate, readingTime } from '../lib/text';
 
 interface Props { post: Post }
 const { post } = Astro.props;
-const { title, description, date, category, draft } = post.data;
+const { title, description, date, category, draft, featured } = post.data;
 ---
-<a class="post-row" href={`/blog/${post.id}/`} data-post-slug={post.id}>
-    <div class="kicker">
-        <time datetime={isoDate(date)} class="accent">{formatDate(date)}</time>
-        <span>{category}</span>
-        <span>{readingTime(post.body ?? '')} min read</span>
-        {draft && <span>Draft</span>}
+<a class="post-row post-row--thin" href={`/blog/${post.id}/`} data-post-slug={post.id}>
+    <div class="post-row-main">
+        <h3 class="post-row-title">{title}</h3>
+        <p class="post-row-desc">{description}</p>
     </div>
-    <h3 class="post-row-title">{title}</h3>
-    <p class="post-row-desc">{description}</p>
+    <div class="kicker post-row-meta">
+        {featured && <span class="accent">Featured</span>}
+        {draft && <span>Draft</span>}
+        <span>{category}</span>
+        <span>{readingTime(post.body ?? '')} min</span>
+        <time datetime={isoDate(date)} class="accent">{formatDate(date)}</time>
+    </div>
 </a>
