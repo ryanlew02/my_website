@@ -8,8 +8,8 @@ test.beforeEach(async ({ page }) => { await fakeSupabase(page); });
 test('index lists published posts and never drafts or scheduled posts', async ({ page }) => {
     await page.goto('/blog/');
     await expect(page).toHaveTitle(/Notes/);
-    await expect(page.locator('.featured-title')).toHaveText('Fixture: a fluid simulation in C++');
-    await expect(page.locator('.post-row-title')).toHaveText(['Fixture: neural networks from scratch']);
+    // Featured post first, then the rest.
+    await expect(page.locator('.post-row-title')).toHaveText(['Fixture: a fluid simulation in C++', 'Fixture: neural networks from scratch']);
     const html = await page.content();
     expect(html).not.toContain('secret draft');
     expect(html).not.toContain('scheduled post');
