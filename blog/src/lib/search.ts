@@ -9,6 +9,8 @@ export interface SearchDoc {
     tags: string[];
     tagSlugs: string[];
     date: string;
+    minutes: number;
+    featured: boolean;
     text: string;
 }
 

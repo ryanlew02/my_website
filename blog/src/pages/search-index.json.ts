@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getPosts } from '../lib/posts';
-import { markdownToPlainText, slugify } from '../lib/text';
+import { markdownToPlainText, readingTime, slugify } from '../lib/text';
 import type { SearchDoc } from '../lib/search';
 
 // Built from the same list as the pages, so a draft can never be searched.
@@ -15,6 +15,8 @@ export const GET: APIRoute = async () => {
         tags: p.data.tags,
         tagSlugs: p.data.tags.map(slugify),
         date: p.data.date.toISOString(),
+        minutes: readingTime(p.body ?? ''),
+        featured: Boolean(p.data.featured),
         text: markdownToPlainText(p.body ?? '').slice(0, 20000),
     }));
     return new Response(JSON.stringify(docs), { headers: { 'Content-Type': 'application/json' } });
