@@ -29,12 +29,16 @@ function run() {
     summary.textContent = q || query.tag || query.category
         ? `${hits.length} result${hits.length === 1 ? '' : 's'}${q ? ` for “${q}”` : ''}`
         : `${hits.length} post${hits.length === 1 ? '' : 's'}`;
-    results.replaceChildren(...hits.map((d) => el('a', { class: 'post-row', href: `/blog/${d.slug}/` },
-        el('div', { class: 'kicker' },
-            el('time', { datetime: d.date, class: 'accent' }, dateFmt.format(new Date(d.date))),
-            el('span', {}, d.category)),
-        el('h3', { class: 'post-row-title' }, d.title),
-        el('p', { class: 'post-row-desc' }, q ? snippet(d, q) : d.description))));
+    // Same markup as components/PostRow.astro (the home page's thin rows).
+    results.replaceChildren(...hits.map((d) => el('a', { class: 'post-row post-row--thin', href: `/blog/${d.slug}/`, 'data-post-slug': d.slug },
+        el('div', { class: 'post-row-main' },
+            el('h3', { class: 'post-row-title' }, d.title),
+            el('p', { class: 'post-row-desc' }, q ? snippet(d, q) : d.description)),
+        el('div', { class: 'kicker post-row-meta' },
+            d.featured ? el('span', { class: 'accent' }, 'Featured') : false,
+            el('span', {}, d.category),
+            el('span', {}, `${d.minutes} min`),
+            el('time', { datetime: d.date.slice(0, 10), class: 'accent' }, dateFmt.format(new Date(d.date)))))));
 }
 
 let timer: ReturnType<typeof setTimeout>;

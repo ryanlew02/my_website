@@ -3,7 +3,7 @@ import { search, snippet, tokenize, type SearchDoc } from '../../src/lib/search'
 
 const doc = (o: Partial<SearchDoc>): SearchDoc => ({
     slug: 's', title: '', description: '', category: 'Graphics', categorySlug: 'graphics',
-    tags: [], tagSlugs: [], date: '2026-01-01T00:00:00Z', text: '', ...o,
+    tags: [], tagSlugs: [], date: '2026-01-01T00:00:00Z', minutes: 1, featured: false, text: '', ...o,
 });
 const docs = [
     doc({ slug: 'fluid', title: 'Fluid simulation in C++', tags: ['C++', 'OpenGL'], tagSlugs: ['cpp', 'opengl'], text: 'pressure projection jacobi', date: '2026-02-01T00:00:00Z' }),
