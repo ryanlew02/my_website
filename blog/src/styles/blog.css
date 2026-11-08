@@ -413,7 +413,7 @@ main { flex: 1 0 auto; padding-top: var(--header-h); }
 
 /* ── Footer ── */
 .site-footer {
-    margin-top: var(--space-8);
+    margin-top: var(--space-6);
     padding: var(--space-6) 0 calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
     border-top: 1px solid var(--line);
     font-size: 13.5px;
