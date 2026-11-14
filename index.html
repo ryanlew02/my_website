@@ -32,7 +32,7 @@
             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:opsz,wght@6..72,300..600&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="style.css?v=67560196" />
+        <link rel="stylesheet" href="style.css?v=dcbe1b05" />
         <script>(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}})();</script>
     </head>
 
@@ -88,9 +88,40 @@
                         <div class="hero-copy">
                             <h1>Ryan Lewandowski</h1>
 
-                            <p class="sub">
-                                I like computers, physics, and machine learning. Mostly where they meet: building simulations to see how things collide.
-                            </p>
+                            <!-- The paragraph and the figure share a row: the figure
+                                 hangs off the paragraph's right-hand side, in the
+                                 space the type column leaves empty. See .hero-lead
+                                 in style.css -->
+                            <div class="hero-lead">
+                                <p class="sub">
+                                    I like computers, physics, and machine learning. Mostly where they meet: building simulations to see how things collide.
+                                </p>
+
+                                <!-- A small line drawing — the site has one plate and
+                                     one set of screenshots, so it needed a third
+                                     kind of picture: a diagram, drawn in the same
+                                     hairline weight as the rules. Decorative, so
+                                     it is hidden from the accessibility tree. -->
+                                <figure class="hero-figure" aria-hidden="true">
+                                    <svg class="hero-figure-diagram" viewBox="0 0 120 120" fill="none" role="presentation">
+                                        <!-- The field boundary, dotted -->
+                                        <circle class="fig-field" cx="60" cy="60" r="55" />
+                                        <!-- Two orbits, each with a body travelling along it -->
+                                        <g transform="rotate(-22 60 60)">
+                                            <ellipse class="fig-orbit" cx="60" cy="60" rx="46" ry="16" />
+                                            <circle class="fig-orbiter fig-orbiter--wide" cx="60" cy="60" r="2.6" />
+                                        </g>
+                                        <g transform="rotate(36 60 60)">
+                                            <ellipse class="fig-orbit" cx="60" cy="60" rx="33" ry="11" />
+                                            <circle class="fig-orbiter fig-orbiter--tight" cx="60" cy="60" r="2" />
+                                        </g>
+                                        <!-- The primary mass -->
+                                        <circle class="fig-halo" cx="60" cy="60" r="9" />
+                                        <circle class="fig-core" cx="60" cy="60" r="4" />
+                                    </svg>
+                                    <figcaption class="fig-caption">Fig. 01 — n-body</figcaption>
+                                </figure>
+                            </div>
 
                             <div class="btn-row">
                                 <a class="btn btn--primary" href="#handwritten">
@@ -139,7 +170,8 @@
             <!-- ── 02 · About ──────────────────────────────── -->
             <section class="snap-section" id="about">
                 <div class="section-inner">
-                    <div class="section-heading">
+                    <div class="section-heading" data-num="01">
+                        <span class="section-number">01</span>
                         <h2 class="section-title">About</h2>
                     </div>
 
@@ -210,7 +242,8 @@
             <!-- ── 03 · Handwritten Projects ───────────────── -->
             <section class="snap-section" id="handwritten">
                 <div class="section-inner">
-                    <div class="section-heading">
+                    <div class="section-heading" data-num="02">
+                        <span class="section-number">02</span>
                         <h2 class="section-title">Non-AI Projects</h2>
                     </div>
 
@@ -229,7 +262,8 @@
             <!-- ── 04 · AI Assisted Projects ──────────────── -->
             <section class="snap-section" id="projects">
                 <div class="section-inner">
-                    <div class="section-heading">
+                    <div class="section-heading" data-num="03">
+                        <span class="section-number">03</span>
                         <h2 class="section-title">AI Assisted Projects</h2>
                     </div>
 
