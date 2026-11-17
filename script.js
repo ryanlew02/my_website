@@ -34,7 +34,7 @@
             status: 'Hackathon Project',
             href: 'https://github.com/arjun-net/MadHacks2026',
             external: true,
-            image: { src: 'assets/badgerpulse_showcase.jpg', alt: 'Badger Pulse map of UW-Madison with a heatmap showing where students are gathering', pos: 'center 50%' },
+            image: { src: 'assets/badgerpulse_banner.jpg', alt: 'Badger Pulse on three iPhones: the 3D heatmap, the live campus map, and the Popular times activity view' },
             desc: 'A live campus-activity map for UW-Madison, built at MadHacks 2026. I built the iOS app and connected the SwiftUI front end to our Rust backend, so anonymous location pings turn into a real-time heatmap of where people are on campus.',
             bullets: [
                 'Built the SwiftUI app: live map, heatmap overlay, activity, sharing, and settings screens',
